@@ -33,13 +33,20 @@
     "security": {
       "csp": null
     },
+    "systemTray": {
+      "iconPath": "icons/icon.ico",
+      "iconAsTemplate": true
+    },
     "windows": [
       {
-        "fullscreen": false,
-        "resizable": true,
         "title": "wom",
+        "fullscreen": false,
+        "resizable": false,
         "width": 800,
-        "height": 600
+        "height": 600,
+        "center": true,
+        "alwaysOnTop": true,
+        "visible": false
       }
     ]
   }
