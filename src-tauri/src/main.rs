@@ -10,6 +10,10 @@ fn greet(name: &str) -> String {
 }
 
 fn main() {
+    // dev
+    // "alwaysOnTop": true,
+    // "visible": false
+
     tauri::Builder::default()
         .system_tray(my_tray::system_tray())
         .on_system_tray_event(my_tray::on_system_tray_event)
@@ -19,9 +23,12 @@ fn main() {
                 event.window().hide().unwrap();
                 api.prevent_close();
             }
-            tauri::WindowEvent::Focused(is_focused) => if !is_focused {
-                event.window().hide().unwrap();
-            }
+            // dev
+            // tauri::WindowEvent::Focused(is_focused) => {
+            //     if !is_focused {
+            //         event.window().hide().unwrap();
+            //     }
+            // }
             _ => {}
         })
         .run(tauri::generate_context!())

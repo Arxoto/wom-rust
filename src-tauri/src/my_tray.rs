@@ -1,5 +1,5 @@
 use tauri::{
-    CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem,
+    AppHandle, CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem,
 };
 
 pub fn system_tray() -> SystemTray {
@@ -15,7 +15,7 @@ pub fn system_tray() -> SystemTray {
     SystemTray::new().with_menu(tray_menu)
 }
 
-pub fn on_system_tray_event(app: &tauri::AppHandle, event: tauri::SystemTrayEvent) {
+pub fn on_system_tray_event(app: &AppHandle, event: SystemTrayEvent) {
     // 在 tauri.conf.json 里的 tauri.windows[].label
     let window = app.get_window("main").unwrap();
     // // switch visible

@@ -1,9 +1,8 @@
 import { useState } from "react";
 import reactLogo from "../assets/react.svg";
 import { invoke } from "@tauri-apps/api/tauri";
-import "./Default.css";
 
-export default function Tauri() {
+export default function () {
   const [greetMsg, setGreetMsg] = useState("");
   const [name, setName] = useState("");
 
