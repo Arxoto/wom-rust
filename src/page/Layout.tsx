@@ -1,23 +1,32 @@
-import { Link, Outlet } from 'react-router-dom'
+import './Layout.css';
 
-export default function () {
-    // 可以添加导航栏等
-    let navigations: string[] = [
-        '/',
-        'navigation',
-    ]
+interface ReactDomWithChildren {
+    children: any
+}
+
+function Box({ children }: ReactDomWithChildren) {
     return (
-        <div>
-            <h1>Navigation Head</h1>
-            <ul>
-                {navigations.map(navigation => (
-                    <li key={navigation}>
-                        <Link to={navigation}>{navigation}</Link>
-                    </li>
-                ))}
-            </ul>
-
-            <Outlet />
+        <div className='box'>
+            {children}
         </div>
     )
 }
+
+function Body({ children }: ReactDomWithChildren) {
+    return (
+        <div className='body'>
+            {children}
+        </div>
+    )
+}
+
+function Head({ children }: ReactDomWithChildren) {
+    return (
+        <div className='head'>
+            {children}
+            <img src="" alt="" />
+        </div>
+    )
+}
+
+export { Box, Body, Head };

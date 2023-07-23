@@ -11,6 +11,12 @@ fn greet(name: &str) -> String {
 
 fn main() {
     // dev
+    // "title": "wom",
+    // "fullscreen": false,
+    // "resizable": false,
+    // "width": 800,
+    // "height": 600,
+    // "center": true,
     // "alwaysOnTop": true,
     // "visible": false
 

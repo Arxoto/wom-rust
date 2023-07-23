@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
+import './Default.css'
 
 export default function () {
   const [greetMsg, setGreetMsg] = useState("");
@@ -13,6 +14,12 @@ export default function () {
   return (
     <div className="container">
       <h1>Welcome to Tauri!</h1>
+      <h1>Welcome to Tauri!</h1>
+      <h1>Welcome to Tauri!</h1>
+      <h1>Welcome to Tauri!</h1>
+      <h1>Welcome to Tauri!</h1>
+      <h1>Welcome to Tauri!</h1>
+      <h1>Welcome to Tauri!</h1>
 
       <div className="row">
         <a href="https://vitejs.dev" target="_blank">
@@ -22,11 +29,19 @@ export default function () {
           <img src="/wow.png" className="logo tauri" alt="Tauri logo" />
         </a>
         <a href="https://reactjs.org" target="_blank">
-          <img src="cursor.png" className="logo react" alt="React logo" />
+          <img src="/cursor.png" className="logo react" alt="React logo" />
         </a>
       </div>
 
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
+      <p>
+      Click on the Tauri, Vite, and React logos to learn more.
+      Click on the Tauri, Vite, and React logos to learn more.
+      Click on the Tauri, Vite, and React logos to learn more.
+      Click on the Tauri, Vite, and React logos to learn more.
+      Click on the Tauri, Vite, and React logos to learn more.
+      Click on the Tauri, Vite, and React logos to learn more.
+      Click on the Tauri, Vite, and React logos to learn more.
+      </p>
 
       <form
         className="row"

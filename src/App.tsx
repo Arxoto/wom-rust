@@ -1,20 +1,20 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import constant from "./constant";
+import Error from "./page/Error";
 import Wom from "./page/Wom";
-import Layout from "./page/Layout";
+import Navigation from "./page/navigation/Navigation";
 import Default from "./page/Default";
 
 const router = createBrowserRouter([
   {
     path: '/',
-    // element: <Wom />
-    element: <Layout />,
-    children: [
-      { index: true, element: <Wom /> }
-    ]
+    element: <Wom />,
+    errorElement: <Error />
   },
   {
-    path: 'navigation',
-    element: <Layout />,
+    path: constant.router_navigation,
+    element: <Navigation />,
+    errorElement: <Error />,
     children: [
       { index: true, element: <Default /> }
     ]

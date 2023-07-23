@@ -1,0 +1,37 @@
+/* box 默认底端留下 4px 空隙 */
+.box {
+    position: fixed;
+    height: calc(100% - 4px);
+    width: 100%;
+
+    display: flex;
+    flex-flow: column;
+}
+
+/* head 的大小由 font-size 决定 */
+.head {
+    width: 100%;
+    font-size: 1.6em;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.head>img {
+    width: 1.6em;
+    margin: 0 .4em 0 0;
+    content: url(/wom.png);
+}
+
+@media (prefers-color-scheme: dark) {
+    .head>img {
+        content: url(/wow.png);
+    }
+}
+
+/* body 长度自适应 */
+.body {
+    width: 100%;
+    overflow: auto;
+}

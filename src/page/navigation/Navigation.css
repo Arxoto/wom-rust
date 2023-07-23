@@ -1,0 +1,10 @@
+ul {
+    white-space: nowrap;
+    width: 100%;
+}
+
+li {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
