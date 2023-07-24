@@ -1,7 +1,7 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import constant from "./constant";
 import Error from "./page/Error";
-import Wom from "./page/Wom";
+import Wom from "./page/wom/Wom";
 import Navigation from "./page/navigation/Navigation";
 import Default from "./page/Default";
 

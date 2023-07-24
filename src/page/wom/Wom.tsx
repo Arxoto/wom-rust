@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import constant from "../constant";
-import { Box, Head, Body } from "./Layout";
+import constant from "../../constant";
+import { Box, Head, Body } from "../Layout";
 import './Wom.css'
 
 export default function () {

@@ -4,4 +4,5 @@ export default {
     wom_input_default: '',
     wom_tag_default: '',
     wom_tag_loading: '•••',
+    wom_tag_notfound: 'N/A',
 }

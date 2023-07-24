@@ -45,7 +45,7 @@
         "width": 800,
         "height": 600,
         "center": true,
-        "alwaysOnTop": false,
+        "alwaysOnTop": true,
         "visible": true
       }
     ]
