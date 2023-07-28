@@ -1,8 +1,5 @@
-input {
-    outline: none;
-    border: none;
-
+.wom-input {
     width: 100%;
-    font-size: 1.2em;
-    font-weight: lighter !important;
+    height: 1.8em;
+    font-size: 1em;
 }

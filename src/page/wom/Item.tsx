@@ -1,41 +1,28 @@
-interface ItemDescriptor {
-    iconPath: string,
-    title: string,
-    detail: string,
-    actions: string[],
-}
+import { ItemAction, ItemActionStatus } from "./ItemAction";
+import { ItemType, ItemIcon } from "./ItemIcon";
+import "./Item.css";
 
-interface ItemObject {
-    theType: ItemType | string,
+interface ItemDescriptor {
+    theType: ItemType,
     theKey: string,
     title: string,
     detail: string,
-    actions: string[],
-    trigger: (action: string | null, params: string[] | null) => void,
+    action: ItemActionStatus,
+    trigger: (action: ItemActionStatus, params: string[] | null) => void,
 }
 
-enum ItemType {
-    Tool,    // 内置选项
-    Cmd,     // 命令行
-    Web,     // 网页
-    App,     // 应用
-    Folder,  // 文件夹
+function Item({ theType, theKey, title, detail, action, trigger }: ItemDescriptor) {
+    return (
+        <div className="line">
+            <div className="icon"><ItemIcon itemType={theType} /></div>
+            <div className="middle">
+                <div className="title">{title}</div>
+                <div className="detail">{detail}</div>
+            </div>
+            <ItemAction actionIndex={action.actionIndex} actions={action.actions}></ItemAction>
+        </div>
+    )
 }
 
-function ItemObjectConvertDescriptor(item: ItemObject): ItemDescriptor {
-    // todo
-    return {
-        iconPath: '',
-        title: '',
-        detail: 'string',
-        actions: [],
-    }
-}
-
-interface ItemElement {
-    item: ItemObject
-}
-
-function Item({ item }: ItemElement) {
-
-}
+export { Item, ItemType };
+export type { ItemDescriptor };

@@ -1,10 +1,14 @@
 :root {
-  --color-light: #f3f3f3;
-  --color-light-active: #e0e0e0;
-  --color-dark: #8b8b8b;
-  --color-dark-active: #606060;
-  --color-outer: #fff;
-  --color-inner: #000;
+  --color-common-general: #f3f3f3;
+  --color-common-magical: #e0e0e0;
+  --color-common-ex1: #f6ffff;
+  --color-common-ex2: #007bff;
+  --color-common-ex3: #5050ff;
+  --color-common-ex4: #ff8080;
+  --color-different-general: #8b8b8b;
+  --color-different-magical: #606060;
+  --color-frame-outer: #fff;
+  --color-frame-inner: #000;
 }
 
 /*滚动条整体样式*/
@@ -17,16 +21,16 @@
 /*滚动条的滑块*/
 ::-webkit-scrollbar-thumb {
   border-radius: 4px;
-  background: var(--color-dark);
+  background: var(--color-different-general);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-dark-active);
+  background: var(--color-different-magical);
 }
 
 /*滚动条的轨道*/
 ::-webkit-scrollbar-track {
-  background-color: var(--color-light);
+  background-color: var(--color-common-general);
 }
 
 html,
@@ -37,55 +41,71 @@ body {
   width: 100%;
   overflow: hidden;
 
-  background-color: var(--color-light);
-}
-
-.round-box {
-  border-radius: 8px;
-}
-
-.base-color {
-  background-color: var(--color-light);
+  background-color: var(--color-common-general);
 }
 
 .common-color {
-  color: var(--color-inner);
-  background-color: var(--color-outer);
+  color: var(--color-frame-inner);
+  background-color: var(--color-frame-outer);
 }
 
 .common-box {
-  user-select: none;
   margin: 4px;
-  padding: 4px;
+  padding: 0 4px;
+
   font-weight: bold;
+
+  user-select: none;
 }
 
-.activable {
-  cursor: pointer;
-  box-shadow: 0 0 4px var(--color-dark);
-}
+.inputable {
+  margin: 4px;
+  padding: 0 4px;
+  border-radius: 8px;
 
-.activable:hover {
-  text-shadow: 0 0 8px var(--color-light-active);
-  /* filter: drop-shadow(0 0 2em #747bff); */
-}
-
-.activable:active {
-  box-shadow: 0 0 4px var(--color-dark) inset;
-}
-
-.activable-hide {
-  cursor: pointer;
-}
-
-.activable-hide:hover {
-  text-shadow: 0 0 8px var(--color-dark);
-}
-
-.activable-hide:active {
-  text-shadow: 0 0 8px var(--color-dark-active);
+  outline: none;
+  border: none;
 }
 
 .inputable:focus {
-  box-shadow: 0 0 4px var(--color-dark) inset;
+  box-shadow: 0 0 4px var(--color-different-general) inset;
+}
+
+.activable-button {
+  margin: 4px;
+  padding: 0 4px;
+  border-radius: 8px;
+
+  font-weight: bold;
+  
+  user-select: none;
+  cursor: pointer;
+
+  box-shadow: 0 0 4px var(--color-different-general);
+}
+
+.activable-button:hover {
+  box-shadow: 0 0 4px var(--color-different-magical);
+}
+
+.activable-button:active {
+  box-shadow: 0 0 4px var(--color-different-general) inset;
+}
+
+.activable-text {
+  margin: 4px;
+  padding: 0 4px;
+
+  font-weight: bold;
+
+  user-select: none;
+  cursor: pointer;
+}
+
+.activable-text:hover {
+  text-shadow: 0 0 8px var(--color-different-general);
+}
+
+.activable-text:active {
+  text-shadow: 0 0 8px var(--color-different-magical);
 }

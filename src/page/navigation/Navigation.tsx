@@ -31,18 +31,18 @@ export default function () {
     return (
         <Box>
             <Head>
-                <div className='common-box activable-hide' onClick={() => navigate('/')}>&lt;</div>
-                <ul>
+                <div className='activable-text' onClick={() => navigate('/')}>&lt;</div>
+                <div className='common-box navigation-box'>
                     {navigations.map(navigation => {
+                        let inner;
                         if (navigation.clickable) {
-                            return <li key={navigation.index}>
-                                <Link to={navigation.pathname} className='common-box common-color round-box activable'>{navigation.showname}</Link>
-                            </li>
+                            inner = <Link to={navigation.pathname} className='common-color activable-button'>{navigation.showname}</Link>
                         } else {
-                            return <span className='common-box'>/{navigation.showname}</span>
+                            inner = <span>{navigation.showname}</span>
                         }
+                        return <div key={navigation.index}>/{inner}</div>
                     })}
-                </ul>
+                </div>
             </Head>
             <Body>
                 <Outlet />

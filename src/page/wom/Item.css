@@ -1,0 +1,99 @@
+.line {
+    position: relative;
+
+    height: 3em;
+
+    user-select: none;
+    cursor: pointer;
+}
+
+.icon {
+    position: absolute;
+
+    height: 100%;
+    width: 4em;
+}
+
+.icon>img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* 位置需要与icon宽度保持一致 */
+/* 文本溢出不显示 不换行 */
+.middle {
+    position: absolute;
+    left: 4em;
+
+    width: calc(100% - 4em);
+    height: 100%;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1;
+
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: flex-start;
+    align-content: flex-start;
+}
+
+.title {
+    font-size: 1.6em;
+    padding: 0 .5em 0 0;
+}
+
+.detail {
+    font-size: 1em;
+    font-style: italic;
+}
+
+
+.line:hover {
+    background-color: var(--color-common-ex1);
+}
+
+.line:hover .title {
+    font-weight: bold;
+}
+
+.line-active .title,
+.line-active .detail {
+    color: var(--color-common-ex2);
+    text-shadow: 0 0 4px var(--color-common-ex4);
+}
+
+/* 必须至少和icon类的宽度一样 */
+.line-active .icon>img {
+    left: calc(-4em + 50%);
+    filter: drop-shadow(4em 0 0 var(--color-common-ex2)) drop-shadow(0 0 4px var(--color-common-ex4));
+}
+
+
+.action {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    padding: 0 1em;
+
+    font-size: 1.8em;
+    white-space: nowrap;
+
+    background-color: var(--color-common-general);
+}
+
+.action::before {
+    content: '';
+
+    position: absolute;
+    top: 0;
+    left: -1em;
+    width: 1em;
+    height: 100%;
+
+    background: linear-gradient(0.25turn, #0000, var(--color-common-general));
+}

@@ -8,6 +8,12 @@
     flex-flow: column;
 }
 
+/* body 长度自适应 */
+.body {
+    width: 100%;
+    overflow: auto;
+}
+
 /* head 的大小由 font-size 决定 */
 .head {
     width: 100%;
@@ -28,10 +34,4 @@
     .head>img {
         content: url(/wow.png);
     }
-}
-
-/* body 长度自适应 */
-.body {
-    width: 100%;
-    overflow: auto;
 }
