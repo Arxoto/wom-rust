@@ -193,7 +193,9 @@ export default function () {
             <Body>
                 {
                     items.map((item, index) => (
-                        <Item key={index}
+                        <Item
+                            selected={index === selectItemIndex}
+                            key={index}
                             theType={item.theType}
                             title={item.title}
                             detail={item.detail}

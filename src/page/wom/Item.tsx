@@ -16,6 +16,7 @@ enum ItemType {
 }
 
 interface ItemDescriptor {
+    selected?: boolean,
     theType: ItemType | string,
     title: string,
     detail: string,
@@ -28,11 +29,11 @@ function triggerItem(item: ItemDescriptor, actionIndex: number) {
 }
 
 function Item(item: ItemDescriptor) {
-    let { theType, title, detail, actions, trigger } = item;
+    let { selected, theType, title, detail, actions, trigger } = item;
     let [actionIndex, setIndex] = useState(0);
     return (
         <div className="line">
-            <div onClick={async () => { triggerItem(item, actionIndex); }}>
+            <div className={selected ? "line-active" : undefined} onClick={async () => { triggerItem(item, actionIndex); }}>
                 <div className="icon"><ItemIcon itemType={theType} /></div>
                 <div className="middle">
                     <div className="title">{title}</div>
