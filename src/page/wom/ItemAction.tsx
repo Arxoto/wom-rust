@@ -12,7 +12,11 @@ function ItemAction({ actionIndex, actions }: ItemActionStatus) {
     } else if (actionIndex >= actions.length) {
         actionIndex = actions.length - 1;
     }
-    return <div className='action'>{actions[actionIndex]}</div>
+    return <div className='action'>
+        <div className="left activable-text">◀</div>
+        {actions[actionIndex]}
+        <div className="right activable-text">▶</div>
+    </div>
 }
 
 export { ItemAction };
