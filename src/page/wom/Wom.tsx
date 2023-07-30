@@ -141,11 +141,40 @@ export default function () {
     const [selectItemIndex, setSelectItemIndex] = useState(0);
     const [items, setItems] = useState<ItemDescriptor[]>([]);
 
+    const safeStepItem = (nextIndex: number) => {
+        if (nextIndex < 0) {
+            setSelectItemIndex(items.length - 1);
+        } else if (nextIndex >= items.length) {
+            setSelectItemIndex(0);
+        } else {
+            setSelectItemIndex(nextIndex);
+        }
+    }
+
     const inputRef = useRef<HTMLInputElement>(null);
     function selectInput() {
         inputRef.current?.select();
     }
-    runtime.whenOnfocus(selectInput);
+    runtime.whenfocus(selectInput);
+
+    runtime.whenkeydown((event) => {
+        if (event.defaultPrevented) {
+            return;
+        }
+        switch (event.key) {
+            case "ArrowUp":
+                event.preventDefault();
+                safeStepItem(selectItemIndex - 1);
+                break;
+            case "ArrowDown":
+                event.preventDefault();
+                safeStepItem(selectItemIndex + 1);
+                break;
+
+            default:
+                break;
+        }
+    })
 
     let sendLock = false;
     const doSearch = debounce(constant.doSearch_debounce, () => {

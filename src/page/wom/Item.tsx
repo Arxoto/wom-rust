@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import ItemAction from "./ItemAction";
 import ItemIcon from "./ItemIcon";
 import "./Item.css";
@@ -31,8 +31,21 @@ function triggerItem(item: ItemDescriptor, actionIndex: number) {
 function Item(item: ItemDescriptor) {
     let { selected, theType, title, detail, actions, trigger } = item;
     let [actionIndex, setIndex] = useState(0);
+
+    const itemRef = useRef<HTMLDivElement>(null);
+    function showItem() {
+        itemRef.current?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'center'
+        })
+    }
+    if (selected) {
+        showItem();
+    }
+
     return (
-        <div className="line">
+        <div className="line" ref={itemRef}>
             <div className={selected ? "line-active" : undefined} onClick={async () => { triggerItem(item, actionIndex); }}>
                 <div className="icon"><ItemIcon itemType={theType} /></div>
                 <div className="middle">

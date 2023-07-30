@@ -1,3 +1,6 @@
 export default {
-    whenOnfocus: (fn: (() => void) | null) => { document.body.onfocus = fn; },
+    whenfocus: (fn: (() => void) | null) => { document.body.onfocus = fn; },
+    whenkeydown: (onkeydown: ((event: KeyboardEvent) => void) | null) => {
+        window.onkeydown = onkeydown;
+    }
 }
