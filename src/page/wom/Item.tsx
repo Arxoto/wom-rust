@@ -1,25 +1,46 @@
-import { ItemAction, ItemActionStatus } from "./ItemAction";
-import { ItemType, ItemIcon } from "./ItemIcon";
+import { useState } from "react";
+import ItemAction from "./ItemAction";
+import ItemIcon from "./ItemIcon";
 import "./Item.css";
 
-interface ItemDescriptor {
-    theType: ItemType,
-    theKey: string,
-    title: string,
-    detail: string,
-    action: ItemActionStatus,
-    trigger: (action: ItemActionStatus, params: string[] | null) => void,
+// web file no args
+import { open } from '@tauri-apps/api/shell';
+
+enum ItemType {
+    Setting = "setting",    // 选项
+    Plugin = "plugin",          // 内置工具
+    Cmd = "cmd",            // 命令行
+    Web = "web",            // 网页
+    Folder = "folder",      // 文件夹
+    Application = "app",    // 应用
 }
 
-function Item({ theType, theKey, title, detail, action, trigger }: ItemDescriptor) {
+interface ItemDescriptor {
+    theType: ItemType | string,
+    title: string,
+    detail: string,
+    actions: string[],
+    trigger?: (action: string, params: string[] | null) => void,
+}
+
+function triggerItem(item: ItemDescriptor, actionIndex: number) {
+    console.log(item.theType, item.title, item.detail, item.actions[actionIndex]);
+}
+
+function Item(item: ItemDescriptor) {
+    let { theType, title, detail, actions, trigger } = item;
+    let [actionIndex, setIndex] = useState(0);
     return (
         <div className="line">
-            <div className="icon"><ItemIcon itemType={theType} /></div>
-            <div className="middle">
-                <div className="title">{title}</div>
-                <div className="detail">{detail}</div>
+            <div onClick={async () => { triggerItem(item, actionIndex); }}>
+                <div className="icon"><ItemIcon itemType={theType} /></div>
+                <div className="middle">
+                    <div className="title">{title}</div>
+                    <div className="detail">{detail}</div>
+                </div>
             </div>
-            <ItemAction actionIndex={action.actionIndex} actions={action.actions}></ItemAction>
+
+            <ItemAction actions={actions} actionIndex={actionIndex} setIndex={setIndex}></ItemAction>
         </div>
     )
 }

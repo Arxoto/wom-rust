@@ -1,23 +1,31 @@
-interface ItemActionStatus {
-    actionIndex: number,
+interface ItemActionElement {
     actions: string[],
+    actionIndex: number,
+    setIndex: React.Dispatch<React.SetStateAction<number>>,
 }
 
-function ItemAction({ actionIndex, actions }: ItemActionStatus) {
+function safeStepIndex(actionState: ItemActionElement, step: number) {
+    const nextIndex = actionState.actionIndex + step;
+    const maxIndex = actionState.actions.length - 1;
+    const setIndex = actionState.setIndex;
+    if (nextIndex < 0) {
+        setIndex(0);
+    } else if (nextIndex > maxIndex) {
+        setIndex(maxIndex);
+    } else {
+        setIndex(nextIndex);
+    }
+}
+
+export default function ({ actions, actionIndex, setIndex }: ItemActionElement) {
     if (!actions.length) {
         return <div className='action'></div>
     }
-    if (actionIndex < 0) {
-        actionIndex = 0;
-    } else if (actionIndex >= actions.length) {
-        actionIndex = actions.length - 1;
-    }
     return <div className='action'>
-        <div className="left activable-text">◀</div>
+        {actionIndex > 0 && <div className="left activable-text"
+            onClick={() => setIndex(actionIndex - 1)}>◀</div>}
         {actions[actionIndex]}
-        <div className="right activable-text">▶</div>
+        {actionIndex < actions.length - 1 && <div className="right activable-text"
+            onClick={() => setIndex(actionIndex + 1)}>▶</div>}
     </div>
 }
-
-export { ItemAction };
-export type { ItemActionStatus };
