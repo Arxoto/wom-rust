@@ -136,9 +136,10 @@ function debounce(delay: number, fn: Function) {
 }
 
 export default function () {
-    const [womTag, setWomTag] = useState(constant.wom_tag_default);
-    const [items, setItems] = useState<ItemDescriptor[]>([]);
     const navigate = useNavigate();
+    const [womTag, setWomTag] = useState(constant.wom_tag_default);
+    const [selectItemIndex, setSelectItemIndex] = useState(0);
+    const [items, setItems] = useState<ItemDescriptor[]>([]);
 
     const inputRef = useRef<HTMLInputElement>(null);
     function selectInput() {
@@ -151,16 +152,28 @@ export default function () {
         if (sendLock) {
             return;
         }
-        let value = inputRef.current?.value || "";
+        let imputValue = inputRef.current?.value || "";
 
-        console.log(value);
-        if (value.length % 2 === 0) {
-            setItems([]);
+        // get tiems
+        let tmpItems: ItemDescriptor[];
+        console.log(imputValue);
+        if (imputValue.length % 2 === 0) {
+            tmpItems = [];
         } else {
-            setItems(testItems);
+            tmpItems = testItems;
         }
+
+        // show
+        if (imputValue.length === 0) {
+            setWomTag(constant.wom_tag_default);
+        } else if (tmpItems.length === 0) {
+            setWomTag(constant.wom_tag_notfound);
+        } else {
+            setWomTag(constant.wom_tag_hide)
+        }
+        setItems(tmpItems);
     })
-    
+
     return (
         <Box>
             <Head>
@@ -172,7 +185,10 @@ export default function () {
                     onCompositionEnd={() => { sendLock = false; }}
                     onInput={doSearch}
                 />
-                <p className='common-box'>{womTag}</p>
+                {womTag === constant.wom_tag_hide ?
+                    <p className='common-box'>{selectItemIndex + 1}/{items.length}</p> :
+                    <p className='common-box'>{womTag}</p>
+                }
             </Head>
             <Body>
                 {
