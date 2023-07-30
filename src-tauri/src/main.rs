@@ -9,6 +9,10 @@ fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
 
+/// todo
+/// 开机启动 https://github.com/tauri-apps/plugins-workspace/tree/v1/plugins/autostart
+/// 单例启动 https://github.com/tauri-apps/plugins-workspace/tree/v1/plugins/single-instance
+/// db       https://github.com/tauri-apps/plugins-workspace/tree/v1/plugins/sql
 fn main() {
     // dev
     // "title": "wom",
