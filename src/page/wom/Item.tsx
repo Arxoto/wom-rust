@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import ItemAction from "./ItemAction";
 import ItemIcon from "./ItemIcon";
 import "./Item.css";
@@ -16,7 +16,6 @@ enum ItemType {
 }
 
 interface ItemDescriptor {
-    selected?: boolean,
     theType: ItemType | string,
     title: string,
     detail: string,
@@ -24,13 +23,18 @@ interface ItemDescriptor {
     trigger?: (action: string, params: string[] | null) => void,
 }
 
-function triggerItem(item: ItemDescriptor, actionIndex: number) {
-    console.log(item.theType, item.title, item.detail, item.actions[actionIndex]);
+interface ItemElementParam extends ItemDescriptor {
+    selected: boolean,
+    actionIndex: number,
+    setIndex: (nextIndex: number) => void,
 }
 
-function Item(item: ItemDescriptor) {
-    let { selected, theType, title, detail, actions, trigger } = item;
-    let [actionIndex, setIndex] = useState(0);
+function triggerItem(item: ItemElementParam) {
+    console.log(item.theType, item.title, item.detail, item.actions[item.actionIndex]);
+}
+
+const Item = (item: ItemElementParam) => {
+    let { selected, theType, title, detail, actions, actionIndex, setIndex, trigger } = item;
 
     const itemRef = useRef<HTMLDivElement>(null);
     function showItem() {
@@ -40,13 +44,16 @@ function Item(item: ItemDescriptor) {
             inline: 'center'
         })
     }
-    if (selected) {
-        showItem();
-    }
+
+    useEffect(() => {
+        if (selected) {
+            showItem();
+        }
+    }, [selected]);
 
     return (
         <div className="line" ref={itemRef}>
-            <div className={selected ? "line-active" : undefined} onClick={async () => { triggerItem(item, actionIndex); }}>
+            <div className={selected ? "line-active" : undefined} onClick={async () => { triggerItem(item); }}>
                 <div className="icon"><ItemIcon itemType={theType} /></div>
                 <div className="middle">
                     <div className="title">{title}</div>

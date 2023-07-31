@@ -1,23 +1,10 @@
 interface ItemActionElement {
     actions: string[],
     actionIndex: number,
-    setIndex: React.Dispatch<React.SetStateAction<number>>,
+    setIndex: (nextIndex: number) => void,
 }
 
-function safeStepIndex(actionState: ItemActionElement, step: number) {
-    const nextIndex = actionState.actionIndex + step;
-    const maxIndex = actionState.actions.length - 1;
-    const setIndex = actionState.setIndex;
-    if (nextIndex < 0) {
-        setIndex(0);
-    } else if (nextIndex > maxIndex) {
-        setIndex(maxIndex);
-    } else {
-        setIndex(nextIndex);
-    }
-}
-
-export default function ({ actions, actionIndex, setIndex }: ItemActionElement) {
+const ItemAction = ({ actions, actionIndex, setIndex }: ItemActionElement) => {
     if (!actions.length) {
         return <div className='action'></div>
     }
@@ -29,3 +16,5 @@ export default function ({ actions, actionIndex, setIndex }: ItemActionElement) 
             onClick={() => setIndex(actionIndex + 1)}>▶</div>}
     </div>
 }
+
+export default ItemAction;

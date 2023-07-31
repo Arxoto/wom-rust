@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import constant from "../../constant";
 import { Box, Head, Body } from "../Layout";
@@ -123,24 +123,14 @@ const testItems: ItemDescriptor[] = [
     },
 ];
 
-// 防抖 执行最后一次
-function debounce(delay: number, fn: Function) {
-    let timerId: number | undefined = undefined;
-    return function (...args: any) {
-        clearTimeout(timerId);
-        timerId = setTimeout(() => {
-            fn(...args);
-            timerId = undefined;
-        }, delay);
-    }
-}
-
 export default function () {
     const navigate = useNavigate();
     const [womTag, setWomTag] = useState(constant.wom_tag_default);
-    const [selectItemIndex, setSelectItemIndex] = useState(0);
     const [items, setItems] = useState<ItemDescriptor[]>([]);
+    const [selectItemIndex, setSelectItemIndex] = useState(0);
+    const [selectActionIndex, setSelectActionIndex] = useState<number[]>([]);
 
+    // 上下选中 item
     const safeStepItem = (nextIndex: number) => {
         if (nextIndex < 0) {
             setSelectItemIndex(items.length - 1);
@@ -150,34 +140,105 @@ export default function () {
             setSelectItemIndex(nextIndex);
         }
     }
+    // 左右选中 action
+    const safeStepAction = (itemIndex: number) => {
+        return (nextActionItem: number) => {
+            const actionsLen = items[itemIndex].actions.length;
+            if (!actionsLen) {
+                return;
+            }
+            const maxIndex = actionsLen - 1;
+            if (nextActionItem < 0) {
+                nextActionItem = 0;
+            } else if (nextActionItem > maxIndex) {
+                nextActionItem = maxIndex;
+            }
+            setSelectActionIndex(selectActionIndex.map((ai, i) => {
+                if (i !== itemIndex) {
+                    return ai;
+                }
+                return nextActionItem;
+            }));
+        }
+    }
+    const tryActionLeft = () => {
+        const actionsLen = items[selectItemIndex].actions.length;
+        if (!actionsLen) {
+            return false;
+        }
+        const oldActionIndex = selectActionIndex[selectItemIndex];
+        if (oldActionIndex <= 0) {
+            return false;
+        }
+        setSelectActionIndex(selectActionIndex.map((ai, i) => {
+            if (i !== selectItemIndex) {
+                return ai;
+            }
+            return oldActionIndex - 1;
+        }));
+        return true;
+    }
+    const tryActionRight = () => {
+        const actionsLen = items[selectItemIndex].actions.length;
+        if (!actionsLen) {
+            return false;
+        }
+        const oldActionIndex = selectActionIndex[selectItemIndex];
+        if (oldActionIndex >= actionsLen - 1) {
+            return false;
+        }
+        setSelectActionIndex(selectActionIndex.map((ai, i) => {
+            if (i !== selectItemIndex) {
+                return ai;
+            }
+            return oldActionIndex + 1;
+        }));
+        return true;
+    }
 
+    // 聚焦 input
     const inputRef = useRef<HTMLInputElement>(null);
     function selectInput() {
         inputRef.current?.select();
     }
-    runtime.whenfocus(selectInput);
 
-    runtime.whenkeydown((event) => {
-        if (event.defaultPrevented) {
-            return;
+    // 挂载键盘操作
+    useEffect(() => {
+        runtime.whenfocus(selectInput);
+
+        runtime.whenkeydown((event) => {
+            if (event.defaultPrevented) {
+                return;
+            }
+            switch (event.key) {
+                case "ArrowUp":
+                    event.preventDefault();
+                    safeStepItem(selectItemIndex - 1);
+                    break;
+                case "ArrowDown":
+                    event.preventDefault();
+                    safeStepItem(selectItemIndex + 1);
+                    break;
+                case "ArrowLeft":
+                    if (tryActionLeft()) { event.preventDefault(); }
+                    break;
+                case "ArrowRight":
+                    if (tryActionRight()) { event.preventDefault(); }
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        return () => {
+            runtime.whenfocus(null);
+            runtime.whenkeydown(null);
         }
-        switch (event.key) {
-            case "ArrowUp":
-                event.preventDefault();
-                safeStepItem(selectItemIndex - 1);
-                break;
-            case "ArrowDown":
-                event.preventDefault();
-                safeStepItem(selectItemIndex + 1);
-                break;
+    });
 
-            default:
-                break;
-        }
-    })
-
+    // 更新 items
     let sendLock = false;
-    const doSearch = debounce(constant.doSearch_debounce, () => {
+    const doSearch = runtime.debounce(constant.doSearch_debounce, () => {
         if (sendLock) {
             return;
         }
@@ -186,7 +247,7 @@ export default function () {
         // get tiems
         let tmpItems: ItemDescriptor[];
         console.log(imputValue);
-        if (imputValue.length % 2 === 0) {
+        if (imputValue.length % 2 === 0 && imputValue.length < 5) {
             tmpItems = [];
         } else {
             tmpItems = testItems;
@@ -201,6 +262,7 @@ export default function () {
             setWomTag(constant.wom_tag_hide)
         }
         setItems(tmpItems);
+        setSelectActionIndex(new Array(tmpItems.length).fill(0));
     })
 
     return (
@@ -223,13 +285,15 @@ export default function () {
                 {
                     items.map((item, index) => (
                         <Item
-                            selected={index === selectItemIndex}
                             key={index}
                             theType={item.theType}
                             title={item.title}
                             detail={item.detail}
                             actions={item.actions}
                             trigger={item.trigger}
+                            selected={index === selectItemIndex}
+                            actionIndex={selectActionIndex[index]}
+                            setIndex={safeStepAction(index)}
                         ></Item>
                     )
                     )
