@@ -1,3 +1,5 @@
+import { ItemType } from "./executer";
+
 import plugin from "../../assets/plugin.svg";
 import setting from "../../assets/setting-1.svg";
 import cmd from "../../assets/cmd.svg";
@@ -5,7 +7,6 @@ import web from "../../assets/web.svg";
 import folder from "../../assets/folder-2.svg";
 import app from "../../assets/app.svg";
 import more from "../../assets/more.svg";
-import { ItemType } from "./Item";
 
 interface ItemIconElement {
     itemType: string,

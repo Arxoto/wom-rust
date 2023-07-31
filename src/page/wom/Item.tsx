@@ -1,36 +1,14 @@
 import { useEffect, useRef } from "react";
+import { ItemDescriptor, triggerItem } from "./executer";
 import ItemAction from "./ItemAction";
 import ItemIcon from "./ItemIcon";
 import "./Item.css";
 
-// web file no args
-import { open } from '@tauri-apps/api/shell';
-
-enum ItemType {
-    Setting = "setting",    // 选项
-    Plugin = "plugin",          // 内置工具
-    Cmd = "cmd",            // 命令行
-    Web = "web",            // 网页
-    Folder = "folder",      // 文件夹
-    Application = "app",    // 应用
-}
-
-interface ItemDescriptor {
-    theType: ItemType | string,
-    title: string,
-    detail: string,
-    actions: string[],
-    trigger?: (action: string, params: string[] | null) => void,
-}
 
 interface ItemElementParam extends ItemDescriptor {
     selected: boolean,
     actionIndex: number,
     setIndex: (nextIndex: number) => void,
-}
-
-function triggerItem(item: ItemElementParam) {
-    console.log(item.theType, item.title, item.detail, item.actions[item.actionIndex]);
 }
 
 const Item = (item: ItemElementParam) => {
@@ -53,7 +31,7 @@ const Item = (item: ItemElementParam) => {
 
     return (
         <div className="line" ref={itemRef}>
-            <div className={selected ? "line-active" : undefined} onClick={async () => { triggerItem(item); }}>
+            <div className={selected ? "line-active" : undefined} onClick={async () => { triggerItem(item, item.actionIndex, ''); }}>
                 <div className="icon"><ItemIcon itemType={theType} /></div>
                 <div className="middle">
                     <div className="title">{title}</div>
@@ -66,5 +44,4 @@ const Item = (item: ItemElementParam) => {
     )
 }
 
-export { Item, ItemType };
-export type { ItemDescriptor };
+export default Item;
