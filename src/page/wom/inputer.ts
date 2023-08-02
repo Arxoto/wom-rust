@@ -1,120 +1,104 @@
-import { ItemDescriptor, ItemType } from "./executer";
+import { ItemPersistent, ItemDescriptor, ItemType, actionsByType } from "./executer";
 
-const testItems: ItemDescriptor[] = [
-    {
-        theType: ItemType.Plugin,
-        title: 'plugin',
-        detail: '',
-        actions: ['aaa', 'sss', 'ddd']
-    },
-    {
-        theType: ItemType.Plugin,
-        title: 'plugin',
-        detail: '',
-        actions: ['aaa', 'sss', 'ddd']
-    },
-    {
-        theType: ItemType.Setting,
-        title: 'UserSetting',
-        detail: 'detail',
-        actions: ['aaa', '阿木木', '阿松大']
-    },
-    {
-        theType: ItemType.Cmd,
-        title: 'cmd',
-        detail: 'detail',
-        actions: ['aaa', '阿木木', '阿松大']
-    },
-    {
-        theType: ItemType.Cmd,
-        title: 'cmd',
-        detail: 'detail',
-        actions: []
-    },
-    {
-        theType: ItemType.Cmd,
-        title: 'cmd',
-        detail: 'detail',
-        actions: ['aaa', 'sss', 'ddd']
-    },
-    {
-        theType: ItemType.Web,
-        title: 'web-web',
-        detail: 'detail',
-        actions: ['aaa', 'sss', 'ddd']
-    },
-    {
-        theType: ItemType.Web,
-        title: 'web-web',
-        detail: 'detail',
-        actions: ['aaa', 'sss', 'ddd']
-    },
-    {
-        theType: ItemType.Web,
-        title: 'web-web==============================================',
-        detail: 'detail',
-        actions: ['aaa', 'sss', 'ddd']
-    },
-    {
-        theType: ItemType.Web,
-        title: 'web-web==============================================',
-        detail: 'detail',
-        actions: []
-    },
-    {
-        theType: ItemType.Folder,
-        title: 'folder',
-        detail: 'detail',
-        actions: []
-    },
-    {
-        theType: ItemType.Folder,
-        title: 'folder',
-        detail: 'detail',
-        actions: []
-    },
-    {
-        theType: ItemType.Folder,
-        title: 'folder',
-        detail: 'detail',
-        actions: []
-    },
-    {
-        theType: ItemType.Folder,
-        title: 'folder',
-        detail: 'detail',
-        actions: []
-    },
-    {
-        theType: ItemType.Application,
-        title: 'app',
-        detail: 'detail',
-        actions: ['aaa', 'sss']
-    },
-    {
-        theType: ItemType.Application,
-        title: 'app',
-        detail: 'detail',
-        actions: ['aaa', 'sss']
-    },
-    {
-        theType: ItemType.Application,
-        title: 'app',
-        detail: 'detail',
-        actions: ['aaa', 'sss']
-    },
-    {
-        theType: ItemType.Application,
-        title: 'app',
-        detail: 'detail',
-        actions: ['aaa', 'sss']
-    },
-    {
-        theType: "...",
-        title: 'title',
-        detail: 'detail',
-        actions: ['aaa', 'sss', 'ddd']
-    },
+const testItems = [
+    [
+        {
+            theType: ItemType.Plugin,
+            title: 'plugin',
+            detail: '',
+        },
+        {
+            theType: ItemType.Plugin,
+            title: 'plugin',
+            detail: '',
+        },
+        {
+            theType: ItemType.Setting,
+            title: 'UserSetting',
+            detail: 'detail',
+        }
+    ], [
+        {
+            theType: ItemType.Cmd,
+            title: 'cmd',
+            detail: 'detail',
+        },
+        {
+            theType: ItemType.Cmd,
+            title: 'cmd',
+            detail: 'detail',
+        },
+        {
+            theType: ItemType.Cmd,
+            title: 'cmd',
+            detail: 'detail',
+        },
+        {
+            theType: ItemType.Web,
+            title: 'web-web',
+            detail: 'https://fanyi.youdao.com/indexLLM.html#/',
+        },
+        {
+            theType: ItemType.Web,
+            title: 'Bilbili-search',
+            detail: 'https://search.bilibili.com/all?keyword={}',
+        },
+        {
+            theType: ItemType.Web,
+            title: 'web-web==============================================',
+            detail: 'detail',
+        },
+        {
+            theType: ItemType.Web,
+            title: 'web-web==============================================',
+            detail: 'detail',
+        },
+        {
+            theType: ItemType.Folder,
+            title: 'folder',
+            detail: 'detail',
+        },
+        {
+            theType: ItemType.Folder,
+            title: 'folder',
+            detail: 'detail',
+        },
+        {
+            theType: ItemType.Folder,
+            title: 'folder',
+            detail: 'detail',
+        },
+        {
+            theType: ItemType.Folder,
+            title: 'folder',
+            detail: 'detail',
+        },
+        {
+            theType: ItemType.Application,
+            title: 'app',
+            detail: 'detail',
+        },
+        {
+            theType: ItemType.Application,
+            title: 'app',
+            detail: 'detail',
+        },
+        {
+            theType: ItemType.Application,
+            title: 'app',
+            detail: 'detail',
+        },
+        {
+            theType: ItemType.Application,
+            title: 'app',
+            detail: 'detail',
+        },
+        {
+            theType: "...",
+            title: 'title',
+            detail: 'detail',
+        },
+    ]
 ];
 
 interface InputValue {
@@ -146,13 +130,28 @@ function searchItems(input: string): ItemDescriptor[] {
     const { key, args } = parseInputValue(input);
 
     console.log(key, args);
-    let tmpItems: ItemDescriptor[];
+    let tmpItemsList: Array<Array<ItemPersistent>>;
+
+    // todo
     if (key.length % 2 === 0 && key.length < 5) {
-        tmpItems = [];
+        tmpItemsList = [];
     } else {
-        tmpItems = testItems;
+        tmpItemsList = testItems;
     }
-    return tmpItems;
+
+    // format actions
+    let formated: Array<Array<ItemDescriptor>> = tmpItemsList.map(items => items.map(item => {
+        return {
+            ...item,
+            actions: actionsByType(item.theType),
+        };
+    }));
+
+    // todo add plugins
+    let plugins: ItemDescriptor[] = [];
+    formated.splice(1, 0, plugins);
+    
+    return formated.flat();
 }
 
 export { parseInputValue, searchItems }

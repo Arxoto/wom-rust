@@ -13,9 +13,18 @@
   "tauri": {
     "allowlist": {
       "all": false,
+      "path": {
+        "all": true
+      },
+      "clipboard": {
+        "all": true
+      },
       "shell": {
         "all": false,
         "open": ".*"
+      },
+      "notification": {
+        "all": true
       }
     },
     "bundle": {

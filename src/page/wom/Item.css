@@ -65,7 +65,8 @@
 }
 
 .line-active .title,
-.line-active .detail {
+.line-active .detail,
+.line-active .action {
     color: var(--color-common-ex2);
     text-shadow: 0 0 4px var(--color-common-ex4);
 }

@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import constant from "../../constant";
 import { whenfocus, whenkeydown, debounce } from "./runtime";
-import { ItemDescriptor } from "./executer";
-import { searchItems } from "./inputer";
+import { ItemDescriptor, triggerItem } from "./executer";
+import { parseInputValue, searchItems } from "./inputer";
 import { Box, Head, Body } from "../Layout";
 import Item from "./Item";
 import './Wom.css'
@@ -110,6 +110,9 @@ export default function () {
                 case "ArrowRight":
                     if (tryActionRight()) { event.preventDefault(); }
                     break;
+                case "Enter":
+                    triggerItem(items[selectItemIndex], selectActionIndex[selectItemIndex], parseInputValue(inputRef.current?.value || "").args);
+                    break;
                 default:
                     break;
             }
@@ -165,17 +168,18 @@ export default function () {
             <Body>
                 {
                     items.map((item, index) => (
-                        <Item
-                            key={index}
-                            theType={item.theType}
-                            title={item.title}
-                            detail={item.detail}
-                            actions={item.actions}
-                            trigger={item.trigger}
-                            selected={index === selectItemIndex}
-                            actionIndex={selectActionIndex[index]}
-                            setIndex={safeStepAction(index)}
-                        ></Item>
+                        <div key={index} onClick={async () => { triggerItem(item, selectActionIndex[index], parseInputValue(inputRef.current?.value || "").args); }}>
+                            <Item
+                                theType={item.theType}
+                                title={item.title}
+                                detail={item.detail}
+                                actions={item.actions}
+                                selected={index === selectItemIndex}
+                                actionIndex={selectActionIndex[index]}
+                                setIndex={safeStepAction(index)}
+                            ></Item>
+                        </div>
+
                     )
                     )
                 }

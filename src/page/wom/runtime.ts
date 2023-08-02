@@ -1,3 +1,18 @@
+import { Options, isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification';
+
+const notify = async (options: Options | string): Promise<void> => {
+    let permissionGranted = await isPermissionGranted();
+    if (!permissionGranted) {
+        const permission = await requestPermission();
+        permissionGranted = permission === 'granted';
+    }
+    if (permissionGranted) {
+        sendNotification(options);
+    } else {
+        console.error("no Granted Notification Permission");
+    }
+}
+
 const whenfocus = (fn: (() => void) | null) => {
     document.body.onfocus = fn;
 };
@@ -32,6 +47,7 @@ const throttle = (delay: number, fn: Function) => {
 };
 
 export {
+    notify,
     whenfocus, whenkeydown,
     debounce, throttle
 }
