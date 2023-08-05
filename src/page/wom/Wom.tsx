@@ -1,92 +1,38 @@
-import { useEffect, useRef, useState } from "react";
+// 基础依赖、三方件
+import { useEffect, useReducer, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
+// 常量、运行时函数、功能函数
 import constant from "../../constant";
 import { whenfocus, whenkeydown, debounce } from "./runtime";
-import { ItemDescriptor, triggerItem } from "./executer";
 import { parseInputValue, searchItems } from "./inputer";
+// 自定义的全局变量和hook
+import { womReducer } from "./womReducer";
+import { defaultState, WomContext } from "./womContext";
+// 自定义的组件
 import { Box, Head, Body } from "../Layout";
 import Item from "./Item";
 import './Wom.css'
 
 export default function () {
     const navigate = useNavigate();
-    const [womTag, setWomTag] = useState(constant.wom_tag_default);
-    const [items, setItems] = useState<ItemDescriptor[]>([]);
-    const [selectItemIndex, setSelectItemIndex] = useState(0);
-    const [selectActionIndex, setSelectActionIndex] = useState<number[]>([]);
+    const [womState, dispatch] = useReducer(womReducer, defaultState);  // 使用 useReducer 替代 useState
+    const input = womState.input;
+    const items = womState.items;
+    const currentIndex = womState.currentIndex;
 
-    // 上下选中 item
-    const safeStepItem = (nextIndex: number) => {
-        if (nextIndex < 0) {
-            setSelectItemIndex(items.length - 1);
-        } else if (nextIndex >= items.length) {
-            setSelectItemIndex(0);
-        } else {
-            setSelectItemIndex(nextIndex);
-        }
-    }
-    // 左右选中 action
-    const safeStepAction = (itemIndex: number) => {
-        return (nextActionItem: number) => {
-            const actionsLen = items[itemIndex].actions.length;
-            if (!actionsLen) {
-                return;
-            }
-            const maxIndex = actionsLen - 1;
-            if (nextActionItem < 0) {
-                nextActionItem = 0;
-            } else if (nextActionItem > maxIndex) {
-                nextActionItem = maxIndex;
-            }
-            setSelectActionIndex(selectActionIndex.map((ai, i) => {
-                if (i !== itemIndex) {
-                    return ai;
-                }
-                return nextActionItem;
-            }));
-        }
-    }
-    const tryActionLeft = () => {
-        const actionsLen = items[selectItemIndex].actions.length;
-        if (!actionsLen) {
-            return false;
-        }
-        const oldActionIndex = selectActionIndex[selectItemIndex];
-        if (oldActionIndex <= 0) {
-            return false;
-        }
-        setSelectActionIndex(selectActionIndex.map((ai, i) => {
-            if (i !== selectItemIndex) {
-                return ai;
-            }
-            return oldActionIndex - 1;
-        }));
-        return true;
-    }
-    const tryActionRight = () => {
-        const actionsLen = items[selectItemIndex].actions.length;
-        if (!actionsLen) {
-            return false;
-        }
-        const oldActionIndex = selectActionIndex[selectItemIndex];
-        if (oldActionIndex >= actionsLen - 1) {
-            return false;
-        }
-        setSelectActionIndex(selectActionIndex.map((ai, i) => {
-            if (i !== selectItemIndex) {
-                return ai;
-            }
-            return oldActionIndex + 1;
-        }));
-        return true;
-    }
-
-    // 聚焦 input
+    // useRef 与 useState 相同点：重新渲染不会导致信息丢失
+    // useRef 与 useState 不同点：ref的值改变不会引起重新渲染
+    // ref 操作 DOM ：定义 ref 后需在对应组件中赋值：ref={inputRef}  此时 ref 才真正有值
     const inputRef = useRef<HTMLInputElement>(null);
+    /** 聚焦 input */
     function selectInput() {
         inputRef.current?.select();
     }
 
+    // 每次组件渲染的时候都会执行的方法
+    // 第一个入参：如何连接到外部系统，返回值：与该系统断开连接
+    // 第二个入参为依赖项，表示仅当依赖项更新的时候才执行，若无则为每次渲染触发、若为空列表则为仅首次渲染触发
+    // 注意需要：依赖的函数和对象须尽可能得少（闭包同样如此），这里以 useReducer && createContext 解决
     // 挂载键盘操作
     useEffect(() => {
         whenfocus(selectInput);
@@ -98,20 +44,21 @@ export default function () {
             switch (event.key) {
                 case "ArrowUp":
                     event.preventDefault();
-                    safeStepItem(selectItemIndex - 1);
+                    dispatch({ type: 'up' });
                     break;
                 case "ArrowDown":
                     event.preventDefault();
-                    safeStepItem(selectItemIndex + 1);
+                    dispatch({ type: 'down' });
                     break;
                 case "ArrowLeft":
-                    if (tryActionLeft()) { event.preventDefault(); }
+                    dispatch({ type: 'left' });
                     break;
                 case "ArrowRight":
-                    if (tryActionRight()) { event.preventDefault(); }
+                    dispatch({ type: 'right' });
                     break;
                 case "Enter":
-                    triggerItem(items[selectItemIndex], selectActionIndex[selectItemIndex], parseInputValue(inputRef.current?.value || "").args);
+                    // handleTrigger
+                    dispatch({ type: 'trigger' });
                     break;
                 default:
                     break;
@@ -122,10 +69,12 @@ export default function () {
             whenfocus(null);
             whenkeydown(null);
         }
-    });
+    }, []);
 
-    // 更新 items
+    // 每次输入更新 items  这里规避了输入法触发修改
     let sendLock = false;
+    const searchLockOn = () => { sendLock = true; };
+    const searchLockOff = () => { sendLock = false; };
     const doSearch = debounce(constant.doSearch_debounce, () => {
         if (sendLock) {
             return;
@@ -133,57 +82,57 @@ export default function () {
         let inputValue = inputRef.current?.value || "";
 
         // get tiems
-        console.log(inputValue);
-        let tmpItems = searchItems(inputValue);
-
+        let input = parseInputValue(inputValue);
+        let tmpItems = searchItems(input);
 
         // show
-        if (inputValue.length === 0) {
-            setWomTag(constant.wom_tag_default);
-        } else if (tmpItems.length === 0) {
-            setWomTag(constant.wom_tag_notfound);
-        } else {
-            setWomTag(constant.wom_tag_hide)
-        }
-        setItems(tmpItems);
-        setSelectActionIndex(new Array(tmpItems.length).fill(0));
+        dispatch({ type: 'init', items: tmpItems, input });
     })
 
-    return (
-        <Box>
-            <Head>
-                <div className='activable-text' onClick={() => navigate(constant.router_navigation)}>&gt;</div>
-                <input className="common-color inputable wom-input"
-                    type="text" placeholder={constant.wom_input_placeholder}
-                    ref={inputRef}
-                    onCompositionStart={() => { sendLock = true; }}
-                    onCompositionEnd={() => { sendLock = false; }}
-                    onInput={doSearch}
-                />
-                {womTag === constant.wom_tag_hide ?
-                    <p className='common-box'>{selectItemIndex + 1}/{items.length}</p> :
-                    <p className='common-box'>{womTag}</p>
-                }
-            </Head>
-            <Body>
-                {
-                    items.map((item, index) => (
-                        <div key={index} onClick={async () => { triggerItem(item, selectActionIndex[index], parseInputValue(inputRef.current?.value || "").args); }}>
-                            <Item
-                                theType={item.theType}
-                                title={item.title}
-                                detail={item.detail}
-                                actions={item.actions}
-                                selected={index === selectItemIndex}
-                                actionIndex={selectActionIndex[index]}
-                                setIndex={safeStepAction(index)}
-                            ></Item>
-                        </div>
+    // 根据 input 和 item 显示 tag
+    let womTag;
+    if (!input.hasVal) {
+        womTag = constant.wom_tag_default;
+    } else if (items.length === 0) {
+        womTag = constant.wom_tag_notfound;
+    } else {
+        womTag = constant.wom_tag_hide;
+    }
 
-                    )
-                    )
-                }
-            </Body>
-        </Box>
+    // context 可能改变，结合 state ，传递给 provider
+    // 下层组件通过 useContext 获取最近的值（中间层组件可以通过 provider 覆盖）
+    // 如果没有覆盖则相当于全局变量
+    return (
+        <WomContext.Provider value={{ womState, dispatch }} >
+            <Box>
+                <Head>
+                    <div className='activable-text' onClick={() => navigate(constant.router_navigation)}>&gt;</div>
+                    <input className="common-color inputable wom-input"
+                        type="text" placeholder={constant.wom_input_placeholder}
+                        ref={inputRef}
+                        onCompositionStart={searchLockOn}
+                        onCompositionEnd={searchLockOff}
+                        onInput={doSearch}
+                    />
+                    {womTag === constant.wom_tag_hide ?
+                        <p className='common-box'>{currentIndex + 1}/{items.length}</p> :
+                        <p className='common-box'>{womTag}</p>
+                    }
+                </Head>
+                <Body>
+                    {
+                        items.map((item, index) => (
+                            <Item
+                                key={index}
+                                selected={index === currentIndex}
+                                item={item}
+                                itemIndex={index}
+                            ></Item>
+                        )
+                        )
+                    }
+                </Body>
+            </Box>
+        </WomContext.Provider>
     )
 }

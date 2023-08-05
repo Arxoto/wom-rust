@@ -1,3 +1,5 @@
+/// 定义item及其触发方式
+
 // web file no args
 import { open } from '@tauri-apps/api/shell';
 import { writeText } from '@tauri-apps/api/clipboard';
@@ -7,6 +9,7 @@ import constant from '../../constant';
 
 /**
  * todo
+ * - trigger增加页面关闭
  * - 设计持久化
  * - 配置页面
  * - 联调适配
@@ -21,6 +24,9 @@ enum ItemType {
     Application = "app",    // 应用
 }
 
+/**
+ * 根据item类型获取actions
+ */
 function actionsByType(itemType: string): string[] {
     switch (itemType) {
         case ItemType.Folder:
@@ -36,17 +42,38 @@ function actionsByType(itemType: string): string[] {
     }
 }
 
+/**
+ * item持久化信息
+ */
 interface ItemPersistent {
     theType: ItemType | string,
     title: string,
     detail: string,
 }
 
+/**
+ * item描述符
+ * - 增加了actions和可选的自定义触发方法
+ * - 一般内置的item实现该接口
+ */
 interface ItemDescriptor extends ItemPersistent {
     actions: string[],
     trigger?: (action: string, arg: string) => void,
 }
 
+/**
+ * item运行时状态
+ * - 增加了action的显示索引
+ */
+interface ItemState extends ItemDescriptor {
+    actionIndex: number
+}
+
+/**
+ * 特殊路径转换
+ * @param uri 包含特定目录标识的相对路径，格式：{特定目录}|{相对路径}
+ * @returns 真正的路径
+ */
 async function formatPath(uri: string) {
     let [root, ps] = uri.split('|', 2);
     let pp: string;
@@ -79,6 +106,31 @@ async function formatPath(uri: string) {
     return join(pp, ps);
 }
 
+const allowedFormatPath = [
+    'appCacheDir',
+    'appConfigDir',
+    'appDataDir',
+    'appLocalDataDir',
+    'appLogDir',
+    'audioDir',
+    'cacheDir',
+    'configDir',
+    'dataDir',
+    'desktopDir',
+    'documentDir',
+    'downloadDir',
+    'executableDir',
+    'fontDir',
+    'homeDir',
+    'localDataDir',
+    'pictureDir',
+    'publicDir',
+    'resourceDir',
+    'runtimeDir',
+    'templateDir',
+    'videoDir',
+];
+
 function triggerApp(action: string, path: string) {
     if (action === 'select') {
         // todo
@@ -105,7 +157,12 @@ function triggerFolder(action: string, path: string) {
     }
 }
 
-async function triggerItem(item: ItemDescriptor, actionIndex: number, arg: string) {
+async function triggerItem(item: ItemState, arg: string) {
+    if (item.trigger) {
+        item.trigger(item.actions[item.actionIndex], arg);
+        return;
+    }
+
     switch (item.theType) {
         case ItemType.Cmd:
             let args = arg.trim().split(/\s+/);
@@ -125,10 +182,11 @@ async function triggerItem(item: ItemDescriptor, actionIndex: number, arg: strin
             break;
         case ItemType.Web:
             let url = item.detail;
+            // tauri 默认的路径校验规则
             if (new RegExp('^((mailto:\\w+)\|(tel:\\w+)\|(https?://\\w+)).+').test(url)) {
                 let trueUrl = url.replace(constant.input_replace, arg);
                 console.log(url, arg, trueUrl);
-                
+
                 open(trueUrl).catch(e => {
                     console.error(e);
                     notify(`open ${trueUrl} failed`);
@@ -138,22 +196,19 @@ async function triggerItem(item: ItemDescriptor, actionIndex: number, arg: strin
             }
             break;
         case ItemType.Folder:
-            triggerFolder(item.actions[actionIndex], await formatPath(item.detail));
+            triggerFolder(item.actions[item.actionIndex], await formatPath(item.detail));
             break;
         case ItemType.Application:
-            triggerApp(item.actions[actionIndex], await formatPath(item.detail));
+            triggerApp(item.actions[item.actionIndex], await formatPath(item.detail));
             break;
         case ItemType.Setting:
         // todo
         case ItemType.Plugin:
         default:
-            if (item.trigger) {
-                item.trigger(item.actions[actionIndex], arg);
-            }
             console.warn(`${item.title} has no trigger`);
             break;
     }
 }
 
-export { ItemType, actionsByType, triggerItem };
-export type { ItemPersistent, ItemDescriptor };
+export { ItemType, actionsByType, formatPath, allowedFormatPath, triggerItem };
+export type { ItemPersistent, ItemDescriptor, ItemState };

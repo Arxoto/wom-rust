@@ -1,45 +1,46 @@
-import { useEffect, useRef } from "react";
-import { ItemDescriptor } from "./executer";
+import { useContext, useEffect, useRef } from "react";
+import { ItemState } from "./executer";
+import { WomContext } from "./womContext";
+
 import ItemAction from "./ItemAction";
 import ItemIcon from "./ItemIcon";
 import "./Item.css";
 
 
-interface ItemElementParam extends ItemDescriptor {
+interface ItemElementParam {
     selected: boolean,
-    actionIndex: number,
-    setIndex: (nextIndex: number) => void,
+    item: ItemState,
+    itemIndex: number,
 }
 
-const Item = (item: ItemElementParam) => {
-    let { selected, theType, title, detail, actions, actionIndex, setIndex } = item;
+const Item = ({ selected, item, itemIndex }: ItemElementParam) => {
+    let { theType, title, detail, actions, actionIndex } = item;
+    const { dispatch } = useContext(WomContext);
 
     const itemRef = useRef<HTMLDivElement>(null);
-    function showItem() {
-        itemRef.current?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'nearest',
-            inline: 'center'
-        })
-    }
-
     useEffect(() => {
         if (selected) {
-            showItem();
+            // showItem
+            itemRef.current?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'center'
+            });
         }
-    }, [selected]);
+    }, [selected]);  // 只有selected改变时触发
 
+    // 阻止事件冒泡  onClick={(event) => event.stopPropagation()}
     return (
         <div className={selected ? "line line-active" : "line"} ref={itemRef}>
-            <div className="icon"><ItemIcon itemType={theType} /></div>
-            <div className="middle">
-                <div className="title">{title}</div>
-                <div className="detail">{detail}</div>
+            <div onClick={() => dispatch({ type: 'trigger', itemIndex })}>
+                <div className="icon"><ItemIcon itemType={theType} /></div>
+                <div className="middle">
+                    <div className="title">{title}</div>
+                    <div className="detail">{detail}</div>
+                </div>
             </div>
 
-            <div onClick={(event) => event.stopPropagation()}>
-                <ItemAction actions={actions} actionIndex={actionIndex} setIndex={setIndex}></ItemAction>
-            </div>
+            <ItemAction itemIndex={itemIndex} actions={actions} actionIndex={actionIndex}></ItemAction>
 
         </div>
     )

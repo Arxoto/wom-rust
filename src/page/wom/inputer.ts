@@ -1,3 +1,5 @@
+/// input解析及查找items
+
 import { ItemPersistent, ItemDescriptor, ItemType, actionsByType } from "./executer";
 
 const testItems = [
@@ -101,35 +103,56 @@ const testItems = [
     ]
 ];
 
-interface InputValue {
+/**
+ * 解析后的输入对象
+ */
+interface Input {
     key: string,
-    args: string,
+    arg: string,
+    hasArg: boolean,
+    hasVal: boolean,
 }
 
-function parseInputValue(input: string): InputValue {
-    if (!input) {
-        return { key: '', args: '' }
+/**
+ * 解析输入
+ * @param value 输入内容 一般以空格分割 其中第一个为key 其余为args
+ * @returns 解析后的对象
+ */
+function parseInputValue(value: string): Input {
+    if (!value) {
+        return { key: '', arg: '', hasArg: false, hasVal: false };
     }
-    input = input.replace(/\s+/g, ' ');
-    let spaceIndex = input.indexOf(' ');
+    value = value.replace(/\s+/g, ' ');
+
     // 无空格 视为无参数
+    let spaceIndex = value.indexOf(' ');
     if (spaceIndex < 0) {
-        return { key: input, args: '' }
+        return { key: value, arg: '', hasArg: false, hasVal: true };
     }
-    // 存在空格 无论在不在开头一样处理
-    return {
-        key: input.substring(0, spaceIndex),
-        args: input.substring(spaceIndex + 1),
+
+    // 空格不在开头 视为有参数
+    let key = value.substring(0, spaceIndex);
+    let arg = value.substring(spaceIndex + 1);
+    if (spaceIndex > 0) {
+        return { key, arg, hasArg: true, hasVal: true };
     }
+
+    // 空格开头 必须有参数才有参数
+    return { key, arg, hasArg: !!arg, hasVal: true };
 }
 
-function searchItems(input: string): ItemDescriptor[] {
-    if (!input) {
+/**
+ * 根据输入找到应该显示的items
+ * @param input 解析后的输入对象
+ * @returns 符合描述的item描述符
+ */
+function searchItems(input: Input): ItemDescriptor[] {
+    if (!input || !input.hasVal) {
         return [];
     }
-    const { key, args } = parseInputValue(input);
+    const { key, arg, hasArg } = input;
 
-    console.log(key, args);
+    console.log(key, arg, hasArg);
     let tmpItemsList: Array<Array<ItemPersistent>>;
 
     // todo
@@ -150,8 +173,9 @@ function searchItems(input: string): ItemDescriptor[] {
     // todo add plugins
     let plugins: ItemDescriptor[] = [];
     formated.splice(1, 0, plugins);
-    
+
     return formated.flat();
 }
 
 export { parseInputValue, searchItems }
+export type { Input }
