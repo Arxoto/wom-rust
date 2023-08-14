@@ -26,7 +26,7 @@ export default function () {
     const inputRef = useRef<HTMLInputElement>(null);
     /** 聚焦 input */
     function selectInput() {
-        inputRef.current?.select();
+        inputRef.current!.select();
     }
 
     // 每次组件渲染的时候都会执行的方法
