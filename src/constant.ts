@@ -1,4 +1,5 @@
 export default {
+    globalShortcutKey: 'Alt+Space', // 注册时有报错 怀疑是强制覆盖了全局快捷键导致
     router_navigation: '/navigation',
     wom_input_placeholder: '',
     wom_tag_hide: '_',

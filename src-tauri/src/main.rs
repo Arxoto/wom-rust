@@ -1,9 +1,9 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod items;
 mod my_tray;
 mod runtime;
-mod items;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -32,12 +32,14 @@ fn main() {
         .invoke_handler(tauri::generate_handler![greet])
         .on_window_event(|event| match event.event() {
             tauri::WindowEvent::CloseRequested { api, .. } => {
-                event.window().hide().unwrap();
-                api.prevent_close();
+                if event.window().label().eq("main") {
+                    event.window().hide().unwrap();
+                    api.prevent_close();
+                }
             }
             // dev
-            // tauri::WindowEvent::Focused(is_focused) => {
-            //     if !is_focused {
+            // tauri::WindowEvent::Focused(focused) => {
+            //     if event.window().label().eq("main") && !focused {
             //         event.window().hide().unwrap();
             //     }
             // }

@@ -79,7 +79,7 @@ export default function () {
         if (sendLock) {
             return;
         }
-        let inputValue = inputRef.current?.value || "";
+        let inputValue = inputRef.current!.value ?? "";
 
         // get tiems
         let input = parseInputValue(inputValue);
