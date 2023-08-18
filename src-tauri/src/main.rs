@@ -27,6 +27,7 @@ fn main() {
     // "visible": false
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_sql::Builder::default().build())
         .system_tray(my_tray::system_tray())
         .on_system_tray_event(my_tray::on_system_tray_event)
         .invoke_handler(tauri::generate_handler![greet])

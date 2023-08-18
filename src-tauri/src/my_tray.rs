@@ -6,13 +6,13 @@ use tauri::{
 pub fn system_tray() -> SystemTray {
     SystemTray::new().with_menu(
         SystemTrayMenu::new()
-            .add_item(CustomMenuItem::new("quit", "Quit"))
-            .add_native_item(SystemTrayMenuItem::Separator)
             .add_item(CustomMenuItem::new("show", "Show"))
             .add_item(CustomMenuItem::new("hide", "Hide"))
             .add_native_item(SystemTrayMenuItem::Separator)
             .add_item(CustomMenuItem::new("register", "register global shortcut"))
             .add_item(CustomMenuItem::new("unregister", "unregister"))
+            .add_native_item(SystemTrayMenuItem::Separator)
+            .add_item(CustomMenuItem::new("quit", "Quit"))
     )
 }
 
