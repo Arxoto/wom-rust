@@ -6,10 +6,10 @@ import { writeText } from '@tauri-apps/api/clipboard';
 import { appCacheDir, appConfigDir, appDataDir, appLocalDataDir, appLogDir, audioDir, cacheDir, configDir, dataDir, desktopDir, documentDir, downloadDir, executableDir, fontDir, homeDir, join, localDataDir, pictureDir, publicDir, resourceDir, runtimeDir, templateDir, videoDir } from '@tauri-apps/api/path';
 import { notify } from "./runtime";
 import constant from '../../constant';
+import { WebviewWindow } from '@tauri-apps/api/window';
 
 /**
  * todo
- * - trigger增加页面关闭
  * - 设计持久化
  * - 配置页面
  * - 联调适配
@@ -160,6 +160,7 @@ function triggerFolder(action: string, path: string) {
 async function triggerItem(item: ItemState, arg: string) {
     if (item.trigger) {
         item.trigger(item.actions[item.actionIndex], arg);
+        WebviewWindow.getByLabel('main')?.hide();
         return;
     }
 
@@ -208,6 +209,7 @@ async function triggerItem(item: ItemState, arg: string) {
             console.warn(`${item.title} has no trigger`);
             break;
     }
+    WebviewWindow.getByLabel('main')?.hide();
 }
 
 export { ItemType, actionsByType, formatPath, allowedFormatPath, triggerItem };
