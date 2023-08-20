@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { listen } from "@tauri-apps/api/event";
+import { UnlistenFn, listen } from "@tauri-apps/api/event";
 
 import constant from "./constant";
 import { registerSwitch, unregisterSwitch } from "./appInit";
@@ -27,15 +27,21 @@ const router = createBrowserRouter([
 
 function App() {
   useEffect(() => {
+    const unlistens: UnlistenFn[] = [];
+    const addListen = (puf: Promise<UnlistenFn>) => {
+      puf.then(ulf => {
+        unlistens.push(ulf);
+      }).catch(e => console.error(e));
+    }
+
     // register global shortcut by default
     registerSwitch();
     // register listen
-    const unlistenRegister = listen('register', registerSwitch);
-    const unlistenUnregister = listen('unregister', unregisterSwitch);
+    addListen(listen('register', registerSwitch));
+    addListen(listen('unregister', unregisterSwitch));
 
     return () => {
-      unlistenRegister.then(f => f());
-      unlistenUnregister.then(f => f());
+      unlistens.forEach(fn => fn());
     };
   }, []);
 
