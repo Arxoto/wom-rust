@@ -1,14 +1,27 @@
 :root {
   --color-common-general: #f3f3f3;
   --color-common-magical: #e0e0e0;
-  --color-common-ex1: #f6ffff;
-  --color-common-ex2: #007bff;
-  --color-common-ex3: #5050ff;
-  --color-common-ex4: #ff8080;
   --color-different-general: #8b8b8b;
   --color-different-magical: #606060;
   --color-frame-outer: #fff;
   --color-frame-inner: #000;
+  
+  --color-ex1: #f6ffff;
+  --color-ex2: #0080ff;
+  --color-ex3: #ff8080;
+  --color-ex4: #ffffff;
+  
+  /* --color-ex1: #f6ffff;
+  --color-ex2: #0080ff;
+  --color-ex2: #004080;
+  --color-ex3: #c2c2ff;
+  --color-ex4: #ffe8e8; */
+
+  /* --color-ex1: #f6ffff;
+  --color-ex2: #ffea00;
+  --color-ex2: #fff696;
+  --color-ex3: #ff8000;
+  --color-ex4: #003000; */
 }
 
 /*滚动条整体样式*/

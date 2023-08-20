@@ -57,24 +57,33 @@
 
 
 .line:hover {
-    background-color: var(--color-common-ex1);
+    background-color: var(--color-ex1);
 }
 
 .line:hover .title {
     font-weight: bold;
 }
 
+.line-active
+{
+    background-color: var(--color-ex4);
+}
+
 .line-active .title,
-.line-active .detail,
 .line-active .action {
-    color: var(--color-common-ex2);
-    text-shadow: 0 0 4px var(--color-common-ex4);
+    font-weight: bold;
+}
+
+.line-active .title,
+.line-active .detail{
+    color: var(--color-ex2);
+    text-shadow: 0 0 4px var(--color-ex3);
 }
 
 /* 必须至少和icon类的宽度一样 */
 .line-active .icon>img {
     left: calc(-4em + 50%);
-    filter: drop-shadow(4em 0 0 var(--color-common-ex2)) drop-shadow(0 0 4px var(--color-common-ex4));
+    filter: drop-shadow(4em 0 0 var(--color-ex2)) drop-shadow(0 0 4px var(--color-ex3));
 }
 
 
@@ -97,12 +106,13 @@
 }
 
 .action::before {
+    --action-width: 4em;
     content: '';
 
     position: absolute;
     top: 0;
-    left: -1em;
-    width: 1em;
+    left: calc(0em - var(--action-width));
+    width: var(--action-width);
     height: 100%;
 
     background: linear-gradient(0.25turn, #0000, var(--color-common-general));

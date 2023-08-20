@@ -3,7 +3,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { UnlistenFn, listen } from "@tauri-apps/api/event";
 
 import constant from "./constant";
-import { registerSwitch, unregisterSwitch } from "./appInit";
+import { registerSwitch, setStyle, unregisterSwitch } from "./appInit";
 import Error from "./page/Error";
 import Wom from "./page/wom/Wom";
 import Navigation from "./page/navigation/Navigation";
@@ -33,6 +33,8 @@ function App() {
         unlistens.push(ulf);
       }).catch(e => console.error(e));
     }
+
+    setStyle();
 
     // register global shortcut by default
     registerSwitch();

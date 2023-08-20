@@ -13,6 +13,10 @@ import constant from "./constant";
 //     [todos.id, todos.title, todos.status],
 // );
 
+const setStyle = () => {
+    // document.documentElement.style.setProperty(`--color-common-general`, 'blue');
+}
+
 // todo 发现个BUG 摁下alt后会切换至窗口按钮，此时摁下space会打开原生窗口自带的选项栏，和默认热键有冲突 关闭decorations也无法规避
 const registerSwitch = async () => {
     if (await isRegistered(constant.globalShortcutKey)) return;
@@ -44,4 +48,4 @@ const unregisterSwitch = async () => {
     });
 }
 
-export { registerSwitch, unregisterSwitch }
+export { setStyle, registerSwitch, unregisterSwitch }
