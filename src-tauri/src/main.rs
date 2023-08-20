@@ -16,16 +16,6 @@ fn greet(name: &str) -> String {
 /// 单例启动 https://github.com/tauri-apps/plugins-workspace/tree/v1/plugins/single-instance
 /// db       https://github.com/tauri-apps/plugins-workspace/tree/v1/plugins/sql
 fn main() {
-    // dev
-    // "title": "wom",
-    // "fullscreen": false,
-    // "resizable": false,
-    // "width": 800,
-    // "height": 600,
-    // "center": true,
-    // "alwaysOnTop": true,
-    // "visible": false
-
     tauri::Builder::default()
         .plugin(tauri_plugin_sql::Builder::default().build())
         .system_tray(my_tray::system_tray())

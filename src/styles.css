@@ -39,8 +39,16 @@ body {
   padding: 0;
   height: 100%;
   width: 100%;
+
+  background-color: #0000;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
   overflow: hidden;
 
+  border-radius: 8px;
   background-color: var(--color-common-general);
 }
 

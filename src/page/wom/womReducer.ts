@@ -60,7 +60,7 @@ function womReducer(womState: WomState, action: ItemsReducerAction): WomState {
         case 'init': {
             let newItems = action.items ? action.items.map(item => ({ ...item, actionIndex: 0 })) : [];
             let newInput = action.input || womState.input;
-            return { ...womState, items: newItems, input: newInput };
+            return { input: newInput, currentIndex: 0, items: newItems };
         }
         case 'left': {
             let itemIndex = action.itemIndex || womState.currentIndex;
