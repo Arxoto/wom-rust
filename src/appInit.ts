@@ -13,7 +13,7 @@ import constant from "./constant";
 //     [todos.id, todos.title, todos.status],
 // );
 
-// todo 发现个BUG 摁下alt+space后识别摁下有残留 这时候再摁space会使用alt+space原有的功能（标题显示选项）（触发和不触发交替）  关闭decorations也无法规避
+// todo 发现个BUG 摁下alt后会切换至窗口按钮，此时摁下space会打开原生窗口自带的选项栏，和默认热键有冲突 关闭decorations也无法规避
 const registerSwitch = async () => {
     if (await isRegistered(constant.globalShortcutKey)) return;
     register(constant.globalShortcutKey, async () => {

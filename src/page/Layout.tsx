@@ -24,7 +24,7 @@ function Head({ children }: ReactDomWithChildren) {
     return (
         <div className='head'>
             {children}
-            <img src="" alt="" />
+            <img src="" alt="" data-tauri-drag-region />
         </div>
     )
 }

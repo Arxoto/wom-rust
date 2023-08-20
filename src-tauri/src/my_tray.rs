@@ -6,6 +6,7 @@ use tauri::{
 pub fn system_tray() -> SystemTray {
     SystemTray::new().with_menu(
         SystemTrayMenu::new()
+            .add_item(CustomMenuItem::new("BeCenter", "BeCenter"))
             .add_item(CustomMenuItem::new("show", "Show"))
             .add_item(CustomMenuItem::new("hide", "Hide"))
             .add_native_item(SystemTrayMenuItem::Separator)
@@ -34,6 +35,9 @@ pub fn on_system_tray_event(app: &AppHandle, event: SystemTrayEvent) {
             }
             "hide" => {
                 window.hide().unwrap();
+            }
+            "BeCenter" => {
+                window.center().unwrap();
             }
             "register" => {
                 window.emit("register", ()).unwrap();
