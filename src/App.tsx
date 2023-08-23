@@ -27,6 +27,12 @@ const router = createBrowserRouter([
 
 function App() {
   useEffect(() => {
+    // 动态主题 todo cute-active cute-active-action cute-hover cute-hover-action
+    let root = document.getElementById("root");
+    if (root) {
+      root.className = "cute-active cute-hover cute-hover-action";
+    }
+
     const unlistens: UnlistenFn[] = [];
     const addListen = (puf: Promise<UnlistenFn>) => {
       puf.then(ulf => {

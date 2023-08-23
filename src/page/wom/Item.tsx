@@ -5,6 +5,8 @@ import { WomContext } from "./womContext";
 import ItemAction from "./ItemAction";
 import ItemIcon from "./ItemIcon";
 import "./Item.css";
+import "./Item-hover.css"
+import "./Item-active.css"
 
 
 interface ItemElementParam {

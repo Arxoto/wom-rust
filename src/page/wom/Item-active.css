@@ -1,0 +1,30 @@
+.line-active .title,
+.line-active .action {
+    font-weight: bold;
+}
+
+.line-active {
+    background-color: var(--color-active-back);
+}
+
+.cute-active-action .line-active .action {
+    color: var(--color-active-inner);
+    text-shadow: 0 0 4px var(--color-active-outer);
+    background-color: var(--color-active-back);
+}
+
+.cute-active-action .line-active .action::before {
+    background: linear-gradient(0.25turn, #0000, var(--color-active-back));
+}
+
+.cute-active .line-active .title,
+.cute-active .line-active .detail {
+    color: var(--color-active-inner);
+    text-shadow: 0 0 4px var(--color-active-outer);
+}
+
+/* 必须至少和icon类的宽度一样 */
+.cute-active .line-active .icon>img {
+    left: calc(-4em + 50%);
+    filter: drop-shadow(4em 0 0 var(--color-active-inner)) drop-shadow(0 0 4px var(--color-active-outer));
+}

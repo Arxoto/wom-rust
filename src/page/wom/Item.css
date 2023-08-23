@@ -9,6 +9,7 @@
     cursor: pointer;
 }
 
+
 .icon {
     position: absolute;
 
@@ -22,6 +23,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
 
 /* 位置需要与icon宽度保持一致 */
 /* 文本溢出不显示 不换行 */
@@ -53,37 +55,6 @@
 .detail {
     font-size: 1em;
     font-style: italic;
-}
-
-
-.line:hover {
-    background-color: var(--color-ex1);
-}
-
-.line:hover .title {
-    font-weight: bold;
-}
-
-.line-active
-{
-    background-color: var(--color-ex4);
-}
-
-.line-active .title,
-.line-active .action {
-    font-weight: bold;
-}
-
-.line-active .title,
-.line-active .detail{
-    color: var(--color-ex2);
-    text-shadow: 0 0 4px var(--color-ex3);
-}
-
-/* 必须至少和icon类的宽度一样 */
-.line-active .icon>img {
-    left: calc(-4em + 50%);
-    filter: drop-shadow(4em 0 0 var(--color-ex2)) drop-shadow(0 0 4px var(--color-ex3));
 }
 
 

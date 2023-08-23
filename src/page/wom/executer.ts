@@ -133,7 +133,7 @@ const allowedFormatPath = [
 
 function triggerApp(action: string, path: string) {
     if (action === 'select') {
-        // todo
+        // todo SHOpenFolderAndSelectItems or open when failed
     } else {
         triggerFolder(action, path);
     }

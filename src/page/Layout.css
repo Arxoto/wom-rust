@@ -1,8 +1,8 @@
-/* box 默认底端留下 4px 空隙 */
+/* box 下方留下空隙 */
 .box {
     position: fixed;
-    height: calc(100% - 4px);
-    width: 100%;
+    height: calc(100% - 3 * var(--root-shadow));
+    width: calc(100% - 2 * var(--root-shadow));
 
     display: flex;
     flex-flow: column;

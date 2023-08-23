@@ -1,27 +1,30 @@
 :root {
+  --root-shadow: 8px;
   --color-common-general: #f3f3f3;
   --color-common-magical: #e0e0e0;
   --color-different-general: #8b8b8b;
   --color-different-magical: #606060;
   --color-frame-outer: #fff;
   --color-frame-inner: #000;
-  
-  --color-ex1: #f6ffff;
-  --color-ex2: #0080ff;
-  --color-ex3: #ff8080;
-  --color-ex4: #ffffff;
-  
-  /* --color-ex1: #f6ffff;
-  --color-ex2: #0080ff;
-  --color-ex2: #004080;
-  --color-ex3: #c2c2ff;
-  --color-ex4: #ffe8e8; */
 
-  /* --color-ex1: #f6ffff;
-  --color-ex2: #ffea00;
-  --color-ex2: #fff696;
-  --color-ex3: #ff8000;
-  --color-ex4: #003000; */
+  --color-hover-inner: #fff696;
+  --color-hover-outer: #ff8000;
+  --color-hover-back: #003000;
+  --color-active-inner: #0080ff;
+  --color-active-outer: #ff8080;
+  --color-active-back: #f6ffff;
+
+  /* --color-hover-back: #f6ffff;
+  --color-active-inner: #0080ff;
+  --color-active-inner: #004080;
+  --color-active-outer: #c2c2ff;
+  --color-active-back: #ffe8e8; */
+
+  /* --color-hover-back: #f6ffff;
+  --color-active-inner: #ffea00;
+  --color-active-inner: #fff696;
+  --color-active-outer: #ff8000;
+  --color-active-back: #003000; */
 }
 
 /*滚动条整体样式*/
@@ -46,22 +49,32 @@
   background-color: var(--color-common-general);
 }
 
-html,
-body {
+html {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
+}
 
+/* 相对位置：body和html的顶部有莫名空隙 */
+body {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
   background-color: #0000;
 }
 
 #root {
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
+  height: calc(100% - 2 * var(--root-shadow));
+  width: calc(100% - 2 * var(--root-shadow));
+  margin: var(--root-shadow);
+  box-shadow: 0 0 var(--root-shadow) var(--color-different-general);
 
-  border-radius: 8px;
+  border-radius: var(--root-shadow);
   background-color: var(--color-common-general);
 }
 
@@ -98,7 +111,7 @@ body {
   border-radius: 8px;
 
   font-weight: bold;
-  
+
   user-select: none;
   cursor: pointer;
 

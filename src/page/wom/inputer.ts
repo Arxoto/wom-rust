@@ -57,7 +57,7 @@ const testItems = [
         },
         {
             theType: ItemType.Folder,
-            title: 'folder',
+            title: 'folder==============================================',
             detail: 'detail',
         },
         {

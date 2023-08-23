@@ -1,0 +1,30 @@
+.line:hover .title,
+.line:hover .action {
+    font-weight: bold;
+}
+
+.line:hover {
+    background-color: var(--color-hover-back);
+}
+
+.cute-hover-action .line:hover .action {
+    color: var(--color-hover-inner);
+    text-shadow: 0 0 4px var(--color-hover-outer);
+    background-color: var(--color-hover-back);
+}
+
+.cute-hover-action .line:hover .action::before {
+    background: linear-gradient(0.25turn, #0000, var(--color-hover-back));
+}
+
+.cute-hover .line:hover .title,
+.cute-hover .line:hover .detail {
+    color: var(--color-hover-inner);
+    text-shadow: 0 0 4px var(--color-hover-outer);
+}
+
+/* 必须至少和icon类的宽度一样 */
+.cute-hover .line:hover .icon>img {
+    left: calc(-4em + 50%);
+    filter: drop-shadow(4em 0 0 var(--color-hover-inner)) drop-shadow(0 0 4px var(--color-hover-outer));
+}
