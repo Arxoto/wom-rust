@@ -2,7 +2,7 @@
 name = "wom"
 version = "0.0.0"
 description = "A Tauri App"
-authors = ["you"]
+authors = ["JesuseMory"]
 license = ""
 repository = ""
 edition = "2021"
