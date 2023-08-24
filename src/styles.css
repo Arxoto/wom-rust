@@ -46,7 +46,8 @@
 
 /*滚动条的轨道*/
 ::-webkit-scrollbar-track {
-  background-color: var(--color-common-general);
+  border-radius: 4px;
+  background-color: var(--color-common-magical);
 }
 
 html {
