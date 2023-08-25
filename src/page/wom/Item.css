@@ -6,9 +6,11 @@
     line-height: 1;
 
     user-select: none;
-    cursor: pointer;
 }
 
+.line-clickable {
+    cursor: pointer;
+}
 
 .icon {
     position: absolute;

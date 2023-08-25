@@ -34,7 +34,7 @@ const Item = ({ selected, item, itemIndex }: ItemElementParam) => {
     // 阻止事件冒泡  onClick={(event) => event.stopPropagation()}
     return (
         <div className={selected ? "line line-active" : "line"} ref={itemRef}>
-            <div onClick={() => dispatch({ type: 'trigger', itemIndex })}>
+            <div className="line-clickable" onClick={() => dispatch({ type: 'trigger', itemIndex })}>
                 <div className="icon"><ItemIcon itemType={theType} /></div>
                 <div className="middle">
                     <div className="title">{title}</div>
