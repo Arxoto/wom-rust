@@ -1,13 +1,16 @@
 // 基础依赖、三方件
 import { useEffect, useReducer, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
+
 // 常量、运行时函数、功能函数
-import constant from "../../constant";
-import { whenfocus, whenkeydown, debounce } from "./runtime";
+import constant from "../../app/env";
+import { debounce, whenfocus, whenkeydown } from "../../app/runtime";
 import { parseInputValue, searchItems } from "./inputer";
+
 // 自定义的全局变量和hook
 import { womReducer } from "./womReducer";
 import { defaultState, WomContext } from "./womContext";
+
 // 自定义的组件
 import { Box, Head, Body } from "../Layout";
 import Item from "./Item";

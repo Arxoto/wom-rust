@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { UnlistenFn, listen } from "@tauri-apps/api/event";
 
-import constant from "./constant";
-import { registerSwitch, setStyle, unregisterSwitch } from "./appInit";
+import constant from "./app/env";
+import { refreshEnv, registerSwitch, setStyle, unregisterSwitch } from "./app/init";
+import { listenEvents } from "./app/runtime";
+
 import Error from "./page/Error";
 import Wom from "./page/wom/Wom";
 import Navigation from "./page/navigation/Navigation";
@@ -27,29 +28,19 @@ const router = createBrowserRouter([
 
 function App() {
   useEffect(() => {
-    // 动态主题 todo cute-active cute-active-action cute-hover cute-hover-action
-    let root = document.getElementById("root");
-    if (root) {
-      root.className = "cute-active cute-hover cute-hover-action";
-    }
-
-    const unlistens: UnlistenFn[] = [];
-    const addListen = (puf: Promise<UnlistenFn>) => {
-      puf.then(ulf => {
-        unlistens.push(ulf);
-      }).catch(e => console.error(e));
-    }
-
+    refreshEnv();
     setStyle();
 
     // register global shortcut by default
     registerSwitch();
     // register listen
-    addListen(listen('register', registerSwitch));
-    addListen(listen('unregister', unregisterSwitch));
+    const unlisten = listenEvents(
+      ['register', registerSwitch],
+      ['unregister', unregisterSwitch],
+    );
 
     return () => {
-      unlistens.forEach(fn => fn());
+      unlisten();
     };
   }, []);
 

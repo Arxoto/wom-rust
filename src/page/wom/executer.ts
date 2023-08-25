@@ -1,12 +1,7 @@
 /// 定义item及其触发方式
 
-// web file no args
-import { open } from '@tauri-apps/api/shell';
-import { writeText } from '@tauri-apps/api/clipboard';
-import { appCacheDir, appConfigDir, appDataDir, appLocalDataDir, appLogDir, audioDir, cacheDir, configDir, dataDir, desktopDir, documentDir, downloadDir, executableDir, fontDir, homeDir, join, localDataDir, pictureDir, publicDir, resourceDir, runtimeDir, templateDir, videoDir } from '@tauri-apps/api/path';
-import { notify } from "./runtime";
-import constant from '../../constant';
-import { WebviewWindow } from '@tauri-apps/api/window';
+import constant from '../../app/env';
+import { clipboardWriteText, formatPath, mainWindowHide, notify, shellOpen, shellSelect } from '../../app/runtime';
 
 /**
  * todo
@@ -69,71 +64,10 @@ interface ItemState extends ItemDescriptor {
     actionIndex: number
 }
 
-/**
- * 特殊路径转换
- * @param uri 包含特定目录标识的相对路径，格式：{特定目录}|{相对路径}
- * @returns 真正的路径
- */
-async function formatPath(uri: string) {
-    let [root, ps] = uri.split('|', 2);
-    let pp: string;
-    switch (root) {
-        case 'appCacheDir': pp = await appCacheDir(); break;
-        case 'appConfigDir': pp = await appConfigDir(); break;
-        case 'appDataDir': pp = await appDataDir(); break;
-        case 'appLocalDataDir': pp = await appLocalDataDir(); break;
-        case 'appLogDir': pp = await appLogDir(); break;
-        case 'audioDir': pp = await audioDir(); break;
-        case 'cacheDir': pp = await cacheDir(); break;
-        case 'configDir': pp = await configDir(); break;
-        case 'dataDir': pp = await dataDir(); break;
-        case 'desktopDir': pp = await desktopDir(); break;
-        case 'documentDir': pp = await documentDir(); break;
-        case 'downloadDir': pp = await downloadDir(); break;
-        case 'executableDir': pp = await executableDir(); break;
-        case 'fontDir': pp = await fontDir(); break;
-        case 'homeDir': pp = await homeDir(); break;
-        case 'localDataDir': pp = await localDataDir(); break;
-        case 'pictureDir': pp = await pictureDir(); break;
-        case 'publicDir': pp = await publicDir(); break;
-        case 'resourceDir': pp = await resourceDir(); break;
-        case 'runtimeDir': pp = await runtimeDir(); break;
-        case 'templateDir': pp = await templateDir(); break;
-        case 'videoDir': pp = await videoDir(); break;
-        default:
-            return uri;
-    }
-    return join(pp, ps);
-}
-
-const allowedFormatPath = [
-    'appCacheDir',
-    'appConfigDir',
-    'appDataDir',
-    'appLocalDataDir',
-    'appLogDir',
-    'audioDir',
-    'cacheDir',
-    'configDir',
-    'dataDir',
-    'desktopDir',
-    'documentDir',
-    'downloadDir',
-    'executableDir',
-    'fontDir',
-    'homeDir',
-    'localDataDir',
-    'pictureDir',
-    'publicDir',
-    'resourceDir',
-    'runtimeDir',
-    'templateDir',
-    'videoDir',
-];
 
 function triggerApp(action: string, path: string) {
     if (action === 'select') {
-        // todo SHOpenFolderAndSelectItems or open when failed
+        shellSelect(path);
     } else {
         triggerFolder(action, path);
     }
@@ -142,14 +76,14 @@ function triggerApp(action: string, path: string) {
 function triggerFolder(action: string, path: string) {
     switch (action) {
         case 'copy':
-            writeText(path).catch(e => {
+            clipboardWriteText(path).catch(e => {
                 console.error(e);
                 notify(`cpoy ${path} failed`);
             });
             break;
         case 'open':
         default:
-            open(path).catch(e => {
+            shellOpen(path).catch(e => {
                 console.error(e);
                 notify(`open ${path} failed`);
             });
@@ -160,7 +94,7 @@ function triggerFolder(action: string, path: string) {
 async function triggerItem(item: ItemState, arg: string) {
     if (item.trigger) {
         item.trigger(item.actions[item.actionIndex], arg);
-        WebviewWindow.getByLabel('main')?.hide();
+        mainWindowHide();
         return;
     }
 
@@ -171,8 +105,8 @@ async function triggerItem(item: ItemState, arg: string) {
             for (let i = 0; i < args.length && command.includes(constant.input_replace); i++) {
                 command.replace(constant.input_replace, args[i]);
             }
-            writeText(command).then(() => {
-                open(constant.cmd_terminal).catch(e => {
+            clipboardWriteText(command).then(() => {
+                shellOpen(constant.cmd_terminal).catch(e => {
                     console.error(e);
                     notify(`open ${constant.cmd_terminal} failed`);
                 });
@@ -188,7 +122,7 @@ async function triggerItem(item: ItemState, arg: string) {
                 let trueUrl = url.replace(constant.input_replace, arg);
                 console.log(url, arg, trueUrl);
 
-                open(trueUrl).catch(e => {
+                shellOpen(trueUrl).catch(e => {
                     console.error(e);
                     notify(`open ${trueUrl} failed`);
                 });
@@ -209,8 +143,8 @@ async function triggerItem(item: ItemState, arg: string) {
             console.warn(`${item.title} has no trigger`);
             break;
     }
-    WebviewWindow.getByLabel('main')?.hide();
+    mainWindowHide();
 }
 
-export { ItemType, actionsByType, formatPath, allowedFormatPath, triggerItem };
+export { ItemType, actionsByType, triggerItem };
 export type { ItemPersistent, ItemDescriptor, ItemState };
