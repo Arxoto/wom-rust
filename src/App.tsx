@@ -9,6 +9,7 @@ import Error from "./page/Error";
 import Wom from "./page/wom/Wom";
 import Navigation from "./page/navigation/Navigation";
 import Default from "./page/Default";
+import { dbInit } from "./app/persistence";
 
 const router = createBrowserRouter([
   {
@@ -28,11 +29,15 @@ const router = createBrowserRouter([
 
 function App() {
   useEffect(() => {
-    refreshEnv();
-    setStyle();
+    dbInit().then(() => {
+      refreshEnv();
+      setStyle();
 
-    // register global shortcut by default
-    registerSwitch();
+      // register global shortcut by default
+      registerSwitch();
+
+    }).catch(console.error);
+
     // register listen
     const unlisten = listenEvents(
       ['register', registerSwitch],

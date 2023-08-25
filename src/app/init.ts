@@ -2,17 +2,6 @@ import { WebviewWindow } from "@tauri-apps/api/window";
 import { isRegistered, register, unregister } from "@tauri-apps/api/globalShortcut";
 import constant from "./env";
 
-// import Database from "tauri-plugin-sql-api";
-
-// // sqlite. The path is relative to `tauri::api::path::BaseDirectory::App`.
-// const db = await Database.load("sqlite:test.db");
-
-// // INSERT and UPDATE examples for sqlite and postgres
-// const result = await db.execute(
-//     "INSERT into todos (id, title, status) VALUES ($1, $2, $3)",
-//     [todos.id, todos.title, todos.status],
-// );
-
 const setStyle = () => {
     // document.documentElement.style.setProperty(`--color-common-general`, 'blue');
 
