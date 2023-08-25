@@ -18,7 +18,7 @@ const setStyle = () => {
 }
 
 // todo 发现个BUG 摁下alt后会切换至窗口按钮，此时摁下space会打开原生窗口自带的选项栏，和默认热键有冲突 关闭decorations也无法规避
-// electron:\shell\browser\api\electron_api_global_shortcut.h  实现原理不一样 tauri不能依靠 chromium 实现全局热键
+// electron:\shell\browser\api\electron_api_global_shortcut.h
 const registerSwitch = async () => {
     if (await isRegistered(constant.globalShortcutKey)) return;
     register(constant.globalShortcutKey, async () => {
