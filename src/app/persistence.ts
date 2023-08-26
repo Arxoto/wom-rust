@@ -14,34 +14,41 @@ const dbCleanup = async () => {
 }
 
 
-interface Item {
-    id?: number,
+/**
+ * item持久化信息
+ */
+interface ItemPersistent {
     theType: string,
     title: string,
     detail: string,
 }
 
+interface ItemTable extends ItemPersistent {
+    id: number
+}
+
 const itemsTableCreate = async () => await db!.execute("CREATE TABLE IF NOT EXISTS items (id INTEGER primary key AUTOINCREMENT, theType TEXT, title TEXT, detail TEXT)");
 const itemsTableDrop = async () => await db!.execute("DROP TABLE IF EXISTS items");
-const itemsList = async () => await db!.select("SELECT * from items");
-const itemsInsert = async (item: Item) => await db!.execute(
+const itemsSelect = async () => await db!.select(
+    "SELECT * from items"
+);
+const itemsInsert = async (item: ItemPersistent) => await db!.execute(
     "INSERT into items (id, theType, title, detail) VALUES (NULL, $1, $2, $3)",
     [item.theType, item.title, item.detail]
 );
-const itemsUpdate = async (item: Item) => {
-    if (!item.id) {
-        return;
-    }
-    return await db!.execute(
-        "UPDATE items SET theType = $1, title = $2, detail = $3 WHERE id = $4",
-        [item.theType, item.title, item.detail, item.id]
-    );
-}
+const itemsUpdate = async (item: ItemTable) => await db!.execute(
+    "UPDATE items SET theType = $1, title = $2, detail = $3 WHERE id = $4",
+    [item.theType, item.title, item.detail, item.id]
+);
+const itemsDelete = async (id: number) => await db!.execute(
+    "DELETE FROM items WHERE id = $1",
+    [id]
+)
 
 export {
     dbInit, dbCleanup,
-    itemsList, itemsInsert, itemsUpdate
+    itemsSelect, itemsInsert, itemsUpdate, itemsDelete,
 };
 
-export type { Item };
+export type { ItemPersistent, ItemTable };
 

@@ -1,6 +1,7 @@
 /// 定义item及其触发方式
 
 import { variables } from '../../app/env';
+import { ItemPersistent } from '../../app/persistence';
 import { clipboardWriteText, formatPath, mainWindowHide, notify, shellOpen, shellSelect } from '../../app/runtime';
 
 /**
@@ -38,15 +39,6 @@ function actionsByType(itemType: string): string[] {
 }
 
 /**
- * item持久化信息
- */
-interface ItemPersistent {
-    theType: ItemType | string,
-    title: string,
-    detail: string,
-}
-
-/**
  * item描述符
  * - 增加了actions和可选的自定义触发方法
  * - 一般内置的item实现该接口
@@ -57,7 +49,7 @@ interface ItemDescriptor extends ItemPersistent {
 }
 
 /**
- * item运行时状态
+ * item运行时状态 用于reducer中
  * - 增加了action的显示索引
  */
 interface ItemState extends ItemDescriptor {

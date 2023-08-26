@@ -155,14 +155,14 @@ function searchItems(input: Input): ItemDescriptor[] {
     console.log(key, arg, hasArg);
     let tmpItemsList: Array<Array<ItemPersistent>>;
 
-    // todo
+    // todo 存储于db中的匹配的item 匹配度高的在前（二维数组的第一个数组）
     if (key.length % 2 === 0 && key.length < 5) {
         tmpItemsList = [];
     } else {
         tmpItemsList = testItems;
     }
 
-    // format actions
+    // 存储于db中的item 根据类型获取对应的actions
     let formated: Array<Array<ItemDescriptor>> = tmpItemsList.map(items => items.map(item => {
         return {
             ...item,
@@ -170,7 +170,7 @@ function searchItems(input: Input): ItemDescriptor[] {
         };
     }));
 
-    // todo add plugins
+    // todo add plugins 自定义内置的item匹配
     let plugins: ItemDescriptor[] = [];
     formated.splice(1, 0, plugins);
 
