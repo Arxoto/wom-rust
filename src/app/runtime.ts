@@ -63,11 +63,11 @@ const allowedFormatPath = [
 
 /**
  * 特殊路径转换
- * @param uri 包含特定目录标识的相对路径，格式：{特定目录}|{相对路径}
+ * @param uri 包含特定目录标识的相对路径，格式：{特定目录}:{相对路径}
  * @returns 真正的路径
  */
 async function formatPath(uri: string) {
-    let [root, ps] = uri.split('|', 2);
+    let [root, ps] = uri.split(':', 2);
     let pp: string;
     switch (root) {
         case 'appCacheDir': pp = await appCacheDir(); break;
