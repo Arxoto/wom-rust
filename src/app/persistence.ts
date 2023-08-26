@@ -1,11 +1,11 @@
 import Database from "tauri-plugin-sql-api";
-import env from "./env";
+import { constants } from "./env";
 
 let db: Database | undefined;
 
 const dbInit = async () => {
     // sqlite. The path is relative to `tauri::api::path::BaseDirectory::App`.
-    db = await Database.load(env.db_name);
+    db = await Database.load(constants.db_name);
     await itemsTableCreate();
 }
 

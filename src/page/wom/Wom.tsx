@@ -3,7 +3,7 @@ import { useEffect, useReducer, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 
 // 常量、运行时函数、功能函数
-import constant from "../../app/env";
+import { constants } from "../../app/env";
 import { debounce, whenfocus, whenkeydown } from "../../app/runtime";
 import { parseInputValue, searchItems } from "./inputer";
 
@@ -78,7 +78,7 @@ export default function () {
     let sendLock = false;
     const searchLockOn = () => { sendLock = true; };
     const searchLockOff = () => { sendLock = false; };
-    const doSearch = debounce(constant.doSearch_debounce, () => {
+    const doSearch = debounce(constants.doSearch_debounce, () => {
         if (sendLock) {
             return;
         }
@@ -95,11 +95,11 @@ export default function () {
     // 根据 input 和 item 显示 tag
     let womTag;
     if (!input.hasVal) {
-        womTag = constant.wom_tag_default;
+        womTag = constants.wom_tag_default;
     } else if (items.length === 0) {
-        womTag = constant.wom_tag_notfound;
+        womTag = constants.wom_tag_notfound;
     } else {
-        womTag = constant.wom_tag_hide;
+        womTag = constants.wom_tag_hide;
     }
 
     // context 可能改变，结合 state ，传递给 provider
@@ -109,15 +109,15 @@ export default function () {
         <WomContext.Provider value={{ womState, dispatch }} >
             <Box>
                 <Head>
-                    <div className='activable-text' onClick={() => navigate(constant.router_navigation)}>&gt;</div>
+                    <div className='activable-text' onClick={() => navigate(constants.router_navigation)}>&gt;</div>
                     <input className="common-color inputable wom-input"
-                        type="text" placeholder={constant.wom_input_placeholder}
+                        type="text" placeholder={constants.wom_input_placeholder}
                         ref={inputRef}
                         onCompositionStart={searchLockOn}
                         onCompositionEnd={searchLockOff}
                         onInput={doSearch}
                     />
-                    {womTag === constant.wom_tag_hide ?
+                    {womTag === constants.wom_tag_hide ?
                         <p className='common-box'>{currentIndex + 1}/{items.length}</p> :
                         <p className='common-box'>{womTag}</p>
                     }

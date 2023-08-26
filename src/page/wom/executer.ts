@@ -1,6 +1,6 @@
 /// 定义item及其触发方式
 
-import constant from '../../app/env';
+import { variables } from '../../app/env';
 import { clipboardWriteText, formatPath, mainWindowHide, notify, shellOpen, shellSelect } from '../../app/runtime';
 
 /**
@@ -102,13 +102,13 @@ async function triggerItem(item: ItemState, arg: string) {
         case ItemType.Cmd:
             let args = arg.trim().split(/\s+/);
             let command = item.detail;
-            for (let i = 0; i < args.length && command.includes(constant.input_replace); i++) {
-                command.replace(constant.input_replace, args[i]);
+            for (let i = 0; i < args.length && command.includes(variables.input_replace); i++) {
+                command.replace(variables.input_replace, args[i]);
             }
             clipboardWriteText(command).then(() => {
-                shellOpen(constant.cmd_terminal).catch(e => {
+                shellOpen(variables.cmd_terminal).catch(e => {
                     console.error(e);
-                    notify(`open ${constant.cmd_terminal} failed`);
+                    notify(`open ${variables.cmd_terminal} failed`);
                 });
             }).catch(e => {
                 console.error(e);
@@ -119,7 +119,7 @@ async function triggerItem(item: ItemState, arg: string) {
             let url = item.detail;
             // tauri 默认的路径校验规则
             if (new RegExp('^((mailto:\\w+)\|(tel:\\w+)\|(https?://\\w+)).+').test(url)) {
-                let trueUrl = url.replace(constant.input_replace, arg);
+                let trueUrl = url.replace(variables.input_replace, arg);
                 console.log(url, arg, trueUrl);
 
                 shellOpen(trueUrl).catch(e => {

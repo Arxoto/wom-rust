@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import constant from "./app/env";
+import { constants } from "./app/env";
 import { refreshEnv, registerSwitch, setStyle, unregisterSwitch } from "./app/init";
 import { listenEvents } from "./app/runtime";
 
@@ -18,7 +18,7 @@ const router = createBrowserRouter([
     errorElement: <Error />
   },
   {
-    path: constant.router_navigation,
+    path: constants.router_navigation,
     element: <Navigation />,
     errorElement: <Error />,
     children: [
