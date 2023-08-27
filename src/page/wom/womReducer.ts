@@ -3,8 +3,8 @@
 /// 当 state 更新逻辑复杂时，用 reducer 有较高的可读性
 /// 将 state 和特定组件解耦合，方便调试测试，也可以配合 Context 深层传递参数
 
-import { ItemDescriptor, ItemState, triggerItem } from "./executer";
-import { Input } from "./inputer";
+import { ItemDescriptor, ItemState, triggerItem } from "../../app/womExecuter";
+import { Input } from "../../app/womInputer";
 
 /** 定义状态 */
 interface WomState {

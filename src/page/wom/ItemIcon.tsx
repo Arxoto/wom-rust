@@ -1,4 +1,4 @@
-import { ItemType } from "./executer";
+import { ItemType } from "../../app/womExecuter";
 
 import plugin from "../../assets/plugin.svg";
 import setting from "../../assets/setting-1.svg";

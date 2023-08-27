@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 // 常量、运行时函数、功能函数
 import { constants } from "../../app/env";
 import { debounce, whenfocus, whenkeydown } from "../../app/runtime";
-import { parseInputValue, searchItems } from "./inputer";
+import { parseInputValue, searchItems } from "../../app/womInputer";
 
 // 自定义的全局变量和hook
 import { womReducer } from "./womReducer";
@@ -38,6 +38,7 @@ export default function () {
     // 注意需要：依赖的函数和对象须尽可能得少（闭包同样如此），这里以 useReducer && createContext 解决
     // 挂载键盘操作
     useEffect(() => {
+        selectInput();
         whenfocus(selectInput);
 
         whenkeydown((event) => {

@@ -4,7 +4,7 @@
 
 import { Context, Dispatch, createContext } from 'react';
 import { ItemsReducerAction, WomState } from './womReducer';
-import { parseInputValue } from './inputer';
+import { parseInputValue } from '../../app/womInputer';
 
 interface WomContextType {
     womState: WomState,

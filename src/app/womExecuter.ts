@@ -1,8 +1,8 @@
 /// 定义item及其触发方式
 
-import { variables } from '../../app/env';
-import { ItemPersistent } from '../../app/persistence';
-import { clipboardWriteText, formatPath, mainWindowHide, notify, shellOpen, shellSelect } from '../../app/runtime';
+import { variables } from './env';
+import { ItemPersistent } from './persistence';
+import { clipboardWriteText, formatPath, mainWindowHide, notify, shellOpen, shellSelect } from './runtime';
 
 /**
  * todo

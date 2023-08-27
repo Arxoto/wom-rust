@@ -1,6 +1,6 @@
 /// input解析及查找items
 
-import { ItemPersistent, ItemDescriptor, ItemType, actionsByType } from "./executer";
+import { ItemPersistent, ItemDescriptor, ItemType, actionsByType } from "./womExecuter";
 
 const testItems = [
     [
