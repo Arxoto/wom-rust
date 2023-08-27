@@ -1,6 +1,6 @@
 import Database from "tauri-plugin-sql-api";
 import { constants } from "./env";
-import { ItemPersistent, ItemTable } from "./womItem";
+import { ItemBase, ItemTable } from "./womItem";
 
 let db: Database;
 
@@ -20,7 +20,7 @@ const itemsTableDrop = async () => await db.execute("DROP TABLE IF EXISTS items"
 const itemsSelect = async () => await db.select(
     "SELECT * from items"
 );
-const itemsInsert = async (item: ItemPersistent) => await db.execute(
+const itemsInsert = async (item: ItemBase) => await db.execute(
     "INSERT into items (id, theType, title, detail) VALUES (NULL, $1, $2, $3)",
     [item.theType, item.title, item.detail]
 );
@@ -37,6 +37,3 @@ export {
     dbInit, dbCleanup,
     itemsSelect, itemsInsert, itemsUpdate, itemsDelete,
 };
-
-export type { ItemPersistent, ItemTable };
-
