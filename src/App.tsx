@@ -10,6 +10,7 @@ import Wom from "./page/wom/Wom";
 import Navigation from "./page/navigation/Navigation";
 import Default from "./page/Default";
 import { dbInit } from "./app/persistence";
+import { itemsInit } from "./app/womInputer";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,8 @@ function App() {
     dbInit().then(() => {
       refreshEnv();
       setStyle();
+
+      itemsInit();
 
       // register global shortcut by default
       registerSwitch();

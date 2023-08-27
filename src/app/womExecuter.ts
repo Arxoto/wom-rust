@@ -1,8 +1,9 @@
 /// 定义item及其触发方式
 
 import { variables } from './env';
-import { ItemPersistent } from './persistence';
 import { clipboardWriteText, formatPath, mainWindowHide, notify, shellOpen, shellSelect } from './runtime';
+import { ItemState } from './womItem';
+import { ItemType } from './womItemType';
 
 /**
  * todo
@@ -10,15 +11,6 @@ import { clipboardWriteText, formatPath, mainWindowHide, notify, shellOpen, shel
  * - 配置页面
  * - 联调适配
  */
-
-enum ItemType {
-    Plugin = "plugin",      // 内置工具
-    Setting = "setting",    // 设置
-    Cmd = "cmd",            // 命令行
-    Web = "web",            // 网页
-    Folder = "folder",      // 文件夹
-    Application = "app",    // 应用
-}
 
 /**
  * 根据item类型获取actions
@@ -39,23 +31,8 @@ function actionsByType(itemType: string): string[] {
 }
 
 /**
- * item描述符
- * - 增加了actions和可选的自定义触发方法
- * - 一般内置的item实现该接口
+ * 触发action的相关执行逻辑
  */
-interface ItemDescriptor extends ItemPersistent {
-    actions: string[],
-    trigger?: (action: string, arg: string) => void,
-}
-
-/**
- * item运行时状态 用于reducer中
- * - 增加了action的显示索引
- */
-interface ItemState extends ItemDescriptor {
-    actionIndex: number
-}
-
 
 function triggerApp(action: string, path: string) {
     if (action === 'select') {
@@ -138,5 +115,4 @@ async function triggerItem(item: ItemState, arg: string) {
     mainWindowHide();
 }
 
-export { ItemType, actionsByType, triggerItem };
-export type { ItemPersistent, ItemDescriptor, ItemState };
+export { actionsByType, triggerItem };

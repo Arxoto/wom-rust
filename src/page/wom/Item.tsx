@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef } from "react";
-import { ItemState } from "../../app/womExecuter";
 import { WomContext } from "./womContext";
 
+import { ItemState } from "../../app/womItem";
 import ItemAction from "./ItemAction";
 import ItemIcon from "./ItemIcon";
 import "./Item.css";

@@ -1,107 +1,25 @@
 /// input解析及查找items
 
-import { ItemPersistent, ItemDescriptor, ItemType, actionsByType } from "./womExecuter";
+import { ItemTable, itemsSelect } from "./persistence";
+import { ItemDescriptor, ItemPersistent } from "./womItem";
+import { getItemTypeId } from "./womItemType";
+import { actionsByType } from "./womExecuter";
 
-const testItems = [
-    [
-        {
-            theType: ItemType.Plugin,
-            title: 'plugin',
-            detail: '',
-        },
-        {
-            theType: ItemType.Plugin,
-            title: 'plugin',
-            detail: '',
-        },
-        {
-            theType: ItemType.Setting,
-            title: 'UserSetting',
-            detail: 'detail',
-        }
-    ], [
-        {
-            theType: ItemType.Cmd,
-            title: 'cmd',
-            detail: 'detail',
-        },
-        {
-            theType: ItemType.Cmd,
-            title: 'cmd',
-            detail: 'detail',
-        },
-        {
-            theType: ItemType.Cmd,
-            title: 'cmd',
-            detail: 'detail',
-        },
-        {
-            theType: ItemType.Web,
-            title: 'web-web',
-            detail: 'https://fanyi.youdao.com/indexLLM.html#/',
-        },
-        {
-            theType: ItemType.Web,
-            title: 'Bilbili-search',
-            detail: 'https://search.bilibili.com/all?keyword={}',
-        },
-        {
-            theType: ItemType.Web,
-            title: 'web-web==============================================',
-            detail: 'detail',
-        },
-        {
-            theType: ItemType.Web,
-            title: 'web-web==============================================',
-            detail: 'detail',
-        },
-        {
-            theType: ItemType.Folder,
-            title: 'folder==============================================',
-            detail: 'detail',
-        },
-        {
-            theType: ItemType.Folder,
-            title: 'folder',
-            detail: 'detail',
-        },
-        {
-            theType: ItemType.Folder,
-            title: 'folder',
-            detail: 'detail',
-        },
-        {
-            theType: ItemType.Folder,
-            title: 'folder',
-            detail: 'detail',
-        },
-        {
-            theType: ItemType.Application,
-            title: 'app',
-            detail: 'detail',
-        },
-        {
-            theType: ItemType.Application,
-            title: 'app',
-            detail: 'detail',
-        },
-        {
-            theType: ItemType.Application,
-            title: 'app',
-            detail: 'detail',
-        },
-        {
-            theType: ItemType.Application,
-            title: 'app',
-            detail: 'detail',
-        },
-        {
-            theType: "...",
-            title: 'title',
-            detail: 'detail',
-        },
-    ]
-];
+let itemsCache: ItemTable[];
+
+const itemsInit = () => {
+    itemsSelect().then(
+        items => items as ItemTable[]
+    ).then(items => {
+        itemsCache = items.sort((a, b) => {
+            const { numb: nA } = getItemTypeId(a.theType);
+            const { numb: nB } = getItemTypeId(b.theType);
+            return nA !== nB ? nA - nB : a.id - b.id;
+        });
+        console.log(itemsCache);
+        
+    });
+}
 
 /**
  * 解析后的输入对象
@@ -159,7 +77,7 @@ function searchItems(input: Input): ItemDescriptor[] {
     if (key.length % 2 === 0 && key.length < 5) {
         tmpItemsList = [];
     } else {
-        tmpItemsList = testItems;
+        tmpItemsList = [itemsCache];
     }
 
     // 存储于db中的item 根据类型获取对应的actions
@@ -177,5 +95,5 @@ function searchItems(input: Input): ItemDescriptor[] {
     return formated.flat();
 }
 
-export { parseInputValue, searchItems }
+export { itemsInit, parseInputValue, searchItems }
 export type { Input }
