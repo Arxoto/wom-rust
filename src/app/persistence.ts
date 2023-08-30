@@ -19,7 +19,7 @@ const itemsTableCreate = async () => await db.execute("CREATE TABLE IF NOT EXIST
 const itemsTableDrop = async () => await db.execute("DROP TABLE IF EXISTS items");
 const itemsSelect = async () => await db.select(
     "SELECT * from items"
-);
+) as ItemTable[];
 const itemsInsert = async (item: ItemBase) => await db.execute(
     "INSERT into items (id, theType, title, detail) VALUES (NULL, $1, $2, $3)",
     [item.theType, item.title, item.detail]

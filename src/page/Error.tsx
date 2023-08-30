@@ -2,6 +2,6 @@ import { Link } from 'react-router-dom'
 
 export default function () {
     return (
-        <h1 style={{ textAlign: 'center' }}><Link to='/'>Oooops!</Link></h1>
+        <div style={{ textAlign: 'center', fontSize: '2em', fontWeight: 'bold' }}><Link to='/'>Oooops!</Link></div>
     )
 }

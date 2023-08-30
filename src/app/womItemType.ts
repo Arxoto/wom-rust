@@ -8,10 +8,12 @@ function getItemTypeId(itemType: string): ItemTypeInfo {
             return ItemTypeCmd;
         case ItemType.Web:
             return ItemTypeWeb;
-        case ItemType.Folder:
-            return ItemTypeFolder;
         case ItemType.Application:
             return ItemTypeApplication;
+        case ItemType.Folder:
+            return ItemTypeFolder;
+        case ItemType.File:
+            return ItemTypeFile;
         default:
             return { type: itemType, numb: 0 };
     }
@@ -27,8 +29,9 @@ enum ItemType {
     Setting = "setting",    // 设置
     Cmd = "cmd",            // 命令行
     Web = "web",            // 网页
-    Folder = "folder",      // 文件夹
     Application = "app",    // 应用
+    Folder = "folder",      // 文件夹
+    File = "file",          // 文件 根据文件夹和后缀自动扫描的文件  todo
 }
 
 const ItemTypePlugin: ItemTypeInfo = {
@@ -51,14 +54,19 @@ const ItemTypeWeb: ItemTypeInfo = {
     numb: 4
 };
 
-const ItemTypeFolder: ItemTypeInfo = {
-    type: ItemType.Folder,
+const ItemTypeApplication: ItemTypeInfo = {
+    type: ItemType.Application,
     numb: 5
 };
 
-const ItemTypeApplication: ItemTypeInfo = {
-    type: ItemType.Application,
+const ItemTypeFolder: ItemTypeInfo = {
+    type: ItemType.Folder,
     numb: 6
+};
+
+const ItemTypeFile: ItemTypeInfo = {
+    type: ItemType.File,
+    numb: 7
 };
 
 export { ItemType, getItemTypeId };

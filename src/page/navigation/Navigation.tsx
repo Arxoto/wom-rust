@@ -16,12 +16,13 @@ export default function () {
     // 导航栏
     let navigations: NavigationItem[] = [];
     let shownames: string[] = location.pathname.split('/');
+    // url 开头必定是'/' 所以跳过 0
     for (let index = 1; index < shownames.length; index++) {
         const showname = shownames[index];
         navigations.push({
             index,
             showname,
-            pathname: shownames.slice(1, index + 1).join('/'),
+            pathname: '/' + shownames.slice(1, index + 1).join('/'),
             clickable: true
         })
     }
@@ -45,7 +46,7 @@ export default function () {
                 </div>
             </Head>
             <Body>
-                <Outlet />
+                <div style={{display: 'flex', padding: '1em'}}><Outlet /></div>
             </Body>
         </Box>
     )

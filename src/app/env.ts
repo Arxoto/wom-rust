@@ -2,6 +2,8 @@ const constants = {
     db_name: 'sqlite:wom.db',
 
     router_navigation: '/navigation',
+    router_setting_path: '/navigation/setting',
+    router_setting_name: 'setting',
 
     wom_input_placeholder: '',
     wom_tag_hide: '_',

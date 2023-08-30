@@ -11,6 +11,8 @@ import Navigation from "./page/navigation/Navigation";
 import Default from "./page/Default";
 import { dbInit } from "./app/persistence";
 import { itemsInit } from "./app/womInputer";
+import NavIndex from "./page/navigation/NavIndex";
+import Setting from "./page/navigation/setting/Setting";
 
 const router = createBrowserRouter([
   {
@@ -23,7 +25,8 @@ const router = createBrowserRouter([
     element: <Navigation />,
     errorElement: <Error />,
     children: [
-      { index: true, element: <Default /> }
+      { index: true, element: <NavIndex /> },
+      { path: constants.router_setting_name, element: <Setting /> },
     ]
   }
 ])

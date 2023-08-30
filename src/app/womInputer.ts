@@ -1,16 +1,14 @@
 /// input解析及查找items
 
 import { itemsSelect } from "./persistence";
-import { ItemCommon, ItemDescriptor, ItemReduced, ItemTable } from "./womItem";
+import { ItemCommon, ItemDescriptor, ItemReduced } from "./womItem";
 import { getItemTypeId } from "./womItemType";
 import { actionsByType } from "./womExecuter";
 
 let itemsCache: ItemCommon[];
 
 const itemsInit = () => {
-    itemsSelect().then(
-        items => items as ItemTable[]
-    ).then(items => {
+    itemsSelect().then(items => {
         itemsCache = items.sort((a, b) => {
             const { numb: nA } = getItemTypeId(a.theType);
             const { numb: nB } = getItemTypeId(b.theType);

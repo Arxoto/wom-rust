@@ -11,6 +11,7 @@ import { ItemType } from './womItemType';
  * - 配置页面
  * - 联调适配
  * - 去除调试输出
+ * - css 命名规范化
  */
 
 /**
