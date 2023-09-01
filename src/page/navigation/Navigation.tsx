@@ -46,7 +46,7 @@ export default function () {
                 </div>
             </Head>
             <Body>
-                <div style={{display: 'flex', padding: '1em'}}><Outlet /></div>
+                <div style={{display: 'flex', padding: '0 1em'}}><Outlet /></div>
             </Body>
         </Box>
     )

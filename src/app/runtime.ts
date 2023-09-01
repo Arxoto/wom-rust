@@ -1,6 +1,7 @@
 /// 常用的函数集合、platform平台兼容层抽象（tauri中invoke的方法）
 
 import { writeText } from '@tauri-apps/api/clipboard';
+import { ask } from '@tauri-apps/api/dialog';
 import { listen } from '@tauri-apps/api/event';
 import { Options, isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification';
 import { appCacheDir, appConfigDir, appDataDir, appLocalDataDir, appLogDir, audioDir, cacheDir, configDir, dataDir, desktopDir, documentDir, downloadDir, executableDir, fontDir, homeDir, join, localDataDir, pictureDir, publicDir, resourceDir, runtimeDir, templateDir, videoDir } from '@tauri-apps/api/path';
@@ -9,6 +10,9 @@ import { WebviewWindow } from '@tauri-apps/api/window';
 
 // 剪贴板
 const clipboardWriteText = (s: string) => writeText(s);
+
+// 用户确认
+const ensure = async (message: string) => await ask(message);
 
 // 事件
 const listenEvents = (...listeners: [string, () => void][]) => {
@@ -166,6 +170,7 @@ const throttle = (delay: number, fn: Function) => {
 
 export {
     clipboardWriteText,
+    ensure,
     listenEvents,
     notify,
     formatPath, allowedFormatPath,

@@ -43,11 +43,11 @@ function parseInputValue(value: string): Input {
     // 无空格 视为无参数
     let spaceIndex = value.indexOf(' ');
     if (spaceIndex < 0) {
-        return { key: value, arg: '', hasArg: false, hasVal: true };
+        return { key: value.toLowerCase(), arg: '', hasArg: false, hasVal: true };
     }
 
     // 空格不在开头 视为有参数
-    let key = value.substring(0, spaceIndex);
+    let key = value.substring(0, spaceIndex).toLowerCase();
     let arg = value.substring(spaceIndex + 1);
     if (spaceIndex > 0) {
         return { key, arg, hasArg: true, hasVal: true };

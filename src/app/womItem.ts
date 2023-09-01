@@ -1,3 +1,5 @@
+import { ItemTag } from "./womItemTag"
+
 /**
  * item 最基础的持久化信息
  */
@@ -12,6 +14,13 @@ interface ItemBase {
  */
 interface ItemTable extends ItemBase {
     id: number
+}
+
+/**
+ * item配置时标记修改状态
+ */
+interface ItemConfig extends ItemTable {
+    tag: ItemTag
 }
 
 /**
@@ -48,5 +57,5 @@ interface ItemState extends ItemDescriptor {
 }
 
 export type {
-    ItemBase, ItemCommon, ItemTable, ItemReduced, ItemDescriptor, ItemState
+    ItemBase, ItemCommon, ItemTable, ItemConfig, ItemReduced, ItemDescriptor, ItemState
 }

@@ -35,5 +35,5 @@ const itemsDelete = async (id: number) => await db.execute(
 
 export {
     dbInit, dbCleanup,
-    itemsSelect, itemsInsert, itemsUpdate, itemsDelete,
+    itemsTableCreate, itemsTableDrop, itemsSelect, itemsInsert, itemsUpdate, itemsDelete,
 };

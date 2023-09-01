@@ -3,7 +3,6 @@
     height: 1.8em;
 
     overflow: auto;
-    user-select: none;
     
     display: flex;
     flex-flow: row nowrap;
