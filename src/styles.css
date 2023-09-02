@@ -98,6 +98,7 @@ body {
   padding: 0 4px;
   
   border-radius: 8px;
+  box-shadow: 0 0 4px var(--color-different-general);
 }
 
 .big-box {

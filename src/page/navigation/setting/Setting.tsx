@@ -5,7 +5,7 @@ import { ItemTag } from "../../../app/womItemTag";
 import { ItemType } from "../../../app/womItemType";
 import { ItemConfig } from "../../../app/womItem";
 import { itemsDelete, itemsInsert, itemsSelect, itemsTableCreate, itemsTableDrop, itemsUpdate } from "../../../app/persistence"
-import { ensure } from "../../../app/runtime";
+import { allowedFormatPath, ensure, formatPath } from "../../../app/runtime";
 
 import ItemFamily from "./ItemFamily";
 
@@ -18,14 +18,24 @@ folder|ppn-ph|downloadDir:ppn/ph
 */
 
 export default function () {
+    const [pathMap, setPathMap] = useState<Array<[string, string]>>([]);
     const [items, setItems] = useState<ItemConfig[] | null>(null);
     useEffect(() => {
         itemsSelect().then(ais => {
             setItems(ais.map(ai => ({ ...ai, tag: ItemTag.None })));
         });
+        (async () => {
+            const tmpMap: Array<[string, string]> = [];
+            for (const path of allowedFormatPath) {
+                tmpMap.push([path, await formatPath(path)]);
+            }
+            setPathMap(tmpMap);
+        })();
+
     }, []);
 
     const textRef = useRef<HTMLTextAreaElement>(null);
+    const tipsRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
 
     if (!items) {
@@ -60,6 +70,14 @@ export default function () {
         }
     }
 
+    const tips = () => {
+        if (tipsRef.current!.style.display === 'none') {
+            tipsRef.current!.style.setProperty('display', 'inline');
+        } else {
+            tipsRef.current!.style.setProperty('display', 'none');
+        }
+    }
+
     const clear = async () => {
         const shouldClear = await ensure('sure?');
         shouldClear && itemsTableDrop().then(() =>
@@ -78,12 +96,19 @@ export default function () {
     return <div style={{ width: '100%' }}>
         <div className="radian-box common-color " style={{ position: 'fixed' }}>
             <div style={{ display: 'flex' }}>
-                <div className="activable-button common-color big-box" style={{ textAlign: 'center' }} onClick={add}>add</div>
-                <div className="activable-button common-color big-box" style={{ textAlign: 'center' }}>tips</div>
-                <div className="activable-button common-color big-box" style={{ textAlign: 'center' }} onClick={clear}>clear</div>
-                <div className="activable-button common-color big-box" style={{ textAlign: 'center' }} onClick={save}>save</div>
+                <div className="activable-text common-color big-box" onClick={add}>add</div>
+                <div className="activable-text common-color big-box" onClick={tips}>tips</div>
+                <div className="activable-text common-color big-box" onClick={clear}>clear</div>
+                <div className="activable-text common-color big-box" onClick={save}>save</div>
             </div>
-            <textarea ref={textRef} style={{ display: 'none', position: 'fixed', width: '90%', height: '70%' }} placeholder="{type}|{title}|{detail}"></textarea>
+            <textarea ref={textRef} placeholder="{type}|{title}|{detail}" style={{ display: 'none', position: 'fixed', width: '90%', height: '70%' }}></textarea>
+            <div ref={tipsRef} className="radian-box common-color" style={{ display: 'none', position: 'fixed', width: '90%', height: '70%', overflow: 'auto', userSelect: 'text' }}>
+                <table>
+                    <thead><tr><th>pathTag</th><th>truePath</th></tr></thead>
+                    <tbody>
+                        {pathMap.map((apath, i) => <tr key={i}><td>{apath[0]}</td><td>{apath[1]}</td></tr>)}</tbody>
+                </table>
+            </div>
         </div>
         <div style={{ height: '3em' }}></div>
         {itemsFamily.map((itemFamily, i) => <ItemFamily key={i} theType={itemFamily.theType} itemLines={itemFamily.items} allItems={items} setItems={setItems} />)}

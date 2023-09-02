@@ -41,28 +41,29 @@ const notify = async (options: Options | string): Promise<void> => {
 
 // 允许的特殊路径/环境变量的路径
 const allowedFormatPath = [
-    'appCacheDir',
-    'appConfigDir',
-    'appDataDir',
-    'appLocalDataDir',
-    'appLogDir',
-    'audioDir',
-    'cacheDir',
-    'configDir',
-    'dataDir',
-    'desktopDir',
-    'documentDir',
-    'downloadDir',
-    'executableDir',
-    'fontDir',
-    'homeDir',
-    'localDataDir',
-    'pictureDir',
+    // 公共目录
     'publicDir',
-    'resourceDir',
-    'runtimeDir',
-    'templateDir',
+    // 用户目录
+    'homeDir',
+    'desktopDir',
+    'downloadDir',
+    'documentDir',
+    'pictureDir',
     'videoDir',
+    'audioDir',
+    'templateDir',  // office模板
+    // 临时目录
+    'cacheDir',
+    'localDataDir',
+    'appCacheDir',
+    'appLocalDataDir',
+    // 数据目录
+    'dataDir',
+    'configDir',
+    'appDataDir',
+    'appConfigDir',
+    // 日志
+    'appLogDir',
 ];
 
 /**
@@ -72,6 +73,7 @@ const allowedFormatPath = [
  */
 async function formatPath(uri: string) {
     let [root, ps] = uri.split(':', 2);
+    ps = ps || '';
     let pp: string;
     switch (root) {
         case 'appCacheDir': pp = await appCacheDir(); break;

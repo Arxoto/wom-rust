@@ -10,7 +10,7 @@ interface ItemFamilyParam {
 
 export default function ({ theType, itemLines, allItems, setItems }: ItemFamilyParam) {
     return <>
-        <div style={{ fontSize: '2em', fontWeight: 'bold' }}>{theType}</div>
+        <div><h1>{theType}</h1></div>
         <div className="radian-box common-color" style={{ padding: '8px 0' }}>
             {itemLines.filter(itemLine => itemLine.tag !== ItemTag.Delete).map(itemLine =>
                 <div key={itemLine.id} style={{ fontSize: "1.4em", display: 'flex', flexFlow: 'row nowrap', alignItems: 'center' }}>
