@@ -8,7 +8,6 @@ import { listenEvents } from "./app/runtime";
 import Error from "./page/Error";
 import Wom from "./page/wom/Wom";
 import Navigation from "./page/navigation/Navigation";
-import Default from "./page/Default";
 import { dbInit } from "./app/persistence";
 import { itemsInit } from "./app/womInputer";
 import NavIndex from "./page/navigation/NavIndex";
