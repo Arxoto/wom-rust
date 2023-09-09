@@ -26,15 +26,20 @@ peg::parser!(grammar arithmetic() for str {
 
 #[tauri::command]
 pub fn calc(expr: String) -> Result<f64, String> {
-    match arithmetic::expression(&expr) {
-        Ok(value) => Ok(value),
-        Err(_) => Err("not_expression".to_string()),
-    }
+    arithmetic::expression(&expr).map_err(|_| "not_expression".to_string())
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_err() {
+        let x: Result<i32, i32> = Ok(3);
+        assert_eq!(x.map_err(|_| "err".to_string()), Ok(3));
+        let x: Result<i32, i32> = Err(3);
+        assert_eq!(x.map_err(|_| "err".to_string()), Err("err".to_string()));
+    }
 
     #[test]
     fn test_number() {
