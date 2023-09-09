@@ -4,7 +4,7 @@ import { itemsSelect } from "./persistence";
 import { ItemCommon, ItemDescriptor, ItemReduced } from "./womItem";
 import { getItemTypeId } from "./womItemType";
 import { actionsByType } from "./womExecuter";
-import { gotoNavigation, gotoSetting } from "./womPlugin";
+import { genPlugins, gotoNavigation, gotoSetting } from "./womPlugin";
 
 let itemsCache: ItemCommon[];
 
@@ -66,7 +66,7 @@ function parseInputValue(value: string): Input {
  * @param input 解析后的输入对象
  * @returns 符合描述的item描述符
  */
-function searchItems(input: Input): ItemDescriptor[] {
+const searchItems = async (input: Input, inputValue: string) => {
     console.log(input);
     if (!input || !input.hasVal) {
         return [];
@@ -84,8 +84,9 @@ function searchItems(input: Input): ItemDescriptor[] {
         };
     }));
 
-    // todo add plugins 自定义内置的item匹配 如计算器
-    let plugins: ItemDescriptor[] = [];
+    // add plugins 自定义内置的item匹配 如计算器
+    let plugins: ItemDescriptor[] = await genPlugins(input, inputValue);
+
     formated.splice(1, 0, plugins);
 
     return formated.flat();

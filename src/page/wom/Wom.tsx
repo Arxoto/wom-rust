@@ -79,7 +79,7 @@ export default function () {
     let sendLock = false;
     const searchLockOn = () => { sendLock = true; };
     const searchLockOff = () => { sendLock = false; };
-    const doSearch = debounce(constants.doSearch_debounce, () => {
+    const doSearch = debounce(constants.doSearch_debounce, async () => {
         if (sendLock) {
             return;
         }
@@ -87,7 +87,7 @@ export default function () {
 
         // get tiems
         let input = parseInputValue(inputValue);
-        let tmpItems = searchItems(input);
+        let tmpItems = await searchItems(input, inputValue);
 
         // show
         dispatch({ type: 'init', items: tmpItems, input });

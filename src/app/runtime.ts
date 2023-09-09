@@ -12,6 +12,13 @@ import { WebviewWindow } from '@tauri-apps/api/window';
 // 剪贴板
 const clipboardWriteText = (s: string) => writeText(s);
 
+const clipboardWriteTextNotify = (s: string) => {
+    clipboardWriteText(s).catch(e => {
+        console.error(e);
+        notify(`cpoy ${s} failed`);
+    });
+}
+
 // 用户确认
 const ensure = async (message: string) => await ask(message);
 
@@ -113,6 +120,8 @@ const shellSelect = (s: string) => {
     invoke("open_folder_and_select_items", { path: s });
 };
 
+const calc: (s: string) => Promise<number> = (s: string) => invoke("calc", { expr: s });
+
 // 主窗口隐藏
 const mainWindowHide = () => {
     WebviewWindow.getByLabel('main')?.hide();
@@ -173,12 +182,13 @@ const throttle = (delay: number, fn: Function) => {
 };
 
 export {
-    clipboardWriteText,
+    clipboardWriteText, clipboardWriteTextNotify,
     ensure,
     listenEvents,
     notify,
     formatPath, allowedFormatPath,
     shellOpen, shellSelect,
+    calc,
     mainWindowHide,
     whenfocus, whenkeydown,
     debounce, throttle

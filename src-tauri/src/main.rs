@@ -1,10 +1,11 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use crate::platform::{shell_execute, shutdown_power, open_folder_and_select_items};
+use crate::{platform::{shell_execute, shutdown_power, open_folder_and_select_items}, calculator::calc};
 
 mod my_tray;
 mod platform;
+mod calculator;
 
 /// 开机启动 https://github.com/tauri-apps/plugins-workspace/tree/v1/plugins/autostart
 /// 单例启动 https://github.com/tauri-apps/plugins-workspace/tree/v1/plugins/single-instance
@@ -31,7 +32,7 @@ fn main() {
         .plugin(tauri_plugin_sql::Builder::default().build())
         .system_tray(my_tray::system_tray())
         .on_system_tray_event(my_tray::on_system_tray_event)
-        .invoke_handler(tauri::generate_handler![shell_execute, shutdown_power, open_folder_and_select_items])
+        .invoke_handler(tauri::generate_handler![shell_execute, shutdown_power, open_folder_and_select_items, calc])
         .on_window_event(|event| match event.event() {
             tauri::WindowEvent::CloseRequested { api, .. } => {
                 if event.window().label().eq("main") {

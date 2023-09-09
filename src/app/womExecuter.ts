@@ -1,14 +1,13 @@
 /// 定义item及其触发方式
 
 import { variables } from './env';
-import { clipboardWriteText, formatPath, mainWindowHide, notify, shellOpen, shellSelect } from './runtime';
+import { clipboardWriteText, clipboardWriteTextNotify, formatPath, mainWindowHide, notify, shellOpen, shellSelect } from './runtime';
 import { ItemState } from './womItem';
 import { ItemType } from './womItemType';
 
 /**
  * todo
  * - item 实现 file 类型 根据文件夹和后缀自动扫描的文件
- * - item 实现 plugins 自定义内置的item匹配 如计算器
  * - 去除调试输出
  * - css 命名规范化
  * - 单例启动
@@ -48,10 +47,7 @@ function triggerApp(action: string, path: string) {
 function triggerFolder(action: string, path: string) {
     switch (action) {
         case 'copy':
-            clipboardWriteText(path).catch(e => {
-                console.error(e);
-                notify(`cpoy ${path} failed`);
-            });
+            clipboardWriteTextNotify(path);
             break;
         case 'open':
         default:

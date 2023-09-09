@@ -29,6 +29,9 @@ const movableAction = (actions: string[], nextActionIndex: number): boolean => {
 
 /** 安全地切换 action */
 const movedAction = (items: ItemState[], currentIndex: number, step: number): ItemState[] => {
+    if (items.length <= currentIndex) {
+        return items;
+    }
     const currentItem = items[currentIndex];
     const nextActionIndex = currentItem.actionIndex + step;
     if (!movableAction(currentItem.actions, nextActionIndex)) {
