@@ -1,7 +1,8 @@
 const constants = {
     db_name: 'sqlite:wom.db',
 
-    router_navigation: '/navigation',
+    router_navigation_path: '/navigation',
+    router_navigation_name: 'navigation',
     router_setting_path: '/navigation/setting',
     router_setting_name: 'setting',
 
@@ -20,7 +21,19 @@ const variables = {
     input_replace: '{}',
 }
 
+const routerPath = (routerName: string) => {
+    switch (routerName) {
+        case constants.router_navigation_name:
+            return constants.router_navigation_path;
+        case constants.router_setting_name:
+            return constants.router_setting_path;
+        default:
+            return '/';
+    }
+}
+
 export {
     constants,
     variables,
+    routerPath,
 };

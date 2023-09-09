@@ -2,6 +2,8 @@ function getItemTypeId(itemType: string): ItemTypeInfo {
     switch (itemType) {
         case ItemType.Plugin:
             return ItemTypePlugin;
+        case ItemType.Navi:
+            return ItemTypeNavi;
         case ItemType.Setting:
             return ItemTypeSetting;
         case ItemType.Cmd:
@@ -25,8 +27,9 @@ interface ItemTypeInfo {
 }
 
 enum ItemType {
+    Navi = "page:navigation",   // 导航页
+    Setting = "page:setting",   // 设置页
     Plugin = "plugin",      // 内置工具
-    Setting = "setting",    // 设置
     Cmd = "cmd",            // 命令行
     Web = "web",            // 网页
     Application = "app",    // 应用
@@ -34,9 +37,16 @@ enum ItemType {
     File = "file",          // 文件 根据文件夹和后缀自动扫描的文件  todo
 }
 
+const itemTypeIsPage = (theType: string) => theType.startsWith('page:');
+
 const ItemTypePlugin: ItemTypeInfo = {
     type: ItemType.Plugin,
     numb: 1
+};
+
+const ItemTypeNavi: ItemTypeInfo = {
+    type: ItemType.Navi,
+    numb: 2
 };
 
 const ItemTypeSetting: ItemTypeInfo = {
@@ -69,5 +79,5 @@ const ItemTypeFile: ItemTypeInfo = {
     numb: 7
 };
 
-export { ItemType, getItemTypeId };
+export { ItemType, getItemTypeId, itemTypeIsPage };
 export type { ItemTypeInfo };

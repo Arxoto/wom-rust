@@ -1,45 +1,49 @@
-.line:hover .title,
-.line:hover .action {
+/* 
+.cute-hover         鼠标选中时 item 主体有特效
+.cute-hover-action  鼠标选中时 item-action 有特效
+ */
+
+.line-hover:hover .title,
+.line-hover:hover .action {
     font-weight: bold;
 }
 
-.line:hover {
+.line-hover:hover {
     background-color: var(--color-hover-back);
 }
 
-.cute-hover-action .line:hover .action {
+.cute-hover-action .line-hover:hover .action {
     color: var(--color-hover-unhover);
     background-color: var(--color-hover-back);
 }
 
-.cute-hover-action .line:hover .action:hover {
+.cute-hover-action .line-hover:hover .action:hover {
     color: var(--color-hover-inner);
     text-shadow: 0 0 4px var(--color-hover-outer);
-    background-color: var(--color-hover-back);
 }
 
-.cute-hover-action .line:hover .action::before {
+.cute-hover-action .line-hover:hover .action::before {
     background: linear-gradient(0.25turn, #0000, var(--color-hover-back));
 }
 
-.cute-hover .line:hover .title,
-.cute-hover .line:hover .detail {
+.cute-hover .line-hover:hover .title,
+.cute-hover .line-hover:hover .detail {
     color: var(--color-hover-unhover);
 }
 
-.cute-hover .line-clickable:hover .title,
-.cute-hover .line-clickable:hover .detail {
+.cute-hover .line-hover:hover .line-clickable:hover .title,
+.cute-hover .line-hover:hover .line-clickable:hover .detail {
     color: var(--color-hover-inner);
     text-shadow: 0 0 4px var(--color-hover-outer);
 }
 
 /* 必须至少和icon类的宽度一样 */
-.cute-hover .line:hover .icon>img {
+.cute-hover .line-hover:hover .icon>img {
     left: calc(-4em + 50%);
     filter: drop-shadow(4em 0 0 var(--color-hover-unhover));
 }
 
-.cute-hover .line-clickable:hover .icon>img {
-    left: calc(-4em + 50%);
+/* 主体和 action 的选中细节不同 */
+.cute-hover .line-hover:hover .line-clickable:hover .icon>img {
     filter: drop-shadow(4em 0 0 var(--color-hover-inner)) drop-shadow(0 0 4px var(--color-hover-outer));
 }

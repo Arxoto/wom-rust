@@ -4,18 +4,22 @@ import { itemsSelect } from "./persistence";
 import { ItemCommon, ItemDescriptor, ItemReduced } from "./womItem";
 import { getItemTypeId } from "./womItemType";
 import { actionsByType } from "./womExecuter";
+import { gotoNavigation, gotoSetting } from "./womPlugin";
 
 let itemsCache: ItemCommon[];
 
 const itemsInit = () => {
     itemsSelect().then(items => {
-        itemsCache = items.sort((a, b) => {
+        itemsCache = [gotoNavigation, gotoSetting];
+
+        let itemsInDB = items.sort((a, b) => {
             const { numb: nA } = getItemTypeId(a.theType);
             const { numb: nB } = getItemTypeId(b.theType);
             return nA !== nB ? nA - nB : a.id - b.id;
         }).map(item => ({ ...item, theKey: item.title.toLowerCase() }));
-        console.log(itemsCache);
+        itemsCache.push(...itemsInDB);
 
+        console.log(itemsCache);
     });
 }
 
@@ -80,7 +84,7 @@ function searchItems(input: Input): ItemDescriptor[] {
         };
     }));
 
-    // todo add plugins 自定义内置的item匹配
+    // todo add plugins 自定义内置的item匹配 如计算器
     let plugins: ItemDescriptor[] = [];
     formated.splice(1, 0, plugins);
 

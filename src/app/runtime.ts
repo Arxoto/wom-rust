@@ -6,6 +6,7 @@ import { listen } from '@tauri-apps/api/event';
 import { Options, isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification';
 import { appCacheDir, appConfigDir, appDataDir, appLocalDataDir, appLogDir, audioDir, cacheDir, configDir, dataDir, desktopDir, documentDir, downloadDir, executableDir, fontDir, homeDir, join, localDataDir, pictureDir, publicDir, resourceDir, runtimeDir, templateDir, videoDir } from '@tauri-apps/api/path';
 import { open } from '@tauri-apps/api/shell';
+import { invoke } from '@tauri-apps/api/tauri';
 import { WebviewWindow } from '@tauri-apps/api/window';
 
 // 剪贴板
@@ -108,8 +109,9 @@ async function formatPath(uri: string) {
 const shellOpen = (s: string) => open(s);
 
 // 选中资源
-// todo SHOpenFolderAndSelectItems or open when failed
-const shellSelect = (s: string) => { console.log(s); };
+const shellSelect = (s: string) => {
+    invoke("open_folder_and_select_items", { path: s });
+};
 
 // 主窗口隐藏
 const mainWindowHide = () => {

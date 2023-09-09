@@ -8,6 +8,7 @@ import { itemsDelete, itemsInsert, itemsSelect, itemsTableCreate, itemsTableDrop
 import { allowedFormatPath, ensure, formatPath } from "../../../app/runtime";
 
 import ItemFamily from "./ItemFamily";
+import { itemsInit } from "../../../app/womInputer";
 
 /* example
 cmd|ipconfig|ipconfig
@@ -86,10 +87,29 @@ export default function () {
     }
 
     const save = async () => {
-        items.filter(item => item.tag === ItemTag.Delete).map(item => item.id).forEach(itemsDelete);
-        items.filter(item => item.tag === ItemTag.Update).forEach(itemsUpdate);
-        items.filter(item => item.tag === ItemTag.Insert).forEach(itemsInsert);
-        getAddItems().filter(item => item.tag === ItemTag.Insert).forEach(itemsInsert);
+        // 确保顺序更新完成后，刷新缓存
+        let deletes = items.filter(item => item.tag === ItemTag.Delete).map(item => item.id);
+        for (let i = 0; i < deletes.length; i++) {
+            const id = deletes[i];
+            await itemsDelete(id);
+        }
+        let updates = items.filter(item => item.tag === ItemTag.Update);
+        for (let i = 0; i < updates.length; i++) {
+            const item = updates[i];
+            await itemsUpdate(item);
+        }
+        let inserts = items.filter(item => item.tag === ItemTag.Insert);
+        for (let i = 0; i < inserts.length; i++) {
+            const item = inserts[i];
+            await itemsInsert(item);
+        }
+        let adds = getAddItems();
+        for (let i = 0; i < adds.length; i++) {
+            const item = adds[i];
+            await itemsInsert(item);
+        }
+
+        itemsInit();
         navigate('/');
     }
 

@@ -1,4 +1,4 @@
-import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Box, Head, Body } from "../Layout";
 import './Navigation.css';
 
@@ -37,7 +37,7 @@ export default function () {
                     {navigations.map(navigation => {
                         let inner;
                         if (navigation.clickable) {
-                            inner = <Link to={navigation.pathname} className='common-color activable-button'>{navigation.showname}</Link>
+                            inner = <span className='common-color activable-button' onClick={() => navigate(navigation.pathname)}>{navigation.showname}</span>
                         } else {
                             inner = <span>{navigation.showname}</span>
                         }
@@ -46,7 +46,7 @@ export default function () {
                 </div>
             </Head>
             <Body>
-                <div style={{display: 'flex', padding: '0 1em'}}><Outlet /></div>
+                <div style={{ display: 'flex', padding: '0 1em' }}><Outlet /></div>
             </Body>
         </Box>
     )

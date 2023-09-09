@@ -17,7 +17,7 @@ import Item from "./Item";
 import './Wom.css'
 
 export default function () {
-    const navigate = useNavigate();
+    const navigate = useNavigate();  // <Link/> 的样式过于原始
     const [womState, dispatch] = useReducer(womReducer, defaultState);  // 使用 useReducer 替代 useState
     const input = womState.input;
     const items = womState.items;
@@ -110,7 +110,7 @@ export default function () {
         <WomContext.Provider value={{ womState, dispatch }} >
             <Box>
                 <Head>
-                    <div className='activable-text' onClick={() => navigate(constants.router_navigation)}>&gt;</div>
+                    <div className='activable-text' onClick={() => navigate(constants.router_navigation_path)}>&gt;</div>
                     <input className="common-color inputable wom-input"
                         type="text" placeholder={constants.wom_input_placeholder}
                         ref={inputRef}
@@ -125,14 +125,13 @@ export default function () {
                 </Head>
                 <Body>
                     {
-                        items.map((item, index) => (
+                        items.map((item, index) =>
                             <Item
                                 key={index}
                                 selected={index === currentIndex}
                                 item={item}
                                 itemIndex={index}
                             ></Item>
-                        )
                         )
                     }
                 </Body>

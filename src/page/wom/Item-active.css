@@ -1,3 +1,8 @@
+/* 
+.cute-active        键盘选中时 item 主体有特效
+.cute-active-action 键盘选中时 item-action 有特效
+*/
+
 .line-active .title,
 .line-active .action {
     font-weight: bold;
@@ -8,9 +13,13 @@
 }
 
 .cute-active-action .line-active .action {
+    color: var(--color-active-unhover);
+    background-color: var(--color-active-back);
+}
+
+.cute-active-action .line-active .action:hover {
     color: var(--color-active-inner);
     text-shadow: 0 0 4px var(--color-active-outer);
-    background-color: var(--color-active-back);
 }
 
 .cute-active-action .line-active .action::before {
@@ -19,6 +28,11 @@
 
 .cute-active .line-active .title,
 .cute-active .line-active .detail {
+    color: var(--color-active-unhover);
+}
+
+.cute-active .line-active .line-clickable:hover .title,
+.cute-active .line-active .line-clickable:hover .detail {
     color: var(--color-active-inner);
     text-shadow: 0 0 4px var(--color-active-outer);
 }
@@ -26,5 +40,10 @@
 /* 必须至少和icon类的宽度一样 */
 .cute-active .line-active .icon>img {
     left: calc(-4em + 50%);
+    filter: drop-shadow(4em 0 0 var(--color-active-unhover));
+}
+
+/* 必须至少和icon类的宽度一样 */
+.cute-active .line-active .line-clickable:hover .icon>img {
     filter: drop-shadow(4em 0 0 var(--color-active-inner)) drop-shadow(0 0 4px var(--color-active-outer));
 }

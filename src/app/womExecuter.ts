@@ -7,11 +7,11 @@ import { ItemType } from './womItemType';
 
 /**
  * todo
- * - 设计持久化
- * - 配置页面
- * - 联调适配
+ * - item 实现 file 类型 根据文件夹和后缀自动扫描的文件
+ * - item 实现 plugins 自定义内置的item匹配 如计算器
  * - 去除调试输出
  * - css 命名规范化
+ * - 单例启动
  */
 
 /**
@@ -20,17 +20,18 @@ import { ItemType } from './womItemType';
 function actionsByType(itemType: string): string[] {
     switch (itemType) {
         case ItemType.Folder:
-            return ['open', 'copy'];
+            return aoc;
+        case ItemType.File:
         case ItemType.Application:
-            return ['open', 'select', 'copy'];
-        case ItemType.Plugin:
-        case ItemType.Setting:
-        case ItemType.Cmd:
-        case ItemType.Web:
+            return aosc;
         default:
-            return [];
+            return aempty;
     }
 }
+
+const aoc = ['open', 'copy'];
+const aosc = ['open', 'select', 'copy'];
+const aempty: string[] = [];
 
 /**
  * 触发action的相关执行逻辑
@@ -107,9 +108,6 @@ async function triggerItem(item: ItemState, arg: string) {
         case ItemType.Application:
             triggerApp(item.actions[item.actionIndex], await formatPath(item.detail));
             break;
-        case ItemType.Setting:
-        // todo
-        case ItemType.Plugin:
         default:
             console.warn(`${item.title} has no trigger`);
             break;
