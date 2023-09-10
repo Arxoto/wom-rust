@@ -7,15 +7,24 @@
   --color-frame-outer: #fff;
   --color-frame-inner: #000;
 
-  --color-hover-unhover: #ffea60;
+  /* --color-hover-unhover: #ffea60;
   --color-hover-inner: #fff696;
   --color-hover-outer: #ff8000;
   --color-hover-back: #003000;
   --color-active-unhover: #4100d8;
   --color-active-inner: #0080ff;
-  /* --color-active-outer: #ff8080; */
+  --color-active-outer: #ff8080;
   --color-active-outer: #ffa5ee;
-  --color-active-back: #f6ffff;
+  --color-active-back: #f6ffff; */
+
+  --color-hover-unhover: #4100d8;
+  --color-hover-inner: #0080ff;
+  --color-hover-outer: #ffa5ee;
+  --color-hover-back: #f6ffff;
+  --color-active-unhover: #ffea60;
+  --color-active-inner: #fff696;
+  --color-active-outer: #ff8000;
+  --color-active-back: #003000;
 
   /* --color-hover-back: #f6ffff;
   --color-active-inner: #0080ff;

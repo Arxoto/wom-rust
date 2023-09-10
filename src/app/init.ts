@@ -8,7 +8,7 @@ const setStyle = () => {
     // 动态主题 todo cute-active cute-active-action cute-hover cute-hover-action
     let root = document.getElementById("root");
     if (root) {
-        root.className = "cute-active cute-hover cute-hover-action";
+        root.className = "cute-active cute-active-action cute-hover";
     }
 }
 

@@ -27,23 +27,26 @@
 }
 
 .cute-active .line-active .title,
-.cute-active .line-active .detail {
-    color: var(--color-active-unhover);
-}
-
-.cute-active .line-active .line-clickable:hover .title,
-.cute-active .line-active .line-clickable:hover .detail {
+.cute-active .line-active .detail,
+.cute-active .line-active:hover .line-clickable:hover .title,
+.cute-active .line-active:hover .line-clickable:hover .detail {
     color: var(--color-active-inner);
     text-shadow: 0 0 4px var(--color-active-outer);
 }
 
-/* 必须至少和icon类的宽度一样 */
-.cute-active .line-active .icon>img {
-    left: calc(-4em + 50%);
-    filter: drop-shadow(4em 0 0 var(--color-active-unhover));
+.cute-active .line-active:hover .line-clickable .title,
+.cute-active .line-active:hover .line-clickable .detail {
+    color: var(--color-active-unhover);
 }
 
 /* 必须至少和icon类的宽度一样 */
-.cute-active .line-active .line-clickable:hover .icon>img {
+.cute-active .line-active .icon>img,
+.cute-active .line-active:hover .line-clickable:hover .icon>img {
+    left: calc(-4em + 50%);
     filter: drop-shadow(4em 0 0 var(--color-active-inner)) drop-shadow(0 0 4px var(--color-active-outer));
+}
+
+/* 必须至少和icon类的宽度一样 */
+.cute-active .line-active:hover .line-clickable .icon>img {
+    filter: drop-shadow(4em 0 0 var(--color-active-unhover));
 }
