@@ -171,6 +171,8 @@ const shellSelect = (s: string) => {
 
 const calc: (s: string) => Promise<string> = (s: string) => invoke("calc", { expr: s });
 
+const shutdown_power: (s: string) => void = (s: string) => invoke("shutdown_power", { action: s });
+
 // 主窗口隐藏
 const mainWindowHide = () => {
     WebviewWindow.getByLabel('main')?.hide();
@@ -237,7 +239,7 @@ export {
     notify,
     formatPath, allowedFormatPath, listFiles,
     shellOpen, shellSelect,
-    calc,
+    calc, shutdown_power,
     mainWindowHide,
     whenfocus, whenkeydown,
     debounce, throttle

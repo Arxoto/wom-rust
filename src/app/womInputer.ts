@@ -4,7 +4,7 @@ import { itemsSelect } from "./persistence";
 import { ItemCommon, ItemDescriptor, ItemReduced } from "./womItem";
 import { ItemType, getItemTypeId } from "./womItemType";
 import { actionsByType } from "./womExecuter";
-import { genPlugins, gotoNavigation, gotoSetting } from "./womPlugin";
+import { genPlugins, gotoNavigation, gotoSetting, power_hibernate, power_restart, power_shutdown } from "./womPlugin";
 import { listFiles } from "./runtime";
 
 // 若有其他类似用法 可以抽成闭包
@@ -14,7 +14,7 @@ const setItemsCache = (next: ItemCommon[]) => { outerCache = next };
 
 const itemsInit = async () => {
     let items = await itemsSelect();
-    let innerCache = [gotoNavigation, gotoSetting];
+    let innerCache = [gotoNavigation, gotoSetting, power_hibernate, power_restart, power_shutdown];
 
     // item like cmd/web/app/folder
     let itemsInDB = items.filter(item => item.theType !== ItemType.File).sort((a, b) => {
@@ -98,7 +98,7 @@ const searchItems = async (input: Input, inputValue: string) => {
     let formated: Array<Array<ItemDescriptor>> = itemsMatched.map(items => items.map(item => {
         return {
             ...item,
-            actions: actionsByType(item.theType),
+            actions: (item as unknown as ItemDescriptor).actions || actionsByType(item.theType),
         };
     }));
 
