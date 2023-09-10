@@ -4,7 +4,8 @@ import { writeText } from '@tauri-apps/api/clipboard';
 import { ask } from '@tauri-apps/api/dialog';
 import { listen } from '@tauri-apps/api/event';
 import { Options, isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification';
-import { appCacheDir, appConfigDir, appDataDir, appLocalDataDir, appLogDir, audioDir, cacheDir, configDir, dataDir, desktopDir, documentDir, downloadDir, executableDir, fontDir, homeDir, join, localDataDir, pictureDir, publicDir, resourceDir, runtimeDir, templateDir, videoDir } from '@tauri-apps/api/path';
+import { appCacheDir, appConfigDir, appDataDir, appLocalDataDir, appLogDir, audioDir, cacheDir, configDir, dataDir, desktopDir, documentDir, downloadDir, executableDir, fontDir, homeDir, join, localDataDir, pictureDir, publicDir, resolve, resourceDir, runtimeDir, sep, templateDir, videoDir } from '@tauri-apps/api/path';
+import { FileEntry, exists, readDir } from '@tauri-apps/api/fs';
 import { open } from '@tauri-apps/api/shell';
 import { invoke } from '@tauri-apps/api/tauri';
 import { WebviewWindow } from '@tauri-apps/api/window';
@@ -109,7 +110,55 @@ async function formatPath(uri: string) {
         default:
             return uri;
     }
-    return join(pp, ps);
+    return await resolve(await join(pp, ps));
+}
+
+const basename = (filePath: string) => {
+    let paths = filePath.split(sep);
+    for (let i = paths.length - 1; i >= 0; i--) {
+        const fp = paths[i];
+        if (fp) {
+            return fp;
+        }
+    }
+    return '';
+}
+
+// const extname = (fileName: string) => {
+//     let fns = fileName.split('.');
+//     if (fns.length <= 1) return ''; // 无扩展后缀的文件
+//     return fns[fns.length - 1];
+// }
+
+/**
+ * 
+ * @param desc 过滤的文件扩展名 用','分割
+ * @param uri 包含特定目录标识的相对路径，格式：{特定目录}:{相对路径}
+ * @returns [fileName, filePath][]
+ */
+async function listFiles(desc: string, uri: string): Promise<[string, string][]> {
+    let folderPath = await formatPath(uri);
+    if (! await exists(folderPath)) {
+        return [];
+    }
+
+    const result: [string, string][] = [];
+    const processEntries = async (entries: FileEntry[]) => {
+        for (const entry of entries) {
+            if (entry.children) {
+                await processEntries(entry.children);
+                continue;
+            }
+            let fpath = entry.path;
+            let fname = basename(fpath);
+            if (new RegExp(desc).test(fname)) {
+                result.push([fname, fpath]);
+            }
+        }
+    }
+
+    await processEntries(await readDir(folderPath, { recursive: true }));
+    return result;
 }
 
 // 打开资源
@@ -186,7 +235,7 @@ export {
     ensure,
     listenEvents,
     notify,
-    formatPath, allowedFormatPath,
+    formatPath, allowedFormatPath, listFiles,
     shellOpen, shellSelect,
     calc,
     mainWindowHide,

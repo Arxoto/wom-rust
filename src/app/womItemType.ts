@@ -34,7 +34,7 @@ enum ItemType {
     Web = "web",            // 网页
     Application = "app",    // 应用
     Folder = "folder",      // 文件夹
-    File = "file",          // 文件 根据文件夹和后缀自动扫描的文件  todo
+    File = "file",          // 文件 扫描文件夹下的文件
 }
 
 const itemTypeIsPage = (theType: string) => theType.startsWith('page:');

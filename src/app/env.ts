@@ -14,6 +14,7 @@ const constants = {
     doSearch_debounce: 100,  // wom-input 内容改变 搜索匹配项的延迟
     selectItem_throttle: 50, // 键盘控制选中 item 的延迟  注意双方的大小 这里由于渲染的速度一般自带延迟且小于匹配延迟
     plugin_calc_detail: 'support: int float + - * / % ^ ()',
+    setting_add_placeholder: '{type}|{title}|{detail}\ncmd|name|cmd_args_replace_with_{}\nweb|name|url_single_arg_replace_with_{}\napp|name|magic_path => absolute_path or {path_tag_in_tips}:relative_path\nfolder|name|magic_path\nfile|RegExp|magic_path',
 }
 
 const variables = {

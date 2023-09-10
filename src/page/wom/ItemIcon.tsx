@@ -20,11 +20,13 @@ export default function ({ itemType }: ItemIconElement) {
         case ItemType.Setting:
             return <img src={setting} alt="" style={{ width: '85%' }} />;
         case ItemType.Plugin:
-            return <img src={plugin} alt="" style={{ width: '75%' }} />;
+            return <img src={more} alt="" style={{ width: '50%' }} />
         case ItemType.Cmd:
             return <img src={cmd} alt="" style={{ width: '75%' }} />;
         case ItemType.Web:
             return <img src={web} alt="" style={{ width: '65%' }} />;
+        case ItemType.File:
+            return <img src={plugin} alt="" style={{ width: '75%' }} />;
         case ItemType.Folder:
             return <img src={folder} alt="" style={{ width: '55%' }} />;
         case ItemType.Application: 

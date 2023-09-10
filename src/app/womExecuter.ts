@@ -7,7 +7,7 @@ import { ItemType } from './womItemType';
 
 /**
  * todo
- * - item 实现 file 类型 根据文件夹和后缀自动扫描的文件
+ * - 插件in_empty_page：调色盘、格式转换、便签
  * - 去除调试输出
  * - css 命名规范化
  * - 单例启动
@@ -101,6 +101,7 @@ async function triggerItem(item: ItemState, arg: string) {
         case ItemType.Folder:
             triggerFolder(item.actions[item.actionIndex], await formatPath(item.detail));
             break;
+        case ItemType.File:
         case ItemType.Application:
             triggerApp(item.actions[item.actionIndex], await formatPath(item.detail));
             break;

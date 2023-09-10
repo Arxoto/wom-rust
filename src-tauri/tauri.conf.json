@@ -27,6 +27,12 @@
       "globalShortcut": {
         "all": true
       },
+      "fs": {
+        "all": false,
+        "scope": ["**"],
+        "exists": true,
+        "readDir": true
+      },
       "path": {
         "all": true
       },

@@ -9,6 +9,7 @@ import { allowedFormatPath, ensure, formatPath } from "../../../app/runtime";
 
 import ItemFamily from "./ItemFamily";
 import { itemsInit } from "../../../app/womInputer";
+import { constants } from "../../../app/env";
 
 /* example
 cmd|ipconfig|ipconfig
@@ -16,6 +17,7 @@ web|youdao-fanyi|https://fanyi.youdao.com/indexLLM.html#/
 web|Bilibili-search|https://search.bilibili.com/all?keyword={}
 folder|gogg|D:\gongg
 folder|ppn-ph|downloadDir:ppn/ph
+file|.*\.txt$|D:\book
 */
 
 export default function () {
@@ -109,7 +111,7 @@ export default function () {
             await itemsInsert(item);
         }
 
-        itemsInit();
+        await itemsInit();
         navigate('/');
     }
 
@@ -121,7 +123,7 @@ export default function () {
                 <div className="activable-text common-color big-box" onClick={clear}>clear</div>
                 <div className="activable-text common-color big-box" onClick={save}>save</div>
             </div>
-            <textarea ref={textRef} placeholder="{type}|{title}|{detail}" style={{ display: 'none', position: 'fixed', width: '90%', height: '70%' }}></textarea>
+            <textarea ref={textRef} placeholder={constants.setting_add_placeholder} style={{ display: 'none', position: 'fixed', width: '90%', height: '70%' }}></textarea>
             <div ref={tipsRef} className="radian-box common-color" style={{ display: 'none', position: 'fixed', width: '90%', height: '70%', overflow: 'auto', userSelect: 'text' }}>
                 <table>
                     <thead><tr><th>pathTag</th><th>truePath</th></tr></thead>

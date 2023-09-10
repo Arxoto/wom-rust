@@ -2,25 +2,39 @@
 
 import { itemsSelect } from "./persistence";
 import { ItemCommon, ItemDescriptor, ItemReduced } from "./womItem";
-import { getItemTypeId } from "./womItemType";
+import { ItemType, getItemTypeId } from "./womItemType";
 import { actionsByType } from "./womExecuter";
 import { genPlugins, gotoNavigation, gotoSetting } from "./womPlugin";
+import { listFiles } from "./runtime";
 
 let itemsCache: ItemCommon[];
 
-const itemsInit = () => {
-    itemsSelect().then(items => {
-        itemsCache = [gotoNavigation, gotoSetting];
+const itemsInit = async () => {
+    let items = await itemsSelect();
+    itemsCache = [gotoNavigation, gotoSetting];
 
-        let itemsInDB = items.sort((a, b) => {
-            const { numb: nA } = getItemTypeId(a.theType);
-            const { numb: nB } = getItemTypeId(b.theType);
-            return nA !== nB ? nA - nB : a.id - b.id;
-        }).map(item => ({ ...item, theKey: item.title.toLowerCase() }));
-        itemsCache.push(...itemsInDB);
+    // item like cmd/web/app/folder
+    let itemsInDB = items.filter(item => item.theType !== ItemType.File).sort((a, b) => {
+        const { numb: nA } = getItemTypeId(a.theType);
+        const { numb: nB } = getItemTypeId(b.theType);
+        return nA !== nB ? nA - nB : a.id - b.id;
+    }).map(item => ({ ...item, theKey: item.title.toLowerCase() }));
+    itemsCache.push(...itemsInDB);
+    
+    // item like file
+    items = items.filter(item => item.theType === ItemType.File);
+    for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        let fileItems: ItemCommon[] = (await listFiles(item.title, item.detail)).map(finfo => ({
+            theType: ItemType.File,
+            theKey: finfo[0].toLowerCase(),
+            title: finfo[0],
+            detail: finfo[1],
+        }));
+        itemsCache.push(...fileItems);
+    }
 
-        console.log(itemsCache);
-    });
+    console.log(itemsCache);
 }
 
 /**

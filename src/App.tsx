@@ -32,11 +32,11 @@ const router = createBrowserRouter([
 
 function App() {
   useEffect(() => {
-    dbInit().then(() => {
+    dbInit().then(async () => {
       refreshEnv();
       setStyle();
 
-      itemsInit();
+      await itemsInit();
 
       // register global shortcut by default
       registerSwitch();
