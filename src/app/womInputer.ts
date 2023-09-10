@@ -7,11 +7,14 @@ import { actionsByType } from "./womExecuter";
 import { genPlugins, gotoNavigation, gotoSetting } from "./womPlugin";
 import { listFiles } from "./runtime";
 
-let itemsCache: ItemCommon[];
+// 若有其他类似用法 可以抽成闭包
+let outerCache: ItemCommon[] = [];
+const getItemsCache = () => outerCache;
+const setItemsCache = (next: ItemCommon[]) => { outerCache = next };
 
 const itemsInit = async () => {
     let items = await itemsSelect();
-    itemsCache = [gotoNavigation, gotoSetting];
+    let innerCache = [gotoNavigation, gotoSetting];
 
     // item like cmd/web/app/folder
     let itemsInDB = items.filter(item => item.theType !== ItemType.File).sort((a, b) => {
@@ -19,7 +22,7 @@ const itemsInit = async () => {
         const { numb: nB } = getItemTypeId(b.theType);
         return nA !== nB ? nA - nB : a.id - b.id;
     }).map(item => ({ ...item, theKey: item.title.toLowerCase() }));
-    itemsCache.push(...itemsInDB);
+    innerCache.push(...itemsInDB);
     
     // item like file
     items = items.filter(item => item.theType === ItemType.File);
@@ -31,10 +34,11 @@ const itemsInit = async () => {
             title: finfo[0],
             detail: finfo[1],
         }));
-        itemsCache.push(...fileItems);
+        innerCache.push(...fileItems);
     }
 
-    console.log(itemsCache);
+    console.log(innerCache);
+    setItemsCache(innerCache);
 }
 
 /**
@@ -87,7 +91,7 @@ const searchItems = async (input: Input, inputValue: string) => {
     }
 
     // 存储于db中的匹配的item 匹配度高的在前（二维数组的第一个数组）
-    let tmpItems: ItemReduced[] = itemsCache.map(item => ({ ...item, selected: false }));
+    let tmpItems: ItemReduced[] = getItemsCache().map(item => ({ ...item, selected: false }));
     let itemsMatched = matchFns.map(fn => fn(input, tmpItems));
 
     // 存储于db中的item 根据类型获取对应的actions
