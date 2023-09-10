@@ -30,7 +30,7 @@ interface Input {
     key: string,
     arg: string,
     hasArg: boolean,
-    hasVal: boolean,
+    hasVal: boolean, // input 中有键入任何东西则为 true
 }
 
 /**

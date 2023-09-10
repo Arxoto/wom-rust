@@ -18,13 +18,24 @@ const gotoSetting: ItemCommon = {
     detail: ""
 };
 
-const genCalcDescriptor = async (_input: Input, inputValue: string) => {
+const defaultCalcDescriptor: ItemDescriptor = {
+    actions: [],
+    theKey: "",
+    theType: ItemType.Plugin,
+    title: "calculator",
+    detail: constants.plugin_calc_detail
+}
+const genCalcDescriptor = async (input: Input, inputValue: string) => {
+    if (input.hasVal && !input.arg && !input.key) {
+        // 适配全量匹配
+        return defaultCalcDescriptor;
+    }
     if (!/([0-9]|\.|\+|\-|\*|\/%|\^|\(|\))+/.test(inputValue)) {
         // 1.2+0.1+-2*(3/2)%2+2^3
         return null;
     }
     try {
-        let value = `${await calc(inputValue)}`;
+        let value = await calc(inputValue);
         return {
             theKey: '',
             theType: ItemType.Plugin,
@@ -36,6 +47,7 @@ const genCalcDescriptor = async (_input: Input, inputValue: string) => {
             }
         };
     } catch (error) {
+        console.error(error);
         return null;
     }
 }

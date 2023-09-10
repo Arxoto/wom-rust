@@ -17,6 +17,8 @@ tauri = { version = "1.4", features = [ "dialog-ask", "global-shortcut-all", "wi
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 peg = "0.8.1"
+rust_decimal = { version = "1.32", features = [ "maths" ] }
+num-traits = "0.2"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem
@@ -37,3 +39,9 @@ features = [
     "Win32_UI_Shell_Common",
     "Win32_UI_WindowsAndMessaging",
 ]
+
+[profile.dev]
+panic = "unwind"
+
+[profile.release]
+panic = "unwind"

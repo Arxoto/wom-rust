@@ -120,7 +120,7 @@ const shellSelect = (s: string) => {
     invoke("open_folder_and_select_items", { path: s });
 };
 
-const calc: (s: string) => Promise<number> = (s: string) => invoke("calc", { expr: s });
+const calc: (s: string) => Promise<string> = (s: string) => invoke("calc", { expr: s });
 
 // 主窗口隐藏
 const mainWindowHide = () => {

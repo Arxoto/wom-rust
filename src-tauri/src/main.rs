@@ -27,6 +27,7 @@ mod calculator;
 /// %LocalAppData%\tauri\NSIS\Plugins\x86-unicode      复制 NSIS-ApplicationID.zip/ReleaseUnicode/ApplicationID.dll 至目录下
 /// %LocalAppData%\tauri\NSIS\Plugins\x86-unicode      复制 nsis_tauri_utils.dll 至目录下
 
+// todo 优化 rust 部分的异常处理 如 unwrap
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_sql::Builder::default().build())
