@@ -7,6 +7,7 @@ import { ItemType } from './womItemType';
 
 /**
  * todo
+ * - BUG 键盘触发page 页面跳转 失败
  * - 插件in_empty_page：调色盘、格式转换、便签
  * - 去除调试输出
  * - css 命名规范化

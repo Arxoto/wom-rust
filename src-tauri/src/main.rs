@@ -42,11 +42,12 @@ fn main() {
                 }
             }
             // dev
-            // tauri::WindowEvent::Focused(focused) => {
-            //     if event.window().label().eq("main") && !focused {
-            //         event.window().hide().unwrap();
-            //     }
-            // }
+            #[cfg(not(debug_assertions))]
+            tauri::WindowEvent::Focused(focused) => {
+                if event.window().label().eq("main") && !focused {
+                    event.window().hide().unwrap();
+                }
+            }
             _ => {}
         })
         // .build(tauri::generate_context!())
