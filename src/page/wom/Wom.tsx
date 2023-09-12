@@ -3,7 +3,7 @@ import { useEffect, useReducer, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 
 // 常量、运行时函数、功能函数
-import { constants } from "../../app/env";
+import { constants, router } from "../../app/env";
 import { debounce, whenfocus, whenkeydown } from "../../app/runtime";
 import { parseInputValue, searchItems } from "../../app/womInputer";
 
@@ -100,7 +100,7 @@ export default function () {
     } else if (items.length === 0) {
         womTag = constants.wom_tag_notfound;
     } else {
-        womTag = constants.wom_tag_hide;
+        womTag = constants.wom_tag_showindex;
     }
 
     // context 可能改变，结合 state ，传递给 provider
@@ -110,7 +110,7 @@ export default function () {
         <WomContext.Provider value={{ womState, dispatch }} >
             <Box>
                 <Head>
-                    <div className='activable-text' onClick={() => navigate(constants.router_navigation_path)}>&gt;</div>
+                    <div className='activable-text' onClick={() => navigate(router.navigation_path)}>&gt;</div>
                     <input className="common-color inputable wom-input"
                         type="text" placeholder={constants.wom_input_placeholder}
                         ref={inputRef}
@@ -118,7 +118,7 @@ export default function () {
                         onCompositionEnd={searchLockOff}
                         onInput={doSearch}
                     />
-                    {womTag === constants.wom_tag_hide ?
+                    {womTag === constants.wom_tag_showindex ?
                         <p className='common-box'>{currentIndex + 1}/{items.length}</p> :
                         <p className='common-box'>{womTag}</p>
                     }

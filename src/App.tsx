@@ -1,62 +1,90 @@
-import { useEffect } from "react";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import { constants } from "./app/env";
+import { router } from "./app/env";
+import { dbInit } from "./app/persistence";
+import { isMain, listenEvents } from "./app/runtime";
+import { itemsInit } from "./app/womInputer";
 import { refreshEnv, registerSwitch, setStyle, unregisterSwitch } from "./app/init";
-import { listenEvents } from "./app/runtime";
 
 import Error from "./page/Error";
 import Wom from "./page/wom/Wom";
 import Navigation from "./page/navigation/Navigation";
-import { dbInit } from "./app/persistence";
-import { itemsInit } from "./app/womInputer";
 import NavIndex from "./page/navigation/NavIndex";
 import Setting from "./page/navigation/setting/Setting";
+import Offspring from "./page/offspring/Offspring";
+import Loading from "./page/Loading";
 
-const router = createBrowserRouter([
+const naviFamily = {
+  path: router.navigation_name,
+  element: <Navigation />,
+  children: [
+    { index: true, element: <NavIndex /> },
+    { path: router.setting_name, element: <Setting /> },
+  ]
+};
+
+const womRouter = createBrowserRouter([
   {
     path: '/',
-    element: <Wom />,
-    errorElement: <Error />
-  },
-  {
-    path: constants.router_navigation_path,
-    element: <Navigation />,
+    element: <Outlet />,
     errorElement: <Error />,
     children: [
-      { index: true, element: <NavIndex /> },
-      { path: constants.router_setting_name, element: <Setting /> },
+      { index: true, element: <Wom /> },
+      naviFamily,
+    ]
+  }
+])
+
+const offspringRouter = createBrowserRouter([
+  {
+    path: '/',
+    element: <Offspring />,
+    errorElement: <Error />,
+    children: [
+      { index: true, element: <h1>nothing</h1> },
+      naviFamily,
     ]
   }
 ])
 
 function App() {
+  const ismain = isMain();
+  const [started, setStarted] = useState(false);
   useEffect(() => {
-    dbInit().then(async () => {
-      refreshEnv();
-      setStyle();
-
-      await itemsInit();
-
-      // register global shortcut by default
-      registerSwitch();
-
-    }).catch(console.error);
+    dbInit()
+      .then(refreshEnv)
+      .then(setStyle)
+      .then(itemsInit)
+      .then(() => { ismain && registerSwitch() }) // register global shortcut by default
+      .then(() => setStarted(true))
+      .catch(console.error);
 
     // register listen
-    const unlisten = listenEvents(
-      ['register', registerSwitch],
-      ['unregister', unregisterSwitch],
-    );
+    let unlisten: () => void;
+    if (ismain) {
+      unlisten = listenEvents(
+        ['register', registerSwitch],
+        ['unregister', unregisterSwitch],
+      );
+    } else {
+      unlisten = () => { };
+    }
 
     return () => {
       unlisten();
     };
   }, []);
 
-  return (
-    <RouterProvider router={router} />
-  );
+  if (!started) {
+    return <div style={{ display: 'flex', flexFlow: 'row nowrap', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}><Loading /></div>
+  }
+
+  if (ismain) {
+    return <RouterProvider router={womRouter} />
+  }
+
+  return <RouterProvider router={offspringRouter} />
 }
 
 export default App;

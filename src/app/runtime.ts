@@ -8,7 +8,7 @@ import { appCacheDir, appConfigDir, appDataDir, appLocalDataDir, appLogDir, audi
 import { FileEntry, exists, readDir } from '@tauri-apps/api/fs';
 import { open } from '@tauri-apps/api/shell';
 import { invoke } from '@tauri-apps/api/tauri';
-import { WebviewWindow } from '@tauri-apps/api/window';
+import { WebviewWindow, getCurrent } from '@tauri-apps/api/window';
 
 // 剪贴板
 const clipboardWriteText = (s: string) => writeText(s);
@@ -178,6 +178,24 @@ const mainWindowHide = () => {
     WebviewWindow.getByLabel('main')?.hide();
 }
 
+// 创建临时窗口
+const pageWebView = (url: string) => {
+    let webview = WebviewWindow.getByLabel('offspring');
+    if (webview) {
+        webview.show();
+        return;
+    }
+    webview = new WebviewWindow('offspring', { 
+        url,
+        title: 'offspring',
+        center: true,
+        decorations: false,
+        transparent: true,
+     });
+}
+
+const currentLabel = () => getCurrent().label;
+const isMain = () => currentLabel() === 'main';
 
 // ========= platform-independent =========
 
@@ -240,7 +258,7 @@ export {
     formatPath, allowedFormatPath, listFiles,
     shellOpen, shellSelect,
     calc, shutdown_power,
-    mainWindowHide,
+    mainWindowHide, pageWebView, currentLabel, isMain,
     whenfocus, whenkeydown,
     debounce, throttle
 }

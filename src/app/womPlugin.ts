@@ -1,20 +1,20 @@
-import { constants } from "./env";
+import { constants, router } from "./env";
 import { calc, clipboardWriteTextNotify, shutdown_power } from "./runtime";
 import { Input } from "./womInputer";
 import { ItemCommon, ItemDescriptor } from "./womItem";
 import { ItemType } from "./womItemType";
 
 const gotoNavigation: ItemCommon = {
-    theKey: constants.router_navigation_name,
+    theKey: router.navigation_name,
     theType: ItemType.Navi,
-    title: constants.router_navigation_name,
+    title: router.navigation_name,
     detail: ""
 };
 
 const gotoSetting: ItemCommon = {
-    theKey: constants.router_setting_name,
+    theKey: router.setting_name,
     theType: ItemType.Setting,
-    title: constants.router_setting_name,
+    title: router.setting_name,
     detail: ""
 };
 

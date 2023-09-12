@@ -1,13 +1,13 @@
 /// 定义item及其触发方式
 
-import { variables } from './env';
-import { clipboardWriteText, clipboardWriteTextNotify, formatPath, mainWindowHide, notify, shellOpen, shellSelect } from './runtime';
+import { routerPath, variables } from './env';
+import { clipboardWriteText, clipboardWriteTextNotify, formatPath, mainWindowHide, notify, pageWebView, shellOpen, shellSelect } from './runtime';
 import { ItemState } from './womItem';
 import { ItemType } from './womItemType';
 
 /**
  * todo
- * - BUG 键盘触发page 页面跳转 失败
+ * - offspring 增加 frame 样式
  * - 插件in_empty_page：调色盘、格式转换、便签
  * - 去除调试输出
  * - css 命名规范化
@@ -106,6 +106,10 @@ async function triggerItem(item: ItemState, arg: string) {
         case ItemType.Application:
             triggerApp(item.actions[item.actionIndex], await formatPath(item.detail));
             break;
+        case ItemType.Navi:
+        case ItemType.Setting:
+            pageWebView(routerPath(item.title));
+            break
         default:
             console.warn(`${item.title} has no trigger`);
             break;
