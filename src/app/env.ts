@@ -1,5 +1,6 @@
 const constants = {
     db_name: 'sqlite:wom.db',
+    app_loading_delay: 500,
 
     wom_input_placeholder: '',
     wom_tag_default: '',

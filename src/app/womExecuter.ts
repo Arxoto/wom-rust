@@ -7,7 +7,7 @@ import { ItemType } from './womItemType';
 
 /**
  * todo
- * - offspring 增加 frame 样式
+ * - offspring 关闭标志的动画效果和可移动标识
  * - 插件in_empty_page：调色盘、格式转换、便签
  * - 去除调试输出
  * - css 命名规范化

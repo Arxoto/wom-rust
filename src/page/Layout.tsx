@@ -1,4 +1,6 @@
+import { isMain } from '../app/runtime';
 import './Layout.css';
+import './LayoutOffspring.css'
 
 interface ReactDomWithChildren {
     children: any
@@ -21,11 +23,24 @@ function Body({ children }: ReactDomWithChildren) {
 }
 
 function Head({ children }: ReactDomWithChildren) {
+    if (isMain())
+        return (
+            <div className='head'>
+                {children}
+                <img className='wom-icon' src="" alt="" data-tauri-drag-region />
+            </div>
+        )
     return (
-        <div className='head'>
-            {children}
-            <img src="" alt="" data-tauri-drag-region />
-        </div>
+        <>
+            <div className="offspring-head" data-tauri-drag-region>
+                <div className='offspring-frame'></div>
+            </div>
+            <div className='offspring-placeholder'></div>
+            <div className='head'>
+                {children}
+                <img className='offspring-icon' src="" alt="" data-tauri-drag-region />
+            </div>
+        </>
     )
 }
 

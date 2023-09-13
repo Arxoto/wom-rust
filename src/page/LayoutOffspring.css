@@ -1,0 +1,42 @@
+.offspring-placeholder {
+    height: var(--offspring-height);
+    flex-shrink: 0;
+}
+
+.offspring-head {
+    z-index: -1;
+    flex-shrink: 0;
+    position: absolute;
+    width: 100%;
+    height: calc(var(--offspring-height) + var(--root-radius));
+
+    background-color: var(--color-common-magical);
+    border-top-left-radius: var(--root-radius);
+    border-top-right-radius: var(--root-radius);
+
+    overflow: hidden;
+}
+
+.offspring-frame {
+    position: absolute;
+    width: 100%;
+    height: var(--root-radius);
+    bottom: 0;
+
+    background-color: var(--color-common-general);
+    border-top-left-radius: var(--root-radius);
+    border-top-right-radius: var(--root-radius);
+    box-shadow: 0 0 8px var(--root-shadow-color);
+}
+
+.head>.offspring-icon {
+    content: url(/chaos.png);
+    filter: drop-shadow(0 0 4px var(--color-different-general));
+}
+
+
+.toClose {
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+}

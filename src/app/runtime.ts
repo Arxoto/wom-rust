@@ -182,7 +182,7 @@ const mainWindowHide = () => {
 const pageWebView = (url: string) => {
     let webview = WebviewWindow.getByLabel('offspring');
     if (webview) {
-        webview.show();
+        webview.show().then(() => webview?.setFocus());
         return;
     }
     webview = new WebviewWindow('offspring', { 
@@ -196,6 +196,7 @@ const pageWebView = (url: string) => {
 
 const currentLabel = () => getCurrent().label;
 const isMain = () => currentLabel() === 'main';
+const currentWindowClose = () => getCurrent().close();
 
 // ========= platform-independent =========
 
@@ -258,7 +259,7 @@ export {
     formatPath, allowedFormatPath, listFiles,
     shellOpen, shellSelect,
     calc, shutdown_power,
-    mainWindowHide, pageWebView, currentLabel, isMain,
+    mainWindowHide, pageWebView, currentLabel, isMain, currentWindowClose,
     whenfocus, whenkeydown,
     debounce, throttle
 }

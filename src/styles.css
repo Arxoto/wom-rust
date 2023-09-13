@@ -1,5 +1,9 @@
 :root {
-  --root-shadow: 8px;
+  --root-radius: 8px;
+  --root-shadow: 16px;
+  --root-shadow-color: #606060;
+  --offspring-height: 16px;
+
   --color-common-general: #f3f3f3;
   --color-common-magical: #e0e0e0;
   --color-different-general: #8b8b8b;
@@ -86,9 +90,9 @@ body {
   height: calc(100% - 2 * var(--root-shadow));
   width: calc(100% - 2 * var(--root-shadow));
   margin: var(--root-shadow);
-  box-shadow: 0 0 var(--root-shadow) var(--color-different-general);
+  box-shadow: 0 0 var(--root-shadow) var(--root-shadow-color);
 
-  border-radius: var(--root-shadow);
+  border-radius: var(--root-radius);
   background-color: var(--color-common-general);
 }
 

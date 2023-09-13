@@ -1,11 +1,14 @@
 /* box 下方留下空隙 */
 .box {
     position: fixed;
-    height: calc(100% - 3 * var(--root-shadow));
+    top: var(--root-shadow);
+    height: calc(100% - 2 * var(--root-shadow) - var(--root-radius));
     width: calc(100% - 2 * var(--root-shadow));
 
     display: flex;
-    flex-flow: column;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 /* body 长度自适应 */
@@ -18,6 +21,7 @@
 .head {
     width: 100%;
     font-size: 1.6em;
+    flex-shrink: 0;
 
     display: flex;
     justify-content: flex-start;
@@ -27,11 +31,14 @@
 .head>img {
     width: 1.6em;
     margin: 0 .4em 0 0;
+}
+
+.head>.wom-icon {
     content: url(/wom.png);
 }
 
 @media (prefers-color-scheme: dark) {
-    .head>img {
+    .head>.wom-icon {
         content: url(/wow.png);
     }
 }
