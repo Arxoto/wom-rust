@@ -6,7 +6,6 @@ import { listen } from '@tauri-apps/api/event';
 import { Options, isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification';
 import { appCacheDir, appConfigDir, appDataDir, appLocalDataDir, appLogDir, audioDir, cacheDir, configDir, dataDir, desktopDir, documentDir, downloadDir, executableDir, fontDir, homeDir, join, localDataDir, pictureDir, publicDir, resolve, resourceDir, runtimeDir, sep, templateDir, videoDir } from '@tauri-apps/api/path';
 import { FileEntry, exists, readDir } from '@tauri-apps/api/fs';
-import { open } from '@tauri-apps/api/shell';
 import { invoke } from '@tauri-apps/api/tauri';
 import { WebviewWindow, getCurrent } from '@tauri-apps/api/window';
 
@@ -161,8 +160,9 @@ async function listFiles(desc: string, uri: string): Promise<[string, string][]>
     return result;
 }
 
-// 打开资源
-const shellOpen = (s: string) => open(s);
+// 打开资源 @tauri-apps/api/shell open 打开的进程会挂在本进程下面
+// const shellOpen = (s: string) => open(s);
+const shellOpen = async (s: string) => invoke("shell_execute", { file: s });
 
 // 选中资源
 const shellSelect = (s: string) => {
