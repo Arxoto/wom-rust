@@ -52,7 +52,10 @@ export default function () {
     }));
 
     const getAddItems = () => textRef.current!.value.split('\n').map(line => {
-        let [theType, title, detail] = line.split('|');
+        const ls = line.split('|');
+        let theType = ls[0];
+        let title = ls[1];
+        let detail = ls.slice(2).join('|');
         return { tag: ItemTag.Insert, id: 0, theType: theType?.trim(), title: title?.trim(), detail: detail?.trim() };
     }).filter(item => item.theType && item.title && item.detail && allowedTypes.includes(item.theType));
 
