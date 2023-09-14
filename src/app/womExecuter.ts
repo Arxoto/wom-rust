@@ -72,7 +72,7 @@ async function triggerItem(item: ItemState, arg: string) {
             let args = arg.trim().split(/\s+/);
             let command = item.detail;
             for (let i = 0; i < args.length && command.includes(variables.input_replace); i++) {
-                command.replace(variables.input_replace, args[i]);
+                command = command.replace(variables.input_replace, args[i]);
             }
             clipboardWriteText(command).then(() => {
                 shellOpen(variables.cmd_terminal).catch(e => {
