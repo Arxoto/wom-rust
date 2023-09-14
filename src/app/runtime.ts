@@ -8,6 +8,7 @@ import { appCacheDir, appConfigDir, appDataDir, appLocalDataDir, appLogDir, audi
 import { FileEntry, exists, readDir } from '@tauri-apps/api/fs';
 import { invoke } from '@tauri-apps/api/tauri';
 import { WebviewWindow, getCurrent } from '@tauri-apps/api/window';
+import { open } from '@tauri-apps/api/shell';
 
 // 剪贴板
 const clipboardWriteText = (s: string) => writeText(s);
@@ -160,9 +161,9 @@ async function listFiles(desc: string, uri: string): Promise<[string, string][]>
     return result;
 }
 
-// 打开资源 @tauri-apps/api/shell open 打开的进程会挂在本进程下面
-// const shellOpen = (s: string) => open(s);
-const shellOpen = async (s: string) => invoke("shell_execute", { file: s });
+// 打开资源 两个打开的进程貌似都会挂在本进程下面
+const shellOpen = (s: string) => open(s);
+// const shellOpen = async (s: string) => invoke("shell_execute", { file: s });
 
 // 选中资源
 const shellSelect = (s: string) => {
