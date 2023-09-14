@@ -108,7 +108,7 @@ async function triggerItem(item: ItemState, arg: string) {
             break;
         case ItemType.Navi:
         case ItemType.Setting:
-            pageWebView(routerPath(item.title));
+            pageWebView(item.title, routerPath(item.title));
             break
         default:
             console.warn(`${item.title} has no trigger`);

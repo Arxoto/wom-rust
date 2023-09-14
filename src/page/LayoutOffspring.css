@@ -17,6 +17,18 @@
     overflow: hidden;
 }
 
+.offspring-inner {
+    position: absolute;
+    left: var(--root-radius);
+    height: var(--offspring-height);
+    width: calc(100% - 2 * var(--root-radius));
+
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .offspring-frame {
     position: absolute;
     width: 100%;
@@ -32,11 +44,38 @@
 .head>.offspring-icon {
     content: url(/chaos.png);
     filter: drop-shadow(0 0 4px var(--color-different-general));
+    cursor: grab;
 }
 
+.offspring-inner-right {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
 
-.toClose {
-    position: absolute;
-    right: 0;
+.to-ontop,
+.to-notop,
+.to-close {
+    height: 10px;
+    width: 10px;
+    border-radius: 5px;
+    margin: 0 3px;
     cursor: pointer;
+}
+
+.to-ontop:hover,
+.to-notop:hover,
+.to-close:hover {
+    transform: scale(1.4);
+}
+
+.to-ontop {
+    background-color: blue;
+}
+.to-notop {
+    background-color: green;
+}
+.to-close {
+    background-color: red;
 }

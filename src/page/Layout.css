@@ -35,6 +35,7 @@
 
 .head>.wom-icon {
     content: url(/wom.png);
+    cursor: grab;
 }
 
 @media (prefers-color-scheme: dark) {

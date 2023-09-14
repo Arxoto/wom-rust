@@ -179,24 +179,25 @@ const mainWindowHide = () => {
 }
 
 // 创建临时窗口
-const pageWebView = (url: string) => {
-    let webview = WebviewWindow.getByLabel('offspring');
+const pageWebView = (name: string, url: string) => {
+    let webview = WebviewWindow.getByLabel(name);
     if (webview) {
         webview.show().then(() => webview?.setFocus());
         return;
     }
-    webview = new WebviewWindow('offspring', { 
+    webview = new WebviewWindow(name, {
         url,
-        title: 'offspring',
+        title: name,
         center: true,
         decorations: false,
         transparent: true,
-     });
+    });
 }
 
 const currentLabel = () => getCurrent().label;
 const isMain = () => currentLabel() === 'main';
 const currentWindowClose = () => getCurrent().close();
+const currentWindowTop = (ontop: boolean) => getCurrent().setAlwaysOnTop(ontop);
 
 // ========= platform-independent =========
 
@@ -259,7 +260,7 @@ export {
     formatPath, allowedFormatPath, listFiles,
     shellOpen, shellSelect,
     calc, shutdown_power,
-    mainWindowHide, pageWebView, currentLabel, isMain, currentWindowClose,
+    mainWindowHide, pageWebView, currentLabel, isMain, currentWindowClose, currentWindowTop,
     whenfocus, whenkeydown,
     debounce, throttle
 }
