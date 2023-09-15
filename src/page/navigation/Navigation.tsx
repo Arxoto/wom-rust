@@ -1,5 +1,5 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Box, Head, Body } from "../Layout";
+import { Box, Head, Body, OffspringHead } from "../Layout";
 import './Navigation.css';
 import { isMain } from '../../app/runtime';
 
@@ -17,7 +17,7 @@ export default function () {
 
     // 导航栏
     let shownames: string[] = location.pathname.split('/');
-    
+
     // url[0] === '' （开头必定是'/' 跳过）
     // url[1:] 为自身的相对路径
     if (!(shownames.length > 1 && shownames[0] === '')) {
@@ -42,28 +42,34 @@ export default function () {
     let onBack;
     if (navigations.length < 2) {
         // 导航页
-        if (isMain()) {
-            onBack = () => navigate('/');
-        }
+        onBack = () => navigate('/');
     } else {
         onBack = () => navigate(navigations[navigations.length - 2].pathname);
     }
     return (
         <Box>
-            <Head>
-                <div className='activable-text' onClick={onBack}>&lt;</div>
-                <div className='common-box navigation-box'>
-                    {navigations.map(navigation => {
-                        let inner;
-                        if (navigation.clickable) {
-                            inner = <span className='common-color activable-button' onClick={() => navigate(navigation.pathname)}>{navigation.showname}</span>
-                        } else {
-                            inner = <span>{navigation.showname}</span>
-                        }
-                        return <div key={navigation.index}>/{inner}</div>
-                    })}
-                </div>
-            </Head>
+            {
+                isMain() ?
+                    <Head>
+                        <div className='activable-text' onClick={onBack}>&lt;</div>
+                        <div className='common-box navigation-box'>
+                            {navigations.map(navigation => {
+                                let inner;
+                                if (navigation.clickable) {
+                                    inner = <span className='common-color activable-button' onClick={() => navigate(navigation.pathname)}>{navigation.showname}</span>
+                                } else {
+                                    inner = <span>{navigation.showname}</span>
+                                }
+                                return <div key={navigation.index}>/{inner}</div>
+                            })}
+                        </div>
+                    </Head>
+                    :
+                    <OffspringHead>
+                        <div className='activable-text'>·</div>
+                        <div className='common-box navigation-box'>{navigations[navigations.length - 1].showname}</div>
+                    </OffspringHead>
+            }
             <Body>
                 <div style={{ display: 'flex', padding: '0 1em' }}><Outlet /></div>
             </Body>

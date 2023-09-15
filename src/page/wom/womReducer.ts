@@ -6,6 +6,7 @@
 import { ItemDescriptor, ItemState } from "../../app/womItem";
 import { triggerItem } from "../../app/womExecuter";
 import { Input } from "../../app/womInputer";
+import { throttle } from "../../app/runtime";
 
 /** 定义状态 */
 interface WomState {
@@ -90,7 +91,7 @@ function womReducer(womState: WomState, action: ItemsReducerAction): WomState {
             // 这个没有改变渲染 其实不应该放在这 但是为了能全局使用又只能放在这
             let itemIndex = action.itemIndex || womState.currentIndex;
             let item = womState.items[itemIndex]
-            triggerItem(item, womState.input.arg);
+            ftItem(item, womState.input.arg);
             return womState;
         }
         default: {
@@ -98,6 +99,9 @@ function womReducer(womState: WomState, action: ItemsReducerAction): WomState {
         }
     }
 }
+
+// 防止 React.StrictMode 模式中触发两次
+const ftItem: (item: ItemState, arg: string) => void = throttle(200, triggerItem);
 
 export {
     womReducer, movedAction, movedItem

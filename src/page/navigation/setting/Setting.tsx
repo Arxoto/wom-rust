@@ -10,6 +10,8 @@ import ItemFamily from "./ItemFamily";
 import { itemsInit } from "../../../app/womInputer";
 import { constants } from "../../../app/env";
 
+import './Setting.css'
+
 /* example
 cmd|ipconfig|ipconfig
 web|youdao-fanyi|https://fanyi.youdao.com/indexLLM.html#/
@@ -111,15 +113,15 @@ export default function () {
     }
 
     return <div style={{ width: '100%' }}>
-        <div className="radian-box common-color " style={{ position: 'fixed' }}>
-            <div style={{ display: 'flex' }}>
+        <div className="setting-box">
+            <div className="radian-box common-color setting-bar">
                 <div className="activable-text common-color big-box" onClick={add}>add</div>
                 <div className="activable-text common-color big-box" onClick={tips}>tips</div>
                 <div className="activable-text common-color big-box" onClick={clear}>clear</div>
                 <div className="activable-text common-color big-box" onClick={save}>save</div>
             </div>
-            <textarea ref={textRef} placeholder={constants.setting_add_placeholder} style={{ display: 'none', position: 'fixed', width: '90%', height: '70%' }}></textarea>
-            <div ref={tipsRef} className="radian-box common-color" style={{ display: 'none', position: 'fixed', width: '90%', height: '70%', overflow: 'auto', userSelect: 'text' }}>
+            <textarea ref={textRef} className="add-text" placeholder={constants.setting_add_placeholder} style={{ display: 'none' }}></textarea>
+            <div ref={tipsRef} className="radian-box common-color tips-table" style={{ display: 'none' }}>
                 <table>
                     <thead><tr><th>pathTag</th><th>truePath</th></tr></thead>
                     <tbody>
@@ -127,7 +129,6 @@ export default function () {
                 </table>
             </div>
         </div>
-        <div style={{ height: '3em' }}></div>
         {itemFamilies.map((itemFamily, i) => <ItemFamily key={i} theType={itemFamily.theType} itemLines={itemFamily.items} setItems={setItems} />)}
     </div>
 }

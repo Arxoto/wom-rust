@@ -180,15 +180,16 @@ const mainWindowHide = () => {
 }
 
 // 创建临时窗口
-const pageWebView = (name: string, url: string) => {
-    let webview = WebviewWindow.getByLabel(name);
+const pageWebView = (title: string, url: string) => {
+    let webview = WebviewWindow.getByLabel(title);
     if (webview) {
         webview.show().then(() => webview?.setFocus());
         return;
     }
-    webview = new WebviewWindow(name, {
+
+    new WebviewWindow(title, {
         url,
-        title: name,
+        title,
         center: true,
         decorations: false,
         transparent: true,

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { currentWindowClose, currentWindowTop, isMain } from '../app/runtime';
+import { currentWindowClose, currentWindowTop } from '../app/runtime';
 import './Layout.css';
 import './LayoutOffspring.css'
 
@@ -24,13 +24,15 @@ function Body({ children }: ReactDomWithChildren) {
 }
 
 function Head({ children }: ReactDomWithChildren) {
-    if (isMain())
-        return (
-            <div className='head'>
-                {children}
-                <img className='wom-icon' src="" alt="" data-tauri-drag-region />
-            </div>
-        )
+    return (
+        <div className='head'>
+            {children}
+            <img className='wom-icon' src="" alt="" data-tauri-drag-region />
+        </div>
+    )
+}
+
+function OffspringHead({ children }: ReactDomWithChildren) {
     return (
         <>
             <div className="offspring-head">
@@ -64,4 +66,4 @@ function InputButton({ className, onClick }: { className: any, onClick: () => vo
     return <div className={className} onClick={onClick}></div>
 }
 
-export { Box, Body, Head };
+export { Box, Body, Head, OffspringHead };

@@ -1,0 +1,39 @@
+.setting-box {
+    position: absolute;
+    left: calc(2 * var(--root-shadow));
+    width: calc(100% - 4 * var(--root-shadow));
+}
+
+.setting-bar {
+    margin: 0 0 16px 0 !important;
+    padding: 0 !important;
+    box-shadow: 0 0 16px var(--root-shadow-color) !important;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.tips-table {
+    box-shadow: 0 0 16px var(--root-shadow-color) !important;
+    margin: 0 !important;
+    padding: 8px !important;
+
+    position: absolute;
+    width: calc(100% - 16px);
+    height: 20em;
+
+    overflow: auto;
+    user-select: text;
+}
+
+.add-text {
+    box-shadow: 0 0 16px var(--root-shadow-color) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+
+    position: absolute;
+    width: 100%;
+    height: 20em;
+    border: 0;
+}
