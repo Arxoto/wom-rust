@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react"
-import { useNavigate } from "react-router-dom";
 
 import { ItemTag } from "../../../app/womItemTag";
 import { ItemType } from "../../../app/womItemType";
-import { ItemConfig } from "../../../app/womItem";
+import { ItemConfig, ItemMember } from "../../../app/womItem";
 import { itemsDelete, itemsInsert, itemsSelect, itemsTableCreate, itemsTableDrop, itemsUpdate } from "../../../app/persistence"
 import { allowedFormatPath, ensure, formatPath } from "../../../app/runtime";
 
@@ -21,8 +20,9 @@ file|.*\.txt$|D:\book
 */
 
 export default function () {
+    const [flag, setFlag] = useState(false);
     const [pathMap, setPathMap] = useState<Array<[string, string]>>([]);
-    const [items, setItems] = useState<ItemConfig[] | null>(null);
+    const [items, setItems] = useState<ItemConfig[]>([]);
     useEffect(() => {
         itemsSelect().then(ais => {
             setItems(ais.map(ai => ({ ...ai, tag: ItemTag.None })));
@@ -35,33 +35,27 @@ export default function () {
             setPathMap(tmpMap);
         })();
 
-    }, []);
+    }, [flag]);
 
     const textRef = useRef<HTMLTextAreaElement>(null);
     const tipsRef = useRef<HTMLDivElement>(null);
-    const navigate = useNavigate();
-
-    if (!items) {
-        return <></>;
-    }
 
     const allowedTypes: string[] = [ItemType.Cmd, ItemType.Web, ItemType.Application, ItemType.Folder, ItemType.File];
-    const itemsFamily = allowedTypes.map(itemType => ({
+    const itemFamilies: { theType: string, items: ItemMember[] }[] = allowedTypes.map(itemType => ({
         theType: itemType,
-        items: items.filter(item => item.theType === itemType)
+        items: items.map((item, i) => ({ ...item, index: i })).filter(item => item.theType === itemType)
     }));
 
     const getAddItems = () => textRef.current!.value.split('\n').map(line => {
-        const ls = line.split('|');
+        const ls = line.split(constants.setting_split);
         let theType = ls[0];
         let title = ls[1];
-        let detail = ls.slice(2).join('|');
+        let detail = ls.slice(2).join(constants.setting_split);
         return { tag: ItemTag.Insert, id: 0, theType: theType?.trim(), title: title?.trim(), detail: detail?.trim() };
     }).filter(item => item.theType && item.title && item.detail && allowedTypes.includes(item.theType));
 
     const add = () => {
         if (textRef.current!.style.display === 'none') {
-            textRef.current!.value = '';
             textRef.current!.style.setProperty('display', 'inline');
         } else {
             textRef.current!.style.setProperty('display', 'none');
@@ -70,6 +64,7 @@ export default function () {
             }
 
             const newItems = getAddItems();
+            textRef.current!.value = '';
             if (newItems.length) {
                 setItems([...items, ...newItems]);
             }
@@ -88,34 +83,31 @@ export default function () {
         const shouldClear = await ensure('sure?');
         shouldClear && itemsTableDrop().then(() =>
             itemsTableCreate().then(() =>
-                navigate('/')));
+                setFlag(!flag)));
     }
 
     const save = async () => {
         // 确保顺序更新完成后，刷新缓存
-        let deletes = items.filter(item => item.tag === ItemTag.Delete).map(item => item.id);
-        for (let i = 0; i < deletes.length; i++) {
-            const id = deletes[i];
+        // id 为 0 表示刚刚新增的不在db中
+        let deletes = items.filter(item => item.tag === ItemTag.Delete && item.id).map(item => item.id);
+        for (const id of deletes) {
             await itemsDelete(id);
         }
         let updates = items.filter(item => item.tag === ItemTag.Update);
-        for (let i = 0; i < updates.length; i++) {
-            const item = updates[i];
+        for (const item of updates) {
             await itemsUpdate(item);
         }
         let inserts = items.filter(item => item.tag === ItemTag.Insert);
-        for (let i = 0; i < inserts.length; i++) {
-            const item = inserts[i];
+        for (const item of inserts) {
             await itemsInsert(item);
         }
         let adds = getAddItems();
-        for (let i = 0; i < adds.length; i++) {
-            const item = adds[i];
+        for (const item of adds) {
             await itemsInsert(item);
         }
 
         await itemsInit();
-        navigate('/');
+        setFlag(!flag);
     }
 
     return <div style={{ width: '100%' }}>
@@ -136,6 +128,6 @@ export default function () {
             </div>
         </div>
         <div style={{ height: '3em' }}></div>
-        {itemsFamily.map((itemFamily, i) => <ItemFamily key={i} theType={itemFamily.theType} itemLines={itemFamily.items} allItems={items} setItems={setItems} />)}
+        {itemFamilies.map((itemFamily, i) => <ItemFamily key={i} theType={itemFamily.theType} itemLines={itemFamily.items} setItems={setItems} />)}
     </div>
 }

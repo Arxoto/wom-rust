@@ -24,6 +24,13 @@ interface ItemConfig extends ItemTable {
 }
 
 /**
+ * item配置展示时带上索引信息
+ */
+interface ItemMember extends ItemConfig {
+    index: number
+}
+
+/**
  * item 常规意义上的信息 长期存在于内存中
  * - theKey 用于匹配
  */
@@ -57,5 +64,7 @@ interface ItemState extends ItemDescriptor {
 }
 
 export type {
-    ItemBase, ItemCommon, ItemTable, ItemConfig, ItemReduced, ItemDescriptor, ItemState
+    ItemBase,
+    ItemTable, ItemConfig, ItemMember,
+    ItemCommon, ItemReduced, ItemDescriptor, ItemState
 }
