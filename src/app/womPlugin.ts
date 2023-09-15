@@ -1,5 +1,5 @@
 import { constants, router } from "./env";
-import { calc, clipboardWriteTextNotify, shutdown_power } from "./runtime";
+import { calc, clipboardWriteTextNotify, ensure, shutdown_power } from "./runtime";
 import { Input } from "./womInputer";
 import { ItemCommon, ItemDescriptor } from "./womItem";
 import { ItemType } from "./womItemType";
@@ -18,8 +18,9 @@ const gotoSetting: ItemCommon = {
     detail: ""
 };
 
-const power_trigger = (action: string, _arg: string) => {
-    shutdown_power(action);
+const power_trigger = async (action: string, _arg: string) => {
+    const shouldShutdown = await ensure('sure?');
+    shouldShutdown && shutdown_power(action);
 }
 
 const power_hibernate: ItemDescriptor = {
