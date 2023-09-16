@@ -128,6 +128,7 @@ export default function () {
                 </table>
             </div>
         </div>
+        <div className="fake-setting-box"></div>
         {itemFamilies.map((itemFamily, i) => <ItemFamily key={i} theType={itemFamily.theType} itemLines={itemFamily.items} setItems={setItems} />)}
     </div>
 }

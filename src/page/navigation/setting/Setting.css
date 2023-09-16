@@ -1,3 +1,7 @@
+.fake-setting-box {
+    height: 2em;;
+}
+
 .setting-box {
     position: absolute;
     left: calc(2 * var(--root-shadow));
