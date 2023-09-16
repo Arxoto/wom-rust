@@ -68,14 +68,14 @@ function womReducer(womState: WomState, action: ItemsReducerAction): WomState {
             return { input: newInput, currentIndex: 0, items: newItems };
         }
         case 'left': {
-            let itemIndex = action.itemIndex || womState.currentIndex;
+            let itemIndex = action.itemIndex ?? womState.currentIndex;
             return {
                 ...womState,
                 items: movedAction(womState.items, itemIndex, -1)
             }
         }
         case 'right': {
-            let itemIndex = action.itemIndex || womState.currentIndex;
+            let itemIndex = action.itemIndex ?? womState.currentIndex;
             return {
                 ...womState,
                 items: movedAction(womState.items, itemIndex, 1)
@@ -89,7 +89,7 @@ function womReducer(womState: WomState, action: ItemsReducerAction): WomState {
         }
         case 'trigger': {
             // 这个没有改变渲染 其实不应该放在这 但是为了能全局使用又只能放在这
-            let itemIndex = action.itemIndex || womState.currentIndex;
+            let itemIndex = action.itemIndex ?? womState.currentIndex;
             let item = womState.items[itemIndex]
             ftItem(item, womState.input.arg);
             return womState;
