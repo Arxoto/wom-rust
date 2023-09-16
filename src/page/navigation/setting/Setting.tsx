@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 
 import { ItemTag } from "../../../app/womItemTag";
-import { ItemType } from "../../../app/womItemType";
+import { dbAallowedTypes } from "../../../app/womItemType";
 import { ItemConfig, ItemMember } from "../../../app/womItem";
 import { itemsDelete, itemsInsert, itemsSelect, itemsTableCreate, itemsTableDrop, itemsUpdate } from "../../../app/persistence"
 import { allowedFormatPath, ensure, formatPath } from "../../../app/runtime";
@@ -42,8 +42,7 @@ export default function () {
     const textRef = useRef<HTMLTextAreaElement>(null);
     const tipsRef = useRef<HTMLDivElement>(null);
 
-    const allowedTypes: string[] = [ItemType.Cmd, ItemType.Web, ItemType.Application, ItemType.Folder, ItemType.File];
-    const itemFamilies: { theType: string, items: ItemMember[] }[] = allowedTypes.map(itemType => ({
+    const itemFamilies: { theType: string, items: ItemMember[] }[] = dbAallowedTypes.map(itemType => ({
         theType: itemType,
         items: items.map((item, i) => ({ ...item, index: i })).filter(item => item.theType === itemType)
     }));
@@ -54,7 +53,7 @@ export default function () {
         let title = ls[1];
         let detail = ls.slice(2).join(constants.setting_split);
         return { tag: ItemTag.Insert, id: 0, theType: theType?.trim(), title: title?.trim(), detail: detail?.trim() };
-    }).filter(item => item.theType && item.title && item.detail && allowedTypes.includes(item.theType));
+    }).filter(item => item.theType && item.title && item.detail && dbAallowedTypes.includes(item.theType));
 
     const add = () => {
         if (textRef.current!.style.display === 'none') {

@@ -1,31 +1,3 @@
-function getItemTypeId(itemType: string): ItemTypeInfo {
-    switch (itemType) {
-        case ItemType.Plugin:
-            return ItemTypePlugin;
-        case ItemType.Navi:
-            return ItemTypeNavi;
-        case ItemType.Setting:
-            return ItemTypeSetting;
-        case ItemType.Cmd:
-            return ItemTypeCmd;
-        case ItemType.Web:
-            return ItemTypeWeb;
-        case ItemType.Application:
-            return ItemTypeApplication;
-        case ItemType.Folder:
-            return ItemTypeFolder;
-        case ItemType.File:
-            return ItemTypeFile;
-        default:
-            return { type: itemType, numb: 0 };
-    }
-}
-
-interface ItemTypeInfo {
-    type: ItemType | string,
-    numb: number,
-}
-
 enum ItemType {
     Navi = "page:navigation",   // 导航页
     Setting = "page:setting",   // 设置页
@@ -37,7 +9,13 @@ enum ItemType {
     File = "file",          // 文件 扫描文件夹下的文件
 }
 
-const itemTypeIsPage = (theType: string) => theType.startsWith('page:');
+/**
+ * ItemType 详细信息 带有优先级顺序
+ */
+interface ItemTypeInfo {
+    type: ItemType | string,
+    numb: number,
+}
 
 const ItemTypePlugin: ItemTypeInfo = {
     type: ItemType.Plugin,
@@ -79,5 +57,36 @@ const ItemTypeFile: ItemTypeInfo = {
     numb: 7
 };
 
-export { ItemType, getItemTypeId, itemTypeIsPage };
+/**
+ * 根据 ItemType 获取详细信息
+ */
+function getItemTypeId(itemType: string): ItemTypeInfo {
+    switch (itemType) {
+        case ItemType.Plugin:
+            return ItemTypePlugin;
+        case ItemType.Navi:
+            return ItemTypeNavi;
+        case ItemType.Setting:
+            return ItemTypeSetting;
+        case ItemType.Cmd:
+            return ItemTypeCmd;
+        case ItemType.Web:
+            return ItemTypeWeb;
+        case ItemType.Application:
+            return ItemTypeApplication;
+        case ItemType.Folder:
+            return ItemTypeFolder;
+        case ItemType.File:
+            return ItemTypeFile;
+        default:
+            return { type: itemType, numb: 0 };
+    }
+}
+
+/**
+ * DB 中存放的类型
+ */
+const dbAallowedTypes: string[] = [ItemType.Cmd, ItemType.Web, ItemType.Application, ItemType.Folder, ItemType.File];
+
+export { ItemType, getItemTypeId, dbAallowedTypes };
 export type { ItemTypeInfo };

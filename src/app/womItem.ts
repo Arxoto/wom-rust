@@ -33,9 +33,11 @@ interface ItemMember extends ItemConfig {
 /**
  * item 常规意义上的信息 长期存在于内存中
  * - theKey 用于匹配
+ * - withArgs 当输入有参数时 仅显示带参数的项
  */
 interface ItemCommon extends ItemBase {
-    theKey: string
+    theKey: string,
+    withArgs: boolean,
 }
 
 /**

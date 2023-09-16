@@ -2,10 +2,11 @@
 
 import { itemsSelect } from "./persistence";
 import { ItemCommon, ItemDescriptor, ItemReduced } from "./womItem";
-import { ItemType, getItemTypeId } from "./womItemType";
+import { ItemType, dbAallowedTypes, getItemTypeId } from "./womItemType";
 import { actionsByType } from "./womExecuter";
 import { genPlugins, gotoNavigation, gotoSetting, power_hibernate, power_restart, power_shutdown } from "./womPlugin";
 import { listFiles } from "./runtime";
+import { variables } from "./env";
 
 // 若有其他类似用法 可以抽成闭包
 let outerCache: ItemCommon[] = [];
@@ -13,17 +14,22 @@ const getItemsCache = () => outerCache;
 const setItemsCache = (next: ItemCommon[]) => { outerCache = next };
 
 const itemsInit = async () => {
-    let items = await itemsSelect();
+    let items = (await itemsSelect()).filter(item => dbAallowedTypes.includes(item.theType));
     let innerCache = [gotoNavigation, gotoSetting, power_hibernate, power_restart, power_shutdown];
 
     // item like cmd/web/app/folder
-    let itemsInDB = items.filter(item => item.theType !== ItemType.File).sort((a, b) => {
+    let itemsInDB: ItemCommon[] = items.filter(item => item.theType !== ItemType.File).sort((a, b) => {
         const { numb: nA } = getItemTypeId(a.theType);
         const { numb: nB } = getItemTypeId(b.theType);
         return nA !== nB ? nA - nB : a.id - b.id;
-    }).map(item => ({ ...item, theKey: item.title.toLowerCase() }));
+    }).map(item => ({
+        ...item,
+        theKey: item.title.toLowerCase(),
+        // 详见 executer 仅 cmd web 允许有参数
+        withArgs: (item.theType === ItemType.Cmd || item.theType === ItemType.Web) && item.detail.includes(variables.input_replace),
+    }));
     innerCache.push(...itemsInDB);
-    
+
     // item like file
     items = items.filter(item => item.theType === ItemType.File);
     for (let i = 0; i < items.length; i++) {
@@ -31,6 +37,7 @@ const itemsInit = async () => {
         let fileItems: ItemCommon[] = (await listFiles(item.title, item.detail)).map(finfo => ({
             theType: ItemType.File,
             theKey: finfo[0].toLowerCase(),
+            withArgs: false,
             title: finfo[0],
             detail: finfo[1],
         }));
@@ -113,7 +120,11 @@ const searchItems = async (input: Input, inputValue: string) => {
 // todo 根据 hasArg 决定过滤逻辑 可以直接加载fn后面
 // 都是浅拷贝 所以能直接for-each修改状态
 const matchItems = (fn: (input: Input, tmpItems: ItemReduced[]) => ItemReduced[]) => (input: Input, tmpItems: ItemReduced[]) => {
-    let result = fn(input, tmpItems.filter(item => !item.selected));
+    let filtered = tmpItems.filter(item => !item.selected);
+    if (input.hasArg) {
+        filtered = filtered.filter(item => item.withArgs);
+    }
+    let result = fn(input, filtered);
     result.forEach(item => item.selected = true);
     return result;
 };

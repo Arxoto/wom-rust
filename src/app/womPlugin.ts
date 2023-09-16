@@ -5,6 +5,7 @@ import { ItemCommon, ItemDescriptor } from "./womItem";
 import { ItemType } from "./womItemType";
 
 const gotoNavigation: ItemCommon = {
+    withArgs: false,
     theKey: router.navigation_name,
     theType: ItemType.Navi,
     title: router.navigation_name,
@@ -12,6 +13,7 @@ const gotoNavigation: ItemCommon = {
 };
 
 const gotoSetting: ItemCommon = {
+    withArgs: false,
     theKey: router.setting_name,
     theType: ItemType.Setting,
     title: router.setting_name,
@@ -19,11 +21,12 @@ const gotoSetting: ItemCommon = {
 };
 
 const power_trigger = async (action: string, _arg: string) => {
-    const shouldShutdown = await ensure('sure?');
+    const shouldShutdown = await ensure(`will ${action}, sure?`);
     shouldShutdown && shutdown_power(action);
 }
 
 const power_hibernate: ItemDescriptor = {
+    withArgs: false,
     actions: ['hibernate'],
     theKey: "power_xm_hibernate",
     theType: ItemType.Plugin,
@@ -32,6 +35,7 @@ const power_hibernate: ItemDescriptor = {
     trigger: power_trigger
 }
 const power_restart: ItemDescriptor = {
+    withArgs: false,
     actions: ['restart'],
     theKey: "power_cq_restart",
     theType: ItemType.Plugin,
@@ -40,6 +44,7 @@ const power_restart: ItemDescriptor = {
     trigger: power_trigger
 }
 const power_shutdown: ItemDescriptor = {
+    withArgs: false,
     actions: ['shutdown'],
     theKey: "power_gj_shutdown",
     theType: ItemType.Plugin,
@@ -48,17 +53,17 @@ const power_shutdown: ItemDescriptor = {
     trigger: power_trigger
 }
 
-const defaultCalcDescriptor: ItemDescriptor = {
-    actions: [],
-    theKey: "",
-    theType: ItemType.Plugin,
-    title: "calculator",
-    detail: constants.plugin_calc_detail
-}
-const genCalcDescriptor = async (input: Input, inputValue: string) => {
+async function genCalcDescriptor(input: Input, inputValue: string): Promise<ItemDescriptor | null> {
     if (input.hasVal && !input.arg && !input.key) {
         // 适配全量匹配
-        return defaultCalcDescriptor;
+        return {
+            withArgs: true,
+            theKey: "",
+            theType: ItemType.Plugin,
+            title: "calculator",
+            detail: constants.plugin_calc_detail,
+            actions: [],
+        };
     }
     if (!/([0-9]|\.|\+|\-|\*|\/%|\^|\(|\))+/.test(inputValue)) {
         // 1.2+0.1+-2*(3/2)%2+2^3
@@ -67,6 +72,7 @@ const genCalcDescriptor = async (input: Input, inputValue: string) => {
     try {
         let value = await calc(inputValue);
         return {
+            withArgs: true,
             theKey: '',
             theType: ItemType.Plugin,
             title: 'calculator',
