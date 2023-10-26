@@ -4,7 +4,7 @@ import { itemsSelect } from "./persistence";
 import { ItemCommon, ItemDescriptor, ItemReduced } from "./womItem";
 import { ItemType, dbAallowedTypes, getItemTypeId } from "./womItemType";
 import { actionsByType } from "./womExecuter";
-import { genPlugins, gotoNavigation, gotoSetting, power_hibernate, power_restart, power_shutdown } from "./womPlugin";
+import { genPlugins, power_hibernate, power_restart, power_shutdown } from "./womPlugin";
 import { listFiles } from "./runtime";
 import { variables } from "./env";
 
@@ -15,7 +15,7 @@ const setItemsCache = (next: ItemCommon[]) => { outerCache = next };
 
 const itemsInit = async () => {
     let items = (await itemsSelect()).filter(item => dbAallowedTypes.includes(item.theType));
-    let innerCache = [gotoNavigation, gotoSetting, power_hibernate, power_restart, power_shutdown];
+    let innerCache: ItemCommon[] = [power_hibernate, power_restart, power_shutdown];
 
     // item like cmd/web/app/folder
     let itemsInDB: ItemCommon[] = items.filter(item => item.theType !== ItemType.File).sort((a, b) => {

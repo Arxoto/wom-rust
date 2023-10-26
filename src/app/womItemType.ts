@@ -1,6 +1,5 @@
 enum ItemType {
-    Navi = "page:navigation",   // 导航页
-    Setting = "page:setting",   // 设置页
+    Page = "page",   // 独立页面
     Plugin = "plugin",      // 内置工具
     Cmd = "cmd",            // 命令行
     Web = "web",            // 网页
@@ -22,13 +21,8 @@ const ItemTypePlugin: ItemTypeInfo = {
     numb: 1
 };
 
-const ItemTypeNavi: ItemTypeInfo = {
-    type: ItemType.Navi,
-    numb: 2
-};
-
-const ItemTypeSetting: ItemTypeInfo = {
-    type: ItemType.Setting,
+const ItemTypePage: ItemTypeInfo = {
+    type: ItemType.Page,
     numb: 2
 };
 
@@ -64,10 +58,8 @@ function getItemTypeId(itemType: string): ItemTypeInfo {
     switch (itemType) {
         case ItemType.Plugin:
             return ItemTypePlugin;
-        case ItemType.Navi:
-            return ItemTypeNavi;
-        case ItemType.Setting:
-            return ItemTypeSetting;
+        case ItemType.Page:
+            return ItemTypePage;
         case ItemType.Cmd:
             return ItemTypeCmd;
         case ItemType.Web:

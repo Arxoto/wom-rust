@@ -8,7 +8,7 @@ import { ItemType } from './womItemType';
 /**
  * todo
  * - offspring 关闭窗口按钮的动画效果和可移动标识
- * - 插件in_empty_page：调色盘、格式转换、便签
+ * - 插件in_empty_page：调色盘、格式转换、便签、OCR接口、翻译接口、密码箱
  * - 去除调试输出
  * - css 命名规范化
  * - 单例启动
@@ -106,8 +106,7 @@ async function triggerItem(item: ItemState, arg: string) {
         case ItemType.Application:
             triggerApp(item.actions[item.actionIndex], await formatPath(item.detail));
             break;
-        case ItemType.Navi:
-        case ItemType.Setting:
+        case ItemType.Page:
             pageWebView(item.title, routerPath(item.title));
             break
         default:

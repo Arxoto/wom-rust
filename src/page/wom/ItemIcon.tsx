@@ -1,8 +1,6 @@
 import { ItemType } from "../../app/womItemType";
 
 import plugin from "../../assets/plugin.svg";
-import navigation from "../../assets/navigation.svg";
-import setting from "../../assets/setting-1.svg";
 import cmd from "../../assets/cmd.svg";
 import web from "../../assets/web.svg";
 import folder from "../../assets/folder-2.svg";
@@ -15,10 +13,6 @@ interface ItemIconElement {
 
 export default function ({ itemType }: ItemIconElement) {
     switch (itemType) {
-        case ItemType.Navi:
-            return <img src={navigation} alt="" style={{ width: '65%' }} />;
-        case ItemType.Setting:
-            return <img src={setting} alt="" style={{ width: '85%' }} />;
         case ItemType.Plugin:
             return <img src={more} alt="" style={{ width: '50%' }} />
         case ItemType.Cmd:

@@ -1,0 +1,28 @@
+.nav-index-header {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.nav-index-body-line {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+
+    margin: 4px;
+    padding: 0 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.nav-index-body-line:hover {
+    filter: drop-shadow(0 0 8px var(--color-different-general));
+}
+
+.nav-index-body-line:active {
+    filter: drop-shadow(0 0 8px var(--color-different-magical));
+}

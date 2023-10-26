@@ -39,13 +39,8 @@ export default function () {
     // 最后一项为自身 不跳转
     navigations[navigations.length - 1].clickable = false;
     // 最后第二项为上一项 默认返回
-    let onBack;
-    if (navigations.length < 2) {
-        // 导航页
-        onBack = () => navigate('/');
-    } else {
-        onBack = () => navigate(navigations[navigations.length - 2].pathname);
-    }
+    // let onBack = navigations.length < 2 ? () => navigate('/') : () => navigate(navigations[navigations.length - 2].pathname);
+    let onBack = () => navigate('/');
     return (
         <Box>
             {
@@ -71,7 +66,7 @@ export default function () {
                     </OffspringHead>
             }
             <Body>
-                <div style={{ display: 'flex', padding: '0 1em' }}><Outlet /></div>
+                <div style={{ padding: '0 1em' }}><Outlet /></div>
             </Body>
         </Box>
     )

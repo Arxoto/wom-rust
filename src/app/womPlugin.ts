@@ -4,19 +4,11 @@ import { Input } from "./womInputer";
 import { ItemCommon, ItemDescriptor } from "./womItem";
 import { ItemType } from "./womItemType";
 
-const gotoNavigation: ItemCommon = {
+const gotoPageTest: ItemCommon = {
     withArgs: false,
     theKey: router.navigation_name,
-    theType: ItemType.Navi,
+    theType: ItemType.Page,
     title: router.navigation_name,
-    detail: ""
-};
-
-const gotoSetting: ItemCommon = {
-    withArgs: false,
-    theKey: router.setting_name,
-    theType: ItemType.Setting,
-    title: router.setting_name,
     detail: ""
 };
 
@@ -102,7 +94,6 @@ const genPlugins = async (input: Input, inputValue: string) => {
 }
 
 export {
-    gotoNavigation, gotoSetting,
     power_hibernate, power_restart, power_shutdown,
     genPlugins,
     genCalcDescriptor,
