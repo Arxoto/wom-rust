@@ -1,21 +1,24 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use crate::{platform::{shell_execute, shutdown_power, open_folder_and_select_items}, calculator::calc};
+use crate::{
+    calculator::calc,
+    platform::{open_folder_and_select_items, shell_execute, shutdown_power},
+};
 
+mod calculator;
 mod my_tray;
 mod platform;
-mod calculator;
 
 /// 开机启动 https://github.com/tauri-apps/plugins-workspace/tree/v1/plugins/autostart
 /// 单例启动 https://github.com/tauri-apps/plugins-workspace/tree/v1/plugins/single-instance
 /// db       https://github.com/tauri-apps/plugins-workspace/tree/v1/plugins/sql
-/// 
+///
 /// pnpm tauri dev
 /// pnpm tauri build
 ///     not used  set http_proxy=http://127.0.0.1:10809
 ///     not used  set https_proxy=http://127.0.0.1:10809
-/// 
+///
 /// https://github.com/tauri-apps/tauri/blob/dev/tooling/bundler/src/bundle/windows/msi.rs#L28
 /// https://github.com/tauri-apps/tauri/blob/dev/tooling/bundler/src/bundle/windows/msi/wix.rs#L33
 /// https://github.com/tauri-apps/tauri/blob/dev/tooling/bundler/src/bundle/windows/nsis.rs#L47
@@ -28,12 +31,18 @@ mod calculator;
 /// %LocalAppData%\tauri\NSIS\Plugins\x86-unicode      复制 nsis_tauri_utils.dll 至目录下
 
 // todo 优化 rust 部分的异常处理 如 unwrap
+
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_sql::Builder::default().build())
         .system_tray(my_tray::system_tray())
         .on_system_tray_event(my_tray::on_system_tray_event)
-        .invoke_handler(tauri::generate_handler![shell_execute, shutdown_power, open_folder_and_select_items, calc])
+        .invoke_handler(tauri::generate_handler![
+            shell_execute,
+            shutdown_power,
+            open_folder_and_select_items,
+            calc
+        ])
         .on_window_event(|event| match event.event() {
             tauri::WindowEvent::CloseRequested { api, .. } => {
                 if event.window().label().eq("main") {
@@ -53,4 +62,60 @@ fn main() {
         // .build(tauri::generate_context!())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+
+    // let the_window: Arc<Mutex<Option<tauri::Window>>> = Arc::new(Mutex::new(None));
+
+    // let hide_window = || -> tauri::Result<()> {
+    //     let arc_clone = Arc::clone(&the_window);
+    //     let mutex_guard = arc_clone.lock().unwrap();
+    //     match *mutex_guard {
+    //         Some(ref tmp_win) => tmp_win.hide(),
+    //         None => Ok(()),
+    //     }
+    // };
+
+    // let show_window = || -> tauri::Result<()> {
+    //     let arc_clone = Arc::clone(&the_window);
+    //     let mut mutex_guard = arc_clone.lock().unwrap();
+    //     match *mutex_guard {
+    //         Some(ref tmp_win) => tmp_win.show(),
+    //         None => {
+    //             let tmp_win = tauri::WindowBuilder::new(
+    //                 &app,
+    //                 "main",
+    //                 tauri::WindowUrl::App("index.html".into()),
+    //             )
+    //             .title("wom")
+    //             .decorations(false)
+    //             .transparent(true)
+    //             .fullscreen(false)
+    //             .resizable(false)
+    //             .center()
+    //             .always_on_top(true)
+    //             .build()?;
+    //             *mutex_guard = Some(tmp_win);
+    //             Ok(())
+    //         }
+    //     }
+    // };
+
+    // let switch_window = || -> tauri::Result<()> {
+    //     let arc_clone = Arc::clone(&the_window);
+    //     let mutex_guard = arc_clone.lock().unwrap();
+    //     match *mutex_guard {
+    //         Some(ref tmp_win) => match tmp_win.is_visible() {
+    //             Ok(visible) => {
+    //                 if visible {
+    //                     hide_window()
+    //                 } else {
+    //                     show_window()
+    //                 }
+    //             }
+    //             Err(_) => show_window(),
+    //         },
+    //         None => show_window(),
+    //     }
+    // };
+
+    // let _ = switch_window();
 }

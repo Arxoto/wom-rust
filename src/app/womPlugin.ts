@@ -94,6 +94,7 @@ const genPlugins = async (input: Input, inputValue: string) => {
 }
 
 export {
+    gotoPageTest,
     power_hibernate, power_restart, power_shutdown,
     genPlugins,
     genCalcDescriptor,

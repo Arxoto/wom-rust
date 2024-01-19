@@ -7,8 +7,10 @@ import { ItemType } from './womItemType';
 
 /**
  * todo
+ * - 修改sqlite为json文件
  * - offspring 关闭窗口按钮的动画效果和可移动标识
- * - 插件in_empty_page：调色盘、格式转换、便签、OCR接口、翻译接口、密码箱
+ * - 插件in_empty_page：调色盘、格式转换、便签（使用contenteditable属性）
+ * - 插件in_empty_page（优先级靠后）：OCR接口（ShareX_or_Umi-OCR）、翻译接口（先找到个合适的接口吧）、密码箱（需要明确需求）
  * - 去除调试输出
  * - css 命名规范化
  * - 单例启动

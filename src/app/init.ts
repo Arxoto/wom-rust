@@ -13,8 +13,15 @@ const setStyle = () => {
 }
 
 const refreshEnv = () => {
-    // todo 发现个BUG 摁下alt后会切换至窗口按钮，此时摁下space会打开原生窗口自带的选项栏，和默认热键有冲突 关闭decorations也无法规避
-    variables.global_shortcut_key = 'Shift+Space';
+    variables.global_shortcut_key = 'Alt+Space';
+}
+
+const disableAltEvent = () => {
+    window.addEventListener("keydown", event => {
+        if (event.altKey) {
+            event.preventDefault();
+        }
+    });
 }
 
 // electron:\shell\browser\api\electron_api_global_shortcut.h
@@ -48,4 +55,4 @@ const unregisterSwitch = async () => {
     });
 }
 
-export { setStyle, refreshEnv, registerSwitch, unregisterSwitch }
+export { setStyle, refreshEnv, disableAltEvent, registerSwitch, unregisterSwitch }

@@ -5,7 +5,7 @@ import { constants, router } from "./app/env";
 import { dbInit } from "./app/persistence";
 import { isMain, listenEvents } from "./app/runtime";
 import { itemsInit } from "./app/womInputer";
-import { refreshEnv, registerSwitch, setStyle, unregisterSwitch } from "./app/init";
+import { disableAltEvent, refreshEnv, registerSwitch, setStyle, unregisterSwitch } from "./app/init";
 
 import Error from "./page/Error";
 import Wom from "./page/wom/Wom";
@@ -41,6 +41,7 @@ function App() {
       .then(refreshEnv)
       .then(setStyle)
       .then(itemsInit)
+      .then(disableAltEvent)
       .then(() => { ismain && registerSwitch() }) // register global shortcut by default
       .then(() => setTimeout(() => {
         setStarted(true);
