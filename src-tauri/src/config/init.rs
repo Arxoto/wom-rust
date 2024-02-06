@@ -8,7 +8,7 @@ use super::{
 
 pub struct ConfigState {
     pub ruler: ConfigRuler,
-    pub currrent: Mutex<ConfigCurrent>,
+    pub currrent: Mutex<ConfigCurrent>, // 运行时能被修改
 }
 
 pub fn init(path: &PathBuf) -> ConfigState {

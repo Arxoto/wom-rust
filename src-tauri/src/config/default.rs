@@ -4,7 +4,7 @@ pub fn default_config_ruler() -> ConfigRuler {
     ConfigRuler {
         global_shortcut: ValueRuler {
             the_default: "Alt+Space".to_string(),
-            the_options: Some(vec!["Shift+Space".to_string()]),
+            the_options: Some(vec!["Shift+Space".to_string(), "CommandOrControl+Space".to_string()]),
         },
         window_width: ValueRuler {
             the_default: 800.0,

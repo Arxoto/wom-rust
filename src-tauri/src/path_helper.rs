@@ -58,6 +58,7 @@ pub fn path_format(app: &tauri::App, path_desc: &str) -> PathBuf {
     }
 }
 
+/// (file_name, file_path)
 pub type FileDesc = (String, String);
 
 fn visit_dirs(dir: &PathBuf, into: bool, cb: &mut dyn FnMut(&DirEntry)) -> io::Result<()> {
@@ -86,7 +87,8 @@ pub fn list_files(path: &PathBuf, into: bool, suffixs: &Vec<String>) -> Vec<File
             if let Ok(file_path) = entry.path().into_os_string().into_string() {
                 for suffix in suffixs {
                     if file_name.ends_with(suffix) {
-                        ll.push((file_name.clone(), file_path.clone()));
+                        ll.push((file_name, file_path));
+                        break;
                     }
                 }
             }

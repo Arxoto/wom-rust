@@ -80,9 +80,9 @@ fn main() {
                 }
             }
             #[cfg(not(debug_assertions))]
-            tauri::WindowEvent::Focused(_focused) => {
+            tauri::WindowEvent::Focused(focused) => {
                 // hide window whenever it loses focus
-                if !_focused && event.window().label() == MAIN_WINDOW_LABEL {
+                if !focused && event.window().label() == MAIN_WINDOW_LABEL {
                     let _ = event.window().hide();
                 }
             }

@@ -42,19 +42,19 @@ macro_rules! config_with_ruler {
         }
 
         impl ConfigOrigin {
-            pub fn generate_current(&self, ruler: &ConfigRuler) -> (bool, ConfigCurrent) {
+            pub fn generate_current(self, ruler: &ConfigRuler) -> (bool, ConfigCurrent) {
                 let mut modified = false;
                 let config_current = ConfigCurrent{
-                    $($field_name: if let Some(v) = &self.$field_name {
+                    $($field_name: if let Some(v) = self.$field_name {
                         if let Some(options) = &ruler.$field_name.the_options {
-                            if v != &ruler.$field_name.the_default && !options.contains(&v) {
+                            if v != ruler.$field_name.the_default && !options.contains(&v) {
                                 modified = true;
                                 ruler.$field_name.the_default.clone()
                             } else {
-                                v.clone()
+                                v
                             }
                         } else {
-                            v.clone()
+                            v
                         }
                     } else {
                         modified = true;

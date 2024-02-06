@@ -41,8 +41,8 @@ pub struct ItemCommon {
     pub(crate) with_args: bool,
 }
 
-// impl ItemCommon {
-//     pub fn as_base(&self) -> &ItemBase {
-//         &self.the_base
-//     }
-// }
+impl AsRef<ItemBase> for ItemCommon {
+    fn as_ref(&self) -> &ItemBase {
+        &self.the_base
+    }
+}
