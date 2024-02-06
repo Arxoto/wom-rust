@@ -1,3 +1,70 @@
+:root {
+  --color-comm-general: #f3f3f3;
+  --color-comm-magical: #e0e0e0;
+  --color-diff-general: #8b8b8b;
+  --color-diff-magical: #606060;
+  --color-comm: #fff;
+  --color-diff: #000;
+
+  --color-hover-back: #f9ffff;
+  --color-hover-front: #4100d8;
+  --color-hover-inner: #0080ff;
+  --color-hover-outer: #ffa5ee;
+
+  --color-active-back: #003000;
+  --color-active-front: #ffea60;
+  --color-active-inner: #fff696;
+  --color-active-outer: #ff8000;
+}
+
+/*滚动条整体样式*/
+::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+  height: 8px;
+}
+
+/*滚动条的滑块*/
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background: gray;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: darkgray;
+}
+
+/*滚动条的轨道*/
+::-webkit-scrollbar-track {
+  border-radius: 4px;
+  background-color: lightgray;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  user-select: none;
+}
+
 body {
-    background-color: white;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #0000;
+}
+
+#root {
+  height: calc(100% - 32px);
+  width: calc(100% - 32px);
+  margin: 16px;
+  box-shadow: 0 0 12px gray;
+
+  border-radius: 8px;
+  background-color: var(--color-comm-general);
 }

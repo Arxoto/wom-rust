@@ -56,6 +56,9 @@ fn on_system_tray_event(app: &AppHandle, event: SystemTrayEvent) -> tauri::Resul
     }
 }
 
+/// todo-list
+/// windowBuilder 单独提出去 放在加载配置之后 系统托盘新增重置窗口
+/// 禁用alt和设置窗口大小统一放在App.tsx里
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
