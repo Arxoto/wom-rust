@@ -8,11 +8,36 @@ mod setting;
 
 use config::core::{CONFIG_FILE, MAIN_WINDOW_LABEL, SETTING_FILE};
 use tauri::{
-    AppHandle, CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu,
+    AppHandle, CustomMenuItem, Manager, Runtime, SystemTray, SystemTrayEvent, SystemTrayMenu,
     SystemTrayMenuItem,
 };
 
 use event::MAIN_EVENT;
+
+fn build_main_window<R: Runtime, M: Manager<R>>(manager: &M) -> Result<(), tauri::Error> {
+    let w = tauri::WindowBuilder::new(
+        manager,
+        MAIN_WINDOW_LABEL,
+        tauri::WindowUrl::App("index.html".into()),
+    )
+    .title("wom")
+    .decorations(false) // 原生框架
+    .transparent(true) // 透明
+    .fullscreen(false) // 全屏
+    .resizable(false) // 大小可变
+    .center() // 居中
+    .always_on_top(true) // 置顶
+    .visible(false) // 可见
+    .build()?;
+
+    #[cfg(debug_assertions)]
+    {
+        w.show()?;
+        w.set_focus()?;
+        w.set_always_on_top(false)?;
+    }
+    Ok(())
+}
 
 fn new_system_tray() -> SystemTray {
     SystemTray::new().with_menu(
@@ -48,6 +73,7 @@ fn on_system_tray_event(app: &AppHandle, event: SystemTrayEvent) -> tauri::Resul
                     Err(tauri::Error::WebviewNotFound)
                 }
             }
+            // 这里因为app所有权的原因不宜用 app.global_shortcut_manager()
             "register" => app.emit_to(MAIN_WINDOW_LABEL, MAIN_EVENT.do_global_shortcut, ()),
             "unregister" => app.emit_to(MAIN_WINDOW_LABEL, MAIN_EVENT.un_global_shortcut, ()),
             _ => Ok(()),
@@ -57,8 +83,7 @@ fn on_system_tray_event(app: &AppHandle, event: SystemTrayEvent) -> tauri::Resul
 }
 
 /// todo-list
-/// windowBuilder 单独提出去 放在加载配置之后 系统托盘新增重置窗口
-/// 禁用alt和设置窗口大小统一放在App.tsx里
+/// 设置窗口大小统一放在App.tsx里
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
@@ -89,30 +114,6 @@ fn main() {
             _ => {}
         })
         .setup(|app| {
-            // build main window
-            let w = tauri::WindowBuilder::new(
-                app,
-                MAIN_WINDOW_LABEL,
-                tauri::WindowUrl::App("index.html".into()),
-            )
-            .title("wom")
-            .decorations(false) // 原生框架
-            .transparent(true) // 透明
-            .fullscreen(false) // 全屏
-            .resizable(false) // 大小可变
-            .center() // 居中
-            .always_on_top(true) // 置顶
-            .visible(false) // 可见
-            .build()
-            .expect("build main windows failed");
-
-            #[cfg(debug_assertions)]
-            {
-                w.show()?;
-                w.set_focus()?;
-                w.set_always_on_top(false)?;
-            }
-
             // load persistent files
             let base_path = app
                 .path_resolver()
@@ -134,6 +135,7 @@ fn main() {
                 setting::init::init(&setting_path, setting::init::to_key_by_default, &app);
             app.manage(setting_state);
 
+            build_main_window(app)?;
             Ok(())
         })
         .run(tauri::generate_context!())
