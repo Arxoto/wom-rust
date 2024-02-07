@@ -68,3 +68,43 @@ body {
   border-radius: 8px;
   background-color: var(--color-comm-general);
 }
+
+/* public style */
+
+.a-btn {
+  margin: 4px;
+  padding: .2rem 1rem;
+  border-radius: 8px;
+
+  font-weight: bold;
+  cursor: pointer;
+  background: var(--color-comm);
+  box-shadow: 0 0 4px var(--color-diff-general);
+}
+
+.a-btn:hover {
+  box-shadow: 0 0 4px var(--color-diff-magical);
+}
+
+.a-btn:active {
+  box-shadow: 0 0 4px var(--color-diff-general) inset;
+}
+
+.a-txt {
+  margin: 4px;
+  padding: 4px;
+
+  font-weight: bold;
+  font-style: italic;
+  text-decoration: underline;
+
+  cursor: pointer;
+}
+
+.a-txt:hover {
+  text-shadow: 0 0 8px var(--color-diff-general);
+}
+
+.a-txt:active {
+  text-shadow: 0 0 8px var(--color-diff-magical);
+}

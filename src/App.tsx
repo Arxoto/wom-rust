@@ -1,6 +1,7 @@
 import RouterProvider from "./router/components/RouterProvider";
 import Wom from "./pages/wom/Wom";
 import { useEffect } from "react";
+import NotFound from "./pages/NotFound";
 
 // disable the alt event (window menu in windows)
 function disableAltEventHandler(event: KeyboardEvent) {
@@ -22,7 +23,7 @@ function App() {
       path: '/',
       element: <Wom />
     },
-  ]} notfound={'error_path'} />
+  ]} notfound={<NotFound />} />
 }
 
 export default App;
