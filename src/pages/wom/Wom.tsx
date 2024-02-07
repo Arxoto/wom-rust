@@ -4,13 +4,17 @@ import { listenEvents, registerSwitchDoAndUn } from "../../core/runtime";
 import { configCurrent, configRuler, searchItem } from "../../core/invoker";
 import { Body, Box, Head } from "../Layout";
 import { useNavigate } from "../../router/hooks";
-import { getRouter, router } from "../../core/constants";
+import { router } from "../../core/constants";
 import "./Wom.css";
 
 export default function () {
     let nav = useNavigate();
     useEffect(() => {
         console.log(getCurrent().label)
+
+        setTimeout(() => {
+            nav('asd')
+        }, 5000);
 
         configRuler()
             .then((res) => console.log('config_ruler: ', res))
@@ -43,7 +47,7 @@ export default function () {
     return (
         <Box>
             <Head>
-                <div className="a-txt" onClick={() => nav(getRouter(router.navigation)!.path)}>&gt;</div>
+                <div className="a-txt" onClick={() => nav(router.navigation)}>&gt;</div>
                 <input type="text" className="wom-input" />
                 <p className="head-text"></p>
             </Head>
