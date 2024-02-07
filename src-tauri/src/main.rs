@@ -14,7 +14,11 @@ use tauri::{
 
 use event::MAIN_EVENT;
 
-fn build_main_window<R: Runtime, M: Manager<R>>(manager: &M) -> Result<(), tauri::Error> {
+fn build_main_window<R: Runtime, M: Manager<R>>(
+    manager: &M,
+    width: f64,
+    height: f64,
+) -> Result<(), tauri::Error> {
     let w = tauri::WindowBuilder::new(
         manager,
         MAIN_WINDOW_LABEL,
@@ -25,6 +29,7 @@ fn build_main_window<R: Runtime, M: Manager<R>>(manager: &M) -> Result<(), tauri
     .transparent(true) // 透明
     .fullscreen(false) // 全屏
     .resizable(false) // 大小可变
+    .inner_size(width, height)
     .center() // 居中
     .always_on_top(true) // 置顶
     .visible(false) // 可见
@@ -83,7 +88,6 @@ fn on_system_tray_event(app: &AppHandle, event: SystemTrayEvent) -> tauri::Resul
 }
 
 /// todo-list
-/// 设置窗口大小统一放在App.tsx里
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
@@ -127,6 +131,11 @@ fn main() {
             // load config
             let config_path = base_path.join(CONFIG_FILE);
             let config_state = config::init::init(&config_path);
+            let config_current = config_state
+                .currrent
+                .lock()
+                .expect("fetch config_current failed")
+                .clone();
             app.manage(config_state);
 
             // load setting
@@ -135,7 +144,11 @@ fn main() {
                 setting::init::init(&setting_path, setting::init::to_key_by_default, &app);
             app.manage(setting_state);
 
-            build_main_window(app)?;
+            build_main_window(
+                app,
+                config_current.window_width,
+                config_current.window_height,
+            )?;
             Ok(())
         })
         .run(tauri::generate_context!())

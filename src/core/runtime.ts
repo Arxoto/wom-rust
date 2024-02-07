@@ -8,6 +8,8 @@ import { open } from '@tauri-apps/api/shell';
 import { appWindow, getCurrent } from '@tauri-apps/api/window';
 import { isRegistered, register, unregister } from '@tauri-apps/api/globalShortcut';
 
+// ========= API =========
+
 // 确认
 const ensure = async (message: string) => await ask(message);
 
@@ -35,7 +37,7 @@ const clipboardWriteTextNotify = (s: string) => {
     });
 }
 
-// 打开资源 两个打开的进程貌似都会挂在本进程下面
+// 打开资源  两个打开的进程貌似都会挂在本进程下面
 const shellOpen = (s: string) => open(s);
 // const shellOpen = async (s: string) => invoke("shell_execute", { file: s });
 
@@ -48,7 +50,7 @@ const calc: (s: string) => Promise<string> = (s: string) => invoke("calc", { exp
 
 const shutdown_power: (s: string) => void = (s: string) => invoke("shutdown_power", { action: s });
 
-// window
+// ========= window =========
 
 // 事件
 const listenEvents = (...listeners: [string, () => void][]) => {
@@ -66,29 +68,22 @@ const windowVisibelSwitch = async () => {
     if (await w.isVisible()) {
         w.hide();
     } else {
-        w.show();
+        await w.show();
         w.setFocus();
     }
 }
 
-const registerSwitch = (global_shortcut_key: string) => {
-    return async () => {
-        if (await isRegistered(global_shortcut_key)) return;
-
-        register(global_shortcut_key, windowVisibelSwitch)
-            .then(() => console.log("register"))
-            .catch(console.error);
-    }
-}
-
-const unregisterSwitch = (global_shortcut_key: string) => {
-    return async () => {
-        if (!await isRegistered(global_shortcut_key)) return;
-
-        unregister(global_shortcut_key)
-            .then(() => console.log("unregister"))
-            .catch(console.error);
-    }
+const registerSwitchDoAndUn = (global_shortcut_key: string) => {
+    return [
+        async () => {
+            if (await isRegistered(global_shortcut_key)) {
+                return;
+            }
+            await register(global_shortcut_key, windowVisibelSwitch);
+            console.log("register")
+        },
+        () => unregister(global_shortcut_key).catch(console.error),
+    ]
 }
 
 
@@ -101,14 +96,6 @@ const unregisterSwitch = (global_shortcut_key: string) => {
 // for-each 函数式编程 遍历全部集合 可读性高
 // map      函数式编程 映射 非遍历用途 与 filter reduce 等方法组合使用 （其实不应该放在这里 但很多人会拿过来一起比较）
 // 结论：一般推荐for-each有较高可读性且性能尚可 需要continue/break的场景使用for-of语句 复杂场景使用for-i
-
-const whenfocus = (fn: (() => void) | null) => {
-    document.body.onfocus = fn;
-};
-
-const whenkeydown = (onkeydown: ((event: KeyboardEvent) => void) | null) => {
-    window.onkeydown = onkeydown;
-};
 
 /**
  * 防抖 执行最后一次
@@ -151,7 +138,6 @@ export {
     clipboardWriteText, clipboardWriteTextNotify,
     shellOpen, shellSelect,
     calc, shutdown_power,
-    listenEvents, registerSwitch, unregisterSwitch,
-    whenfocus, whenkeydown,
+    listenEvents, registerSwitchDoAndUn,
     debounce, throttle
 }

@@ -1,31 +1,37 @@
 import { useEffect, useState } from "react";
-import { invoke } from "@tauri-apps/api/tauri";
 import { getCurrent } from "@tauri-apps/api/window";
-import { listenEvents, registerSwitch, unregisterSwitch } from "../../core/runtime";
+import { listenEvents, registerSwitchDoAndUn } from "../../core/runtime";
+import { configCurrent, configRuler, searchItem } from "../../core/invoker";
 
 export default function () {
   useEffect(() => {
     console.log(getCurrent().label)
 
-    invoke('config_ruler')
+    configRuler()
       .then((res) => console.log('config_ruler: ', res))
       .catch((e) => console.error(e))
-    invoke('config_current')
+    configCurrent()
       .then((res) => console.log('config_current: ', res))
+      .then(() => configCurrent()
+        .then((res) => console.log('config_current: ', res))
+      )
       .catch((e) => console.error(e))
     // todo reset window size and center
-    invoke('search_item', { keyword: "wt", hasArgs: false })
+    searchItem("wt", false)
       .then((res) => console.log('search_item: ', res))
       .catch((e) => console.error(e))
 
+    // 在react严格模式下 useEffect 会执行两次 这里由于 await 时运行时会执行其他逻辑 导致函数整体非原子性 会连续注册两次
+    let [doregister, unregister] = registerSwitchDoAndUn("Shift+Space");
     const unlisten = listenEvents(
-      ['do_global_shortcut', registerSwitch("Alt+Space")],
-      ['un_global_shortcut', unregisterSwitch("Alt+Space")],
+      ['do_global_shortcut', doregister],
+      ['un_global_shortcut', unregister],
     )
-    // registerSwitch("Alt+Space")();
+    doregister();
 
     return () => {
       unlisten();
+      unregister();
     }
   }, []);
 
