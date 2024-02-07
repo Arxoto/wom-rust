@@ -10,7 +10,7 @@ export default function () {
         <div style={{ fontSize: '4rem', fontStyle: 'italic' }}>404 not found</div>
         {
             window.label === "main" ?
-                <div className="a-txt" onClick={() => nav("/")}>click here to goto root</div>
+                <div className="a-txt a-txt-diff" onClick={() => nav("/")}>click here to goto root</div>
                 :
                 <div className="a-btn" onClick={() => window.close()}>click here to close window</div>
         }

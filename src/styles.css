@@ -37,7 +37,7 @@
 /*滚动条的轨道*/
 ::-webkit-scrollbar-track {
   border-radius: 4px;
-  background-color: lightgray;
+  background: lightgray;
 }
 
 html {
@@ -59,13 +59,18 @@ body {
   background-color: #0000;
 }
 
+/* 宽高与margin&padding相关 圆角与padding相关 阴影与margin相关 均有略微调整 */
 #root {
-  height: calc(100% - 32px);
-  width: calc(100% - 32px);
-  margin: 16px;
-  box-shadow: 0 0 12px gray;
+  position: relative;
+  top: 0;
+  left: 0;
 
+  height: calc(100% - 40px);
+  width: calc(100% - 40px);
+  margin: 16px;
+  padding: 4px;
   border-radius: 8px;
+  box-shadow: 0 0 12px gray;
   background-color: var(--color-comm-general);
 }
 
@@ -78,7 +83,7 @@ body {
 
   font-weight: bold;
   cursor: pointer;
-  background: var(--color-comm);
+  background-color: var(--color-comm);
   box-shadow: 0 0 4px var(--color-diff-general);
 }
 
@@ -95,10 +100,13 @@ body {
   padding: 4px;
 
   font-weight: bold;
-  font-style: italic;
-  text-decoration: underline;
 
   cursor: pointer;
+}
+
+.a-txt-diff {
+  font-style: italic;
+  text-decoration: underline;
 }
 
 .a-txt:hover {

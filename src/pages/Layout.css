@@ -1,0 +1,46 @@
+.layout-box {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 高度自适应 */
+.layout-box>.elastic {
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+}
+
+/* 高度由 font-size 决定 */
+.layout-box>.static {
+    font-size: 1.6em;
+    width: 100%;
+    flex-shrink: 0;
+    overflow: auto;
+}
+
+/* 定制化head 如果需要foot可参考 */
+.head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.head>img {
+    width: 1.6em;
+    margin: 0 .4em 0 0;
+}
+
+.head>.wom-icon {
+    content: url(/wom.png);
+}
+
+@media (prefers-color-scheme: dark) {
+    .head>.wom-icon {
+        content: url(/wow.png);
+    }
+}

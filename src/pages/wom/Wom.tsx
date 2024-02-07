@@ -1,10 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { getCurrent } from "@tauri-apps/api/window";
 import { listenEvents, registerSwitchDoAndUn } from "../../core/runtime";
 import { configCurrent, configRuler, searchItem } from "../../core/invoker";
-import Loading from "../Loading";
+import { Body, Box, Head } from "../Layout";
+import { useNavigate } from "../../router/hooks";
+import { getRouter, router } from "../../core/constants";
+import "./Wom.css";
 
 export default function () {
+    let nav = useNavigate();
     useEffect(() => {
         console.log(getCurrent().label)
 
@@ -36,18 +40,14 @@ export default function () {
         }
     }, []);
 
-    const [greetMsg, setGreetMsg] = useState("");
-
     return (
-        <div >
-            <input
-                placeholder="Enter ..."
-                onInput={(event) => { setGreetMsg(event.currentTarget.value) }}
-            />
-
-            <p>{greetMsg}</p>
-
-            <Loading/>
-        </div>
+        <Box>
+            <Head>
+                <div className="a-txt" onClick={() => nav(getRouter(router.navigation)!.path)}>&gt;</div>
+                <input type="text" className="wom-input" />
+                <p className="head-text"></p>
+            </Head>
+            <Body>asd</Body>
+        </Box>
     );
 }
