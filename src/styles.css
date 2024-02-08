@@ -7,9 +7,9 @@
   --color-diff: #000;
 
   --color-hover-back: #f9ffff;
-  --color-hover-front: #4100d8;
+  --color-hover-front: #003fdd;
   --color-hover-inner: #0080ff;
-  --color-hover-outer: #ffa5ee;
+  --color-hover-outer: #ffafef;
 
   --color-active-back: #003000;
   --color-active-front: #ffea60;
@@ -68,7 +68,7 @@ body {
   height: calc(100% - 40px);
   width: calc(100% - 40px);
   margin: 16px;
-  padding: 4px;
+  padding: 4px 0;
   border-radius: 8px;
   box-shadow: 0 0 12px gray;
   background-color: var(--color-comm-general);

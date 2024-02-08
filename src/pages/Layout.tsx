@@ -24,7 +24,7 @@ function Head({ children }: ReactDomWithChildren) {
     return (
         <div className='static head'>
             {children}
-            <img className='wom-icon' src="" alt="" />
+            <img className='wom-icon' src="" alt="" data-tauri-drag-region/>
         </div>
     )
 }

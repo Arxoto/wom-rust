@@ -1,6 +1,6 @@
 import { searchItem } from "./invoker";
 import { ItemExtend } from "./womItem";
-import { genCalc, power_hibernate, power_restart, power_shutdown } from "./womPlugins";
+import { genCalc, gotoPageNav, power_hibernate, power_restart, power_shutdown } from "./womPlugins";
 
 /**
  * 解析后的输入对象
@@ -47,7 +47,7 @@ const matchFns = [
 ]
 
 const getStaticPlugins = (input: Input) => {
-    const source: ItemExtend[] = [power_hibernate, power_restart, power_shutdown];
+    const source: ItemExtend[] = [gotoPageNav, power_hibernate, power_restart, power_shutdown];
     const target: ItemExtend[] = [];
     const already = new Set<number>();
     for (const fn of matchFns) {

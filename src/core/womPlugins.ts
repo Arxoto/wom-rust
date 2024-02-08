@@ -61,7 +61,7 @@ const genCalc = async (input: Input, inputValue: string): Promise<ItemExtend | n
         return {
             the_type: ItemType.Plugin,
             title: "calculator",
-            detail: 'support: int float + - * / % ^ ()',
+            detail: 'support: (0.0) +- */ ^%',
             the_key: "",
             with_args: true,
             action_list: [],
