@@ -89,13 +89,13 @@
     background: linear-gradient(0.25turn, #0000, var(--color-comm-general));
 }
 
-.line .action .left {
+.line .action-left {
     position: absolute;
     left: 0;
     font-size: .4em;
 }
 
-.line .action .right {
+.line .action-right {
     position: absolute;
     right: 0;
     font-size: .4em;

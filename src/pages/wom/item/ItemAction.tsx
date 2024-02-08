@@ -14,11 +14,9 @@ const ItemAction = ({ itemIndex, actions, actionIndex }: ItemActionElement) => {
         return <div className='action'></div>
     }
     return <div className='action'>
-        {actionIndex > 0 && <div className="left activable-text"
-            onClick={() => dispatch({ type: 'left', itemIndex })}>◀</div>}
+        {actionIndex > 0 && <div className="action-left a-txt" onClick={() => dispatch({ type: 'left', itemIndex })}>◀</div>}
         {actions[actionIndex]}
-        {actionIndex < actions.length - 1 && <div className="right activable-text"
-            onClick={() => dispatch({ type: 'right', itemIndex })}>▶</div>}
+        {actionIndex < actions.length - 1 && <div className="action-right a-txt" onClick={() => dispatch({ type: 'right', itemIndex })}>▶</div>}
     </div>
 }
 
