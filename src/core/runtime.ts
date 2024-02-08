@@ -5,7 +5,7 @@ import { ask } from '@tauri-apps/api/dialog';
 import { Options, isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification';
 import { invoke } from '@tauri-apps/api/tauri';
 import { open } from '@tauri-apps/api/shell';
-import { appWindow, getCurrent } from '@tauri-apps/api/window';
+import { WebviewWindow, appWindow } from '@tauri-apps/api/window';
 import { isRegistered, register, unregister } from '@tauri-apps/api/globalShortcut';
 
 // ========= API =========
@@ -50,9 +50,8 @@ const calc: (s: string) => Promise<string> = (s: string) => invoke("calc", { exp
 
 const shutdown_power: (s: string) => void = (s: string) => invoke("shutdown_power", { action: s });
 
-// ========= window =========
+// ========= event =========
 
-// 事件
 const listenEvents = (...listeners: [string, () => void][]) => {
     const unlistens = listeners.map(listener => appWindow.listen(listener[0], listener[1]));
 
@@ -64,12 +63,11 @@ const listenEvents = (...listeners: [string, () => void][]) => {
 }
 
 const windowVisibelSwitch = async () => {
-    const w = getCurrent();
-    if (await w.isVisible()) {
-        w.hide();
+    if (await appWindow.isVisible()) {
+        appWindow.hide();
     } else {
-        await w.show();
-        w.setFocus();
+        await appWindow.show();
+        appWindow.setFocus();
     }
 }
 
@@ -84,6 +82,23 @@ const registerSwitchDoAndUn = (global_shortcut_key: string) => {
         },
         () => unregister(global_shortcut_key).catch(console.error),
     ]
+}
+
+// ========= window =========
+
+// 创建页面
+const pageWebView = (pathId: string) => {
+    const label = 'tmp';
+    let webview = WebviewWindow.getByLabel(label);
+    if (webview) {
+        webview.close();
+    }
+
+    new WebviewWindow(label, {
+        url: `/${pathId}`,
+        title: pathId,
+        center: true,
+    });
 }
 
 
@@ -139,5 +154,6 @@ export {
     shellOpen, shellSelect,
     calc, shutdown_power,
     listenEvents, registerSwitchDoAndUn,
+    pageWebView,
     debounce, throttle
 }

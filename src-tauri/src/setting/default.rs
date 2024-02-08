@@ -27,7 +27,7 @@ pub fn default_items() -> Vec<ItemBase> {
         new_item!("web", "git_search", "https://github.com/search?q={}"),
         // app
         new_item!("app", "remote", "mstsc"),
-        new_item!("app", "wTerminal", "wt"),
+        new_item!("app", "jsq_calc", "calc"),
         // folder
         new_item!("folder", "hosts", r#"C:\Windows\System32\drivers\etc"#),
         new_item!(

@@ -33,7 +33,9 @@ const genRouterTree = (root: RouterNode): [Map<string, string[]>, Map<string, Re
 }
 
 export default function ({ root, notfound }: RouterProviderArgs) {
-    let [pathId, setPathId] = useState(root.nodeId);
+    let pathname = window.location.pathname;
+    let currentPathId = pathname === '/' ? root.nodeId : pathname.replace(/\//g, '');
+    let [pathId, setPathId] = useState(currentPathId);
     let [routerTree] = useState(() => genRouterTree(root));
     let [elders, nodes] = routerTree;
 

@@ -1,11 +1,11 @@
 use std::path::PathBuf;
 
-use crate::path_helper::list_files_by_path_desc;
+use crate::path_helper::{list_files_by_path_desc, path_format};
 
 use super::{
     core::{
-        is_general_type, ItemBase, ItemCommon, ITEM_TYPE_CMD, ITEM_TYPE_FILES, ITEM_TYPE_WEB,
-        PLACEHOLDER_ARGS,
+        is_general_type, ItemBase, ItemCommon, ITEM_TYPE_APP, ITEM_TYPE_CMD, ITEM_TYPE_FILES,
+        ITEM_TYPE_FOLDER, ITEM_TYPE_WEB, PLACEHOLDER_ARGS,
     },
     default::default_items,
     persistence::{load, save},
@@ -31,11 +31,21 @@ pub fn init(path: &PathBuf, to_key_fn: fn(&str) -> String, app: &tauri::App) -> 
         .filter(|item| is_general_type(&item.the_type))
         .map(|item| {
             let the_type = &item.the_type;
+            let the_key = to_key_fn(&item.title);
             let with_args = (the_type == ITEM_TYPE_CMD || the_type == ITEM_TYPE_WEB)
                 && item.detail.contains(PLACEHOLDER_ARGS);
-            let the_key = to_key_fn(&item.title);
+
+            let mut the_base = item.clone();
+            if the_type == ITEM_TYPE_APP || the_type == ITEM_TYPE_FOLDER {
+                if let Ok(the_path) = path_format(app, &item.detail)
+                    .into_os_string()
+                    .into_string()
+                {
+                    the_base.detail = the_path;
+                }
+            }
             ItemCommon {
-                the_base: item.clone(),
+                the_base,
                 the_key,
                 with_args,
             }

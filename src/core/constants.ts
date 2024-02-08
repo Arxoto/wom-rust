@@ -5,6 +5,11 @@ const router = {
     config: 'config',
 }
 
+const inputer = {
+    split: '___',
+    args: '{}',
+}
+
 export {
-    router,
+    router, inputer
 };

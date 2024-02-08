@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/tauri";
-import { ItemCommon, ItemExtend, actions } from "./womItem";
+import { ItemCommon, ItemExtend } from "./womItem";
+import { actions } from "./womExecuter";
 
 // ========= config =========
 

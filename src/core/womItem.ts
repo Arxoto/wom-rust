@@ -1,6 +1,8 @@
+/// 定义Item类型
+
 enum ItemType {
-    Page = "page",      // 独立页面
     Plugin = "plugin",  // 内置工具
+    Page = "page",      // 独立页面
     Cmd = "cmd",        // 命令行
     Web = "web",        // 网页
     App = "app",        // 应用
@@ -30,26 +32,5 @@ interface ItemExtend {
     action_index: number,
 }
 
-const a4oc = ['open', 'copy'];
-const a4osc = ['open', 'select', 'copy'];
-const a4empty: string[] = [''];
-
-/**
- * 根据特定类型获取其固定的动作
- */
-const actions = (the_type: string) => {
-    switch (the_type) {
-        case ItemType.Folder:
-            return a4oc;
-        case ItemType.Files:
-        case ItemType.App:
-            return a4osc;
-        default:
-            return a4empty;
-    }
-}
-
-export {
-    ItemType, actions
-};
+export { ItemType };
 export type { ItemBase, ItemCommon, ItemExtend };
