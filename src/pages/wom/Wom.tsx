@@ -1,12 +1,15 @@
 import { useEffect, useReducer, useRef } from "react";
-import { debounce, listenEvents, registerSwitchDoAndUn } from "../../core/runtime";
-import { Body, Box, Head } from "../Layout";
+
 import { useNavigate } from "../../router/hooks";
-import { inputer, router } from "../../core/constants";
-import "./Wom.css";
 import { womReducer } from "./WomReducer";
-import { defaultState } from "./womContext";
+import { WomContext, defaultState } from "./womContext";
+import { debounce, listenEvents, registerSwitchDoAndUn } from "../../core/runtime";
+import { inputer, router } from "../../core/constants";
 import { parseInput, searchItemsEx } from "../../core/womInputer";
+import { Body, Box, Head } from "../Layout";
+
+import Item from "./item/Item";
+import "./Wom.css";
 
 const TAG_DEFAULT = '';
 const TAG_NOTFOUND = 'N/A';
@@ -111,13 +114,29 @@ export default function () {
     }
 
     return (
-        <Box>
-            <Head>
-                <div className="a-txt" onClick={() => nav(router.navigation)}>&gt;</div>
-                <input type="text" className="wom-input" />
-                <p className="head-text"></p>
-            </Head>
-            <Body>asd</Body>
-        </Box>
+        <WomContext.Provider value={{ womState, dispatch }} >
+            <Box>
+                <Head>
+                    <div className="a-txt" onClick={() => nav(router.navigation)}>&gt;</div>
+                    <input type="text" className="wom-input"
+                        ref={inputRef}
+                        onCompositionStart={searchLockOn}
+                        onCompositionEnd={searchLockOff}
+                        onInput={doSearch}
+                    />
+                    <p className="head-text">{womTag === TAG_SHOWINDEX ? `${currentIndex + 1}/${items.length}` : womTag}</p>
+                </Head>
+                <Body>{
+                    items.map((item, index) =>
+                        <Item
+                            key={index}
+                            selected={index === currentIndex}
+                            item={item}
+                            itemIndex={index}
+                        ></Item>
+                    )
+                }</Body>
+            </Box>
+        </WomContext.Provider>
     );
 }

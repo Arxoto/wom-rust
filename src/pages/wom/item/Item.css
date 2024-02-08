@@ -1,0 +1,102 @@
+.line {
+    position: relative;
+
+    height: 3em;
+
+    line-height: 1;
+}
+
+.line .line-clickable {
+    cursor: pointer;
+}
+
+.line .icon {
+    position: absolute;
+
+    height: 100%;
+    width: 4em;
+}
+
+.line .icon>img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+/* 位置需要与icon宽度保持一致 */
+/* 文本溢出不显示 不换行 */
+.line .middle {
+    position: absolute;
+    left: 4em;
+
+    width: calc(100% - 4em);
+    height: 100%;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    font-size: 1em;
+
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: flex-start;
+    align-content: flex-start;
+}
+
+.line .title {
+    font-size: 1.5em;
+    padding: 0 .5em 0 0;
+}
+
+.line .detail {
+    font-size: 1em;
+    font-style: italic;
+}
+
+
+.line .action {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    padding: 0 1em;
+
+    font-size: 1.6em;
+    white-space: nowrap;
+
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+
+    background-color: var(--color-comm-general);
+}
+
+.line .action::before {
+    --action-width: 4em;
+    content: '';
+
+    position: absolute;
+    top: 0;
+    left: calc(0em - var(--action-width));
+    width: var(--action-width);
+    height: 100%;
+
+    background: linear-gradient(0.25turn, #0000, var(--color-comm-general));
+}
+
+.line .action .left {
+    position: absolute;
+    left: 0;
+    font-size: .4em;
+}
+
+.line .action .right {
+    position: absolute;
+    right: 0;
+    font-size: .4em;
+}

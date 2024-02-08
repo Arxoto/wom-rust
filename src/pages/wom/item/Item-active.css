@@ -1,0 +1,47 @@
+.line-active .title,
+.line-active .action {
+    font-weight: bold;
+}
+
+.line-active {
+    background-color: var(--color-active-back);
+}
+
+.line-active .action {
+    color: var(--color-active-front);
+    background-color: var(--color-active-back);
+}
+
+.line-active .action:hover {
+    color: var(--color-active-inner);
+    text-shadow: 0 0 4px var(--color-active-outer);
+}
+
+.line-active .action::before {
+    background: linear-gradient(0.25turn, #0000, var(--color-active-back));
+}
+
+.line-active .title,
+.line-active .detail,
+.line-active:hover .line-clickable:hover .title,
+.line-active:hover .line-clickable:hover .detail {
+    color: var(--color-active-inner);
+    text-shadow: 0 0 4px var(--color-active-outer);
+}
+
+.line-active:hover .line-clickable .title,
+.line-active:hover .line-clickable .detail {
+    color: var(--color-active-front);
+}
+
+/* 必须至少和icon类的宽度一样 */
+.line-active .icon>img,
+.line-active:hover .line-clickable:hover .icon>img {
+    left: calc(-4em + 50%);
+    filter: drop-shadow(4em 0 0 var(--color-active-inner)) drop-shadow(0 0 4px var(--color-active-outer));
+}
+
+/* 必须至少和icon类的宽度一样 */
+.line-active:hover .line-clickable .icon>img {
+    filter: drop-shadow(4em 0 0 var(--color-active-front));
+}
