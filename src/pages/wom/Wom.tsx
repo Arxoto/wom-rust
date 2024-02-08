@@ -1,34 +1,69 @@
-import { useEffect } from "react";
-import { getCurrent } from "@tauri-apps/api/window";
-import { listenEvents, registerSwitchDoAndUn } from "../../core/runtime";
-import { configCurrent, configRuler, searchItem } from "../../core/invoker";
+import { useEffect, useReducer, useRef } from "react";
+import { debounce, listenEvents, registerSwitchDoAndUn } from "../../core/runtime";
 import { Body, Box, Head } from "../Layout";
 import { useNavigate } from "../../router/hooks";
-import { router } from "../../core/constants";
+import { inputer, router } from "../../core/constants";
 import "./Wom.css";
+import { womReducer } from "./WomReducer";
+import { defaultState } from "./womContext";
+import { parseInput, searchItemsEx } from "../../core/womInputer";
+
+const TAG_DEFAULT = '';
+const TAG_NOTFOUND = 'N/A';
+const TAG_SHOWINDEX = '_';
 
 export default function () {
     let nav = useNavigate();
+
+    const [womState, dispatch] = useReducer(womReducer, defaultState);  // 使用 useReducer 替代 useState
+    const input = womState.input;
+    const items = womState.items;
+    const currentIndex = womState.currentIndex;
+
+    // useRef 与 useState 相同点：重新渲染不会导致信息丢失
+    // useRef 与 useState 不同点：ref的值改变不会引起重新渲染
+    // ref 操作 DOM ：定义 ref 后需在对应组件中赋值：ref={inputRef}  此时 ref 才真正有值
+    const inputRef = useRef<HTMLInputElement>(null);
+    /** 聚焦 input */
+    const selectInput = () => {
+        inputRef.current!.select();
+    }
+
+    // 每次组件渲染的时候都会执行的方法
+    // 第一个入参：如何连接到外部系统，返回值：与该系统断开连接
+    // 第二个入参为依赖项，表示仅当依赖项更新的时候才执行，若无则为每次渲染触发、若为空列表则为仅首次渲染触发
+    // 注意需要：依赖的函数和对象须尽可能得少（闭包同样如此），这里以 useReducer && createContext 解决
+    // 挂载键盘操作
     useEffect(() => {
-        console.log(getCurrent().label)
-
-        setTimeout(() => {
-            nav('asd')
-        }, 5000);
-
-        configRuler()
-            .then((res) => console.log('config_ruler: ', res))
-            .catch((e) => console.error(e))
-        configCurrent()
-            .then((res) => console.log('config_current: ', res))
-            .then(() => configCurrent()
-                .then((res) => console.log('config_current: ', res))
-            )
-            .catch((e) => console.error(e))
-        // todo reset window size and center
-        searchItem("wt", false)
-            .then((res) => console.log('search_item: ', res))
-            .catch((e) => console.error(e))
+        selectInput()
+        window.onfocus = selectInput;
+        window.onkeydown = (event) => {
+            if (event.defaultPrevented) {
+                return;
+            }
+            switch (event.key) {
+                case "ArrowUp":
+                    event.preventDefault();
+                    dispatch({ type: 'up' });
+                    break;
+                case "ArrowDown":
+                    event.preventDefault();
+                    dispatch({ type: 'down' });
+                    break;
+                case "ArrowLeft":
+                    dispatch({ type: 'left' });
+                    break;
+                case "ArrowRight":
+                    dispatch({ type: 'right' });
+                    break;
+                case "Enter":
+                    // handleTrigger
+                    dispatch({ type: 'trigger' });
+                    break;
+                default:
+                    break;
+            }
+        }
 
         // 在react严格模式下 useEffect 会执行两次 这里由于 await 时运行时会执行其他逻辑 导致函数整体非原子性 会连续注册两次
         let [doregister, unregister] = registerSwitchDoAndUn("Shift+Space");
@@ -39,10 +74,41 @@ export default function () {
         doregister();
 
         return () => {
+            window.onfocus = null;
+            window.onkeydown = null;
+
             unlisten();
             unregister();
         }
     }, []);
+
+    // 每次输入更新 items  这里规避了输入法触发修改
+    let sendLock = false;
+    const searchLockOn = () => { sendLock = true; };
+    const searchLockOff = () => { sendLock = false; };
+    const doSearch = debounce(inputer.doSearch_debounce, async () => {
+        if (sendLock) {
+            return;
+        }
+        let inputValue = inputRef.current!.value ?? "";
+
+        // get tiems
+        let input = parseInput(inputValue);
+        let tmpItems = await searchItemsEx(input, inputValue);
+
+        // show
+        dispatch({ type: 'init', items: tmpItems, input });
+    })
+
+    // 根据 input 和 item 显示 tag
+    let womTag;
+    if (!input.hasInput) {
+        womTag = TAG_DEFAULT;
+    } else if (items.length === 0) {
+        womTag = TAG_NOTFOUND;
+    } else {
+        womTag = TAG_SHOWINDEX;
+    }
 
     return (
         <Box>

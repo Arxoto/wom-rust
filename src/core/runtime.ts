@@ -101,6 +101,8 @@ const pageWebView = (pathId: string) => {
     });
 }
 
+const currentHide = () => appWindow.hide();
+
 
 // ========= platform-independent =========
 
@@ -154,6 +156,6 @@ export {
     shellOpen, shellSelect,
     calc, shutdown_power,
     listenEvents, registerSwitchDoAndUn,
-    pageWebView,
+    pageWebView, currentHide,
     debounce, throttle
 }

@@ -30,6 +30,7 @@ interface ItemExtend {
     with_args: boolean,
     action_list: string[],
     action_index: number,
+    trigger?: (action: string, arg: string) => void,
 }
 
 export { ItemType };

@@ -1,7 +1,7 @@
 /// 定义item的actions及其触发方式
 
 import { inputer } from "./constants";
-import { clipboardWriteText, clipboardWriteTextNotify, notify, pageWebView, shellOpen, shellSelect, throttle } from "./runtime";
+import { clipboardWriteText, clipboardWriteTextNotify, currentHide, notify, pageWebView, shellOpen, shellSelect, throttle } from "./runtime";
 import { ItemExtend, ItemType } from "./womItem";
 
 
@@ -52,6 +52,11 @@ function triggerFolder(action: string, path: string) {
 }
 
 async function triggerItem(item: ItemExtend, arg: string) {
+    if (item.trigger) {
+        item.trigger(item.action_list[item.action_index], arg);
+        currentHide();
+        return;
+    }
     switch (item.the_type) {
         case ItemType.Cmd:
             let args = arg.trim().split(/\s+/);
