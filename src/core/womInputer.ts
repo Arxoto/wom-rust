@@ -1,4 +1,4 @@
-import { searchItem } from "./invoker";
+import { searchItem } from "./runtime";
 import { ItemExtend } from "./womItem";
 import { genCalc, gotoPageNav, power_hibernate, power_restart, power_shutdown } from "./womPlugins";
 

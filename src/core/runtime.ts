@@ -7,6 +7,8 @@ import { invoke } from '@tauri-apps/api/tauri';
 import { open } from '@tauri-apps/api/shell';
 import { WebviewWindow, appWindow } from '@tauri-apps/api/window';
 import { isRegistered, register, unregister } from '@tauri-apps/api/globalShortcut';
+import { ItemCommon, ItemExtend } from './womItem';
+import { actions } from './womExecuter';
 
 // ========= API =========
 
@@ -41,14 +43,51 @@ const clipboardWriteTextNotify = (s: string) => {
 const shellOpen = (s: string) => open(s);
 // const shellOpen = async (s: string) => invoke("shell_execute", { file: s });
 
+// ========= invoker =========
+
 // 选中资源
 const shellSelect = (s: string) => {
     invoke("open_folder_and_select_items", { path: s });
 };
 
+const shutdown_power: (s: string) => void = (s: string) => invoke("shutdown_power", { action: s });
+
 const calc: (s: string) => Promise<string> = (s: string) => invoke("calc", { expr: s });
 
-const shutdown_power: (s: string) => void = (s: string) => invoke("shutdown_power", { action: s });
+
+// ========= config =========
+
+interface ValueRuler<T> {
+    the_default: T,
+    the_options?: T[],
+}
+
+interface ConfigRuler {
+    global_shortcut: ValueRuler<string>,
+    window_width: ValueRuler<number>,
+    window_height: ValueRuler<number>,
+}
+
+interface ConfigCurrent {
+    global_shortcut: string,
+    window_width: number,
+    window_height: number,
+}
+
+const configRuler = (): Promise<ConfigRuler> => invoke('config_ruler');
+const configCurrent = (): Promise<ConfigCurrent> => invoke('config_current');
+
+// ========= item search =========
+
+const searchItem = async (keyword: string, hasArgs: boolean): Promise<ItemExtend[]> => {
+    let items: ItemCommon[] = await invoke('search_item', { keyword, hasArgs });
+    return items.map(item => ({
+        ...item.the_base,
+        ...item,
+        action_list: actions(item.the_base.the_type),
+        action_index: 0,
+    }))
+}
 
 // ========= event =========
 
@@ -153,8 +192,8 @@ export {
     ensure,
     notify,
     clipboardWriteText, clipboardWriteTextNotify,
-    shellOpen, shellSelect,
-    calc, shutdown_power,
+    shellOpen, shellSelect, shutdown_power, calc, 
+    configRuler, configCurrent, searchItem,
     listenEvents, registerSwitchDoAndUn,
     pageWebView, currentHide,
     debounce, throttle
