@@ -1,4 +1,4 @@
-pub const PLACEHOLDER_SPLIT: &str = "___";
+pub const PLACEHOLDER_SPLIT: &str = " <-> ";
 pub const PLACEHOLDER_ARGS: &str = "{}";
 
 // 类型
