@@ -28,6 +28,8 @@ const Item = ({ selected, item, itemIndex }: ItemElementArgs) => {
             });
         }
     }, [selected]);  // 只有selected改变时触发
+    // 这里有个小bug 每次更新时第一项的selected不会变 不会聚焦到第一项
+    // 需要注意两点： 1、每次更新输入都需要聚焦 2、每次点击切换action都不能聚焦 （因此不能用new Object()代替true）
 
     // 阻止事件冒泡  onClick={(event) => event.stopPropagation()}
     return (

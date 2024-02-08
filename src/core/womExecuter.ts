@@ -98,6 +98,7 @@ async function triggerItem(item: ItemExtend, arg: string) {
             console.warn(`${item.title} has no trigger`);
             break;
     }
+    currentHide();
 }
 
 // 可以防止 React.StrictMode 模式中触发两次

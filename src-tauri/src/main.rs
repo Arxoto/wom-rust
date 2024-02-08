@@ -87,7 +87,38 @@ fn on_system_tray_event(app: &AppHandle, event: SystemTrayEvent) -> tauri::Resul
     }
 }
 
-/// todo-list
+/// ========= package =========
+/// 
+/// pnpm tauri dev
+/// pnpm tauri build
+///     not used  set http_proxy=http://127.0.0.1:10809
+///     not used  set https_proxy=http://127.0.0.1:10809
+///
+/// https://github.com/tauri-apps/tauri/blob/dev/tooling/bundler/src/bundle/windows/msi.rs#L28
+/// https://github.com/tauri-apps/tauri/blob/dev/tooling/bundler/src/bundle/windows/msi/wix.rs#L33
+/// https://github.com/tauri-apps/tauri/blob/dev/tooling/bundler/src/bundle/windows/nsis.rs#L47
+/// 下载 WIX_URL NSIS_URL NSIS_APPLICATIONID_URL NSIS_TAURI_UTILS
+/// %LocalAppData%
+/// mkdir .\tauri\WixTools .\tauri\NSIS
+/// %LocalAppData%\tauri\WixTools  解压 wix311-binaries.zip 至目录下
+/// %LocalAppData%\tauri\NSIS      解压 nsis-3.zip 至目录下
+/// %LocalAppData%\tauri\NSIS\Plugins\x86-unicode      复制 NSIS-ApplicationID.zip/ReleaseUnicode/ApplicationID.dll 至目录下
+/// %LocalAppData%\tauri\NSIS\Plugins\x86-unicode      复制 nsis_tauri_utils.dll 至目录下
+/// 
+/// 
+/// ========= todo =========
+/// 
+/// 完善command能力
+/// 设置页面  wom item
+/// 配置页面  快捷键 窗口大小 样式
+/// 在App中实现动态主题 如 document.documentElement.style.setProperty(`--color-xxx`, 'black');  需要注意黑暗主题可能会导致白色闪瞎眼 可考虑延迟显示窗口
+/// 
+/// 根据编译原理使用rust手写计算器  文法消除左递归及提取左公因子 递归下降分析器 ...
+/// 中文转拼音
+/// 
+/// 根据主窗口适配有无窗口框架 或者实现简单框架(offspring)
+/// 内置页面  调色盘 编码转换 富文本便签(contenteditable)
+/// 联动或者页面  OCR接口（ShareX_or_Umi-OCR）、翻译接口（寻找api）、密码箱（加密算法/明文提示）
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
@@ -103,6 +134,7 @@ fn main() {
         .on_window_event(|event| match event.event() {
             tauri::WindowEvent::CloseRequested { api, .. } => {
                 // hide window when request close
+                // 在主窗口直接w.close()好像拦截不到
                 if event.window().label() == MAIN_WINDOW_LABEL {
                     api.prevent_close();
                     let _ = event.window().hide();
