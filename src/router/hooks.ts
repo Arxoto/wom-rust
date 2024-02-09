@@ -15,3 +15,8 @@ export function useElders() {
     const { elders } = useContext(RouterContext);
     return (nodeId: string) => elders.get(nodeId)
 }
+
+export function useJunior() {
+    const { junior } = useContext(RouterContext);
+    return (nodeId: string) => junior.get(nodeId)
+}

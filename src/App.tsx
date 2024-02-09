@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import NotFound from "./pages/NotFound";
 import { router } from "./core/constants";
 import Offspring from "./pages/Offspring";
-import { isMain, listenEvents, registerSwitchDoAndUn } from "./core/runtime";
+import { configCurrent, isMain, listenEvents, registerSwitchDoAndUn } from "./core/runtime";
 import Navigation from "./pages/navigation/NaviIndex";
 import NaviBox from "./pages/navigation/NaviBox";
 
@@ -20,25 +20,31 @@ function App() {
   useEffect(() => {
     window.addEventListener("keydown", disableAltEventHandler);
 
-    let unlisten = () => { }
-    let unregister = () => { }
+    let logout: Promise<() => void> = new Promise(() => { });
     if (ism) {
-      // 在react严格模式下 useEffect 会执行两次 这里由于 await 时运行时会执行其他逻辑 导致函数整体非原子性 会连续注册两次
-      const doun = registerSwitchDoAndUn("Shift+Space");
-      let doregister = doun[0];
-      unregister = doun[1];
-      unlisten = listenEvents(
-        ['do_global_shortcut', doregister],
-        ['un_global_shortcut', unregister],
-      )
-      doregister();
+      logout = configCurrent()
+        .then(config => {
+          const gsc = config.global_shortcut;
+
+          // 在react严格模式下 useEffect 会执行两次 这里由于 await 时运行时会执行其他逻辑 导致函数整体非原子性 会连续注册两次
+          let [doregister, unregister] = registerSwitchDoAndUn(gsc);
+          let unlisten = listenEvents(
+            ['do_global_shortcut', doregister],
+            ['un_global_shortcut', unregister],
+          )
+          doregister();
+          return () => {
+            unlisten();
+            unregister();
+          }
+        });
+
     }
 
     return () => {
       window.removeEventListener("keydown", disableAltEventHandler);
 
-      unlisten();
-      unregister();
+      logout.then(fn => fn());
     }
   }, []);
 

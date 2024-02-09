@@ -13,13 +13,13 @@
 }
 
 /* 字体行高 不换行+合并空格 */
-.navi-path-box>div {
+.navi-path-box span {
     margin: 0;
     padding: 0 2px;
     line-height: 1;
     white-space: nowrap;
 }
 
-.navi-path-box>.navi-path-item {
+.navi-path-box .navi-path-item {
     padding: 0 8px;
 }

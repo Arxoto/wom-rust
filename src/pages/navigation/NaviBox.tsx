@@ -19,11 +19,11 @@ export default function ({ children }: ReactDomWithChildren) {
         <HeadChaos>
             <div className="a-txt" onClick={() => nav(router.root)}>&lt;</div>
             <div className="navi-path-box">
-                {midPath.map((apath, index) => <>
-                    <div className="a-btn a-btn-hidden navi-path-item" key={index} onClick={() => nav(apath)}>{apath}</div>
-                    <div>{link}</div>
-                </>)}
-                <div className="navi-path-item">{last}</div>
+                {midPath.map((apath, index) => <div key={index}>
+                    <span className="a-btn a-btn-hidden navi-path-item" onClick={() => nav(apath)}>{apath}</span>
+                    <span>{link}</span>
+                </div>)}
+                <span className="navi-path-item">{last}</span>
             </div>
         </HeadChaos>
         <Body>{children}</Body>
