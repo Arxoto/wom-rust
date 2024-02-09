@@ -83,8 +83,11 @@ body {
 
   font-weight: bold;
   cursor: pointer;
-  background-color: var(--color-comm);
   box-shadow: 0 0 4px var(--color-diff-general);
+}
+
+.a-btn-hidden {
+  box-shadow: none;
 }
 
 .a-btn:hover {

@@ -3,7 +3,7 @@ import { useEffect, useReducer, useRef } from "react";
 import { useNavigate } from "../../router/hooks";
 import { womReducer } from "./WomReducer";
 import { WomContext, defaultState } from "./womContext";
-import { debounce, listenEvents, registerSwitchDoAndUn } from "../../core/runtime";
+import { debounce } from "../../core/runtime";
 import { inputer, router } from "../../core/constants";
 import { parseInput, searchItemsEx } from "../../core/womInputer";
 import { Body, Box, Head } from "../Layout";
@@ -69,20 +69,9 @@ export default function () {
             }
         }
 
-        // 在react严格模式下 useEffect 会执行两次 这里由于 await 时运行时会执行其他逻辑 导致函数整体非原子性 会连续注册两次
-        let [doregister, unregister] = registerSwitchDoAndUn("Shift+Space");
-        const unlisten = listenEvents(
-            ['do_global_shortcut', doregister],
-            ['un_global_shortcut', unregister],
-        )
-        doregister();
-
         return () => {
             window.onfocus = null;
             window.onkeydown = null;
-
-            unlisten();
-            unregister();
         }
     }, []);
 

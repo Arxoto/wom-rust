@@ -15,7 +15,7 @@ export default function ({ children }: ReactDomWithChildren) {
                 <div data-tauri-drag-region></div>
             </div>
             <div className="offspring-group">
-                <div className="offspring-btn offspring-mini" onClick={() => { setOntop(false); currentOnTop(false); currentMini(); }}></div>
+                <div className="offspring-btn offspring-mini" onClick={() => { if (ontop) { setOntop(false); currentOnTop(false); } currentMini(); }}></div>
                 <div className="offspring-btn offspring-close" onClick={currentClose}></div>
             </div>
         </div>

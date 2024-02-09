@@ -116,10 +116,13 @@ const registerSwitchDoAndUn = (global_shortcut_key: string) => {
             if (await isRegistered(global_shortcut_key)) {
                 return;
             }
-            await register(global_shortcut_key, windowVisibelSwitch);
-            console.log("register")
+            register(global_shortcut_key, windowVisibelSwitch)
+                .then(() => console.log("doregister"))
+                .catch(console.error)
         },
-        () => unregister(global_shortcut_key).catch(console.error),
+        () => unregister(global_shortcut_key)
+            .then(() => console.log("unregister"))
+            .catch(console.error),
     ]
 }
 
@@ -201,7 +204,7 @@ export {
     ensure,
     notify,
     clipboardWriteText, clipboardWriteTextNotify,
-    shellOpen, shellSelect, shutdown_power, calc, 
+    shellOpen, shellSelect, shutdown_power, calc,
     configRuler, configCurrent, searchItem,
     listenEvents, registerSwitchDoAndUn,
     pageWebView, isMain,

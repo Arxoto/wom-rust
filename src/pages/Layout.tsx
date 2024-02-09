@@ -24,10 +24,19 @@ function Head({ children }: ReactDomWithChildren) {
     return (
         <div className='static head'>
             {children}
-            <img className='wom-icon' src="" alt="" data-tauri-drag-region/>
+            <img className='wom-icon' src="" alt="" data-tauri-drag-region />
         </div>
     )
 }
 
-export { Box, Body, Head };
+function HeadChaos({ children }: ReactDomWithChildren) {
+    return (
+        <div className='static head'>
+            {children}
+            <img className='chaos-icon' src="" alt="" data-tauri-drag-region />
+        </div>
+    )
+}
+
+export { Box, Body, Head, HeadChaos };
 export type { ReactDomWithChildren };

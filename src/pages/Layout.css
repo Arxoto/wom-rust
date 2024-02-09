@@ -44,3 +44,7 @@
         content: url(/wow.png);
     }
 }
+
+.head>.chaos-icon {
+    content: url(/chaos.png);
+}
