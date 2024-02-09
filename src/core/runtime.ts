@@ -142,8 +142,7 @@ const pageWebView = (pathId: string) => {
         decorations: false,
         transparent: true,
         center: true,
-        visible: true,  // develop
-        // visible: false,  // release
+        visible: false,
     });
 }
 
@@ -211,4 +210,5 @@ export {
     currentHide, currentShow,
     currentMini, currentClose, currentOnTop,
     debounce, throttle
-}
+};
+export type { ConfigCurrent };

@@ -109,15 +109,12 @@ fn on_system_tray_event(app: &AppHandle, event: SystemTrayEvent) -> tauri::Resul
 ///
 /// ========= todo =========
 ///
-/// 导航页面  导航栏
 /// 设置页面  wom item
 /// 配置页面  快捷键 窗口大小 样式
-/// 在App中实现动态主题 如 document.documentElement.style.setProperty(`--color-xxx`, 'black');  需要注意黑暗主题可能会导致白色闪瞎眼 可考虑延迟显示窗口
 ///
 /// 根据编译原理使用rust手写计算器  文法消除左递归及提取左公因子 递归下降分析器 ...
 /// 中文转拼音
 ///
-/// 根据主窗口适配有无窗口框架 或者实现简单框架(offspring)
 /// 内置页面  调色盘 编码转换 富文本便签(contenteditable)
 /// 联动或者页面  OCR接口（ShareX_or_Umi-OCR）、翻译接口（寻找api）、密码箱（加密算法/明文提示）
 fn main() {
