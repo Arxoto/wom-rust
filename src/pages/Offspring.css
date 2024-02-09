@@ -1,0 +1,72 @@
+.offspring-head {
+    position: relative;
+    left: 8px;
+    width: calc(100% - 16px);
+    height: 8px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.offspring-body {
+    width: 100%;
+    height: calc(100% - 8px);
+}
+
+.offspring-group {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.offspring-btn {
+    width: 10px;
+    height: 10px;
+    margin: 0 2px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.offspring-ontop-on {
+    background-color: rgb(0, 160, 160);
+}
+
+.offspring-ontop-off {
+    background-color: rgb(0, 100, 0);
+}
+
+.offspring-mini {
+    background-color: rgb(100, 100, 255);
+}
+
+.offspring-close {
+    background-color: rgb(255, 100, 100);
+}
+
+.offspring-drag {
+    width: 32px;
+    height: 8px;
+}
+
+.offspring-drag>div:nth-child(1){
+    width: 4px;
+    height: 4px;
+    border-radius: 2px;
+    background-color: #ffbb4d;
+}
+
+.offspring-drag>div:nth-child(2){
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background-color: #ffbb4d;
+}
+
+.offspring-drag>div:nth-child(3){
+    width: 6px;
+    height: 6px;
+    border-radius: 3px;
+    background-color: #ffbb4d;
+}

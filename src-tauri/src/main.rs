@@ -109,7 +109,7 @@ fn on_system_tray_event(app: &AppHandle, event: SystemTrayEvent) -> tauri::Resul
 ///
 /// ========= todo =========
 ///
-/// 完善command能力
+/// 导航页面  导航栏
 /// 设置页面  wom item
 /// 配置页面  快捷键 窗口大小 样式
 /// 在App中实现动态主题 如 document.documentElement.style.setProperty(`--color-xxx`, 'black');  需要注意黑暗主题可能会导致白色闪瞎眼 可考虑延迟显示窗口

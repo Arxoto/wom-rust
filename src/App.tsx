@@ -3,6 +3,8 @@ import Wom from "./pages/wom/Wom";
 import { useEffect } from "react";
 import NotFound from "./pages/NotFound";
 import { router } from "./core/constants";
+import Offspring from "./pages/Offspring";
+import { isMain } from "./core/runtime";
 
 // disable the alt event (window menu in windows)
 function disableAltEventHandler(event: KeyboardEvent) {
@@ -19,7 +21,7 @@ function App() {
     }
   }, []);
 
-  return <RouterProvider root={{
+  let inner = <RouterProvider root={{
     nodeId: router.root,
     element: <Wom />,
     children: [
@@ -39,6 +41,11 @@ function App() {
       },
     ]
   }} notfound={<NotFound />} />
+
+  if (isMain()) {
+    return inner;
+  }
+  return <Offspring>{inner}</Offspring>
 }
 
 export default App;

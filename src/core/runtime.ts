@@ -136,11 +136,20 @@ const pageWebView = (pathId: string) => {
     new WebviewWindow(label, {
         url: `/${pathId}`,
         title: pathId,
+        decorations: false,
+        transparent: true,
         center: true,
+        visible: true,  // develop
+        // visible: false,  // release
     });
 }
 
+const isMain = () => appWindow.label === "main";
 const currentHide = () => appWindow.hide();
+const currentShow = () => appWindow.show().then(() => appWindow.setFocus());
+const currentMini = () => appWindow.minimize();
+const currentClose = () => appWindow.close();
+const currentOnTop = (ontop: boolean) => appWindow.setAlwaysOnTop(ontop);
 
 
 // ========= platform-independent =========
@@ -195,6 +204,8 @@ export {
     shellOpen, shellSelect, shutdown_power, calc, 
     configRuler, configCurrent, searchItem,
     listenEvents, registerSwitchDoAndUn,
-    pageWebView, currentHide,
+    pageWebView, isMain,
+    currentHide, currentShow,
+    currentMini, currentClose, currentOnTop,
     debounce, throttle
 }

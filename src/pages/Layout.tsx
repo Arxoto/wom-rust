@@ -30,3 +30,4 @@ function Head({ children }: ReactDomWithChildren) {
 }
 
 export { Box, Body, Head };
+export type { ReactDomWithChildren };
