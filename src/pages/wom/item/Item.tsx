@@ -11,25 +11,24 @@ interface ItemElementArgs {
     selected: boolean,
     item: ItemExtend,
     itemIndex: number,
+    version: boolean,
 }
 
-const Item = ({ selected, item, itemIndex }: ItemElementArgs) => {
+const Item = ({ selected, item, itemIndex, version }: ItemElementArgs) => {
     let { the_type, title, detail, action_list, action_index } = item;
     const { dispatch } = useContext(WomContext);
 
     const itemRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
         if (selected) {
-            // showItem
+            // showItem  注意这里优先级比滚轮的交互低 需要等页面完全停止后才能生效 否则被覆盖
             itemRef.current?.scrollIntoView({
                 behavior: 'smooth',
                 block: 'nearest',
                 inline: 'center'
             });
         }
-    }, [selected]);  // 只有selected改变时触发
-    // 这里有个小bug 每次更新时第一项的selected不会变 不会聚焦到第一项
-    // 需要注意两点： 1、每次更新输入都需要聚焦 2、每次点击切换action都不能聚焦 （因此不能用new Object()代替true）
+    }, [selected, version]);  // 只有selected version改变时触发
 
     // 阻止事件冒泡  onClick={(event) => event.stopPropagation()}
     return (

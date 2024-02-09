@@ -22,6 +22,7 @@ export default function () {
     const input = womState.input;
     const items = womState.items;
     const currentIndex = womState.currentIndex;
+    const version = womState.version;
 
     // useRef 与 useState 相同点：重新渲染不会导致信息丢失
     // useRef 与 useState 不同点：ref的值改变不会引起重新渲染
@@ -54,10 +55,10 @@ export default function () {
                     dispatch({ type: 'down' });
                     break;
                 case "ArrowLeft":
-                    dispatch({ type: 'left' });
+                    dispatch({ type: 'left', reRender: true });
                     break;
                 case "ArrowRight":
-                    dispatch({ type: 'right' });
+                    dispatch({ type: 'right', reRender: true });
                     break;
                 case "Enter":
                     // handleTrigger
@@ -133,6 +134,7 @@ export default function () {
                             selected={index === currentIndex}
                             item={item}
                             itemIndex={index}
+                            version={version}
                         ></Item>
                     )
                 }</Body>

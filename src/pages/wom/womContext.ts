@@ -16,6 +16,7 @@ const womState: WomState = {
     input: parseInput(''),
     currentIndex: 0,
     items: [],
+    version: false
 };
 
 const dispatch = (_action: ItemsReducerAction) => { };

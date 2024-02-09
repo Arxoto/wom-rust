@@ -12,14 +12,21 @@ interface WomState {
     input: Input,
     currentIndex: number,
     items: ItemExtend[],
+    version: boolean,
 }
 
 /** 更新状态的动作描述 */
 interface ItemsReducerAction {
+    /** 更新动作 */
     type: string,
+    /** 初始化时 重建items */
     items?: ItemExtend[];
-    itemIndex?: number,
+    /** 初始化时 重建input */
     input?: Input,
+    /** 左右切换action时 指定item */
+    itemIndex?: number,
+    /** 左右切换action时 强制渲染选中效果 */
+    reRender?: boolean,
 }
 
 /** 安全地切换 action */
@@ -59,20 +66,22 @@ function womReducer(womState: WomState, action: ItemsReducerAction): WomState {
         case 'init': {
             let newItems = action.items ? action.items : [];
             let newInput = action.input || womState.input;
-            return { input: newInput, currentIndex: 0, items: newItems };
+            return { input: newInput, currentIndex: 0, items: newItems, version: !womState.version };
         }
         case 'left': {
             let itemIndex = action.itemIndex ?? womState.currentIndex;
             return {
                 ...womState,
-                items: movedAction(womState.items, itemIndex, -1)
+                items: movedAction(womState.items, itemIndex, -1),
+                version: action.reRender ? !womState.version : womState.version,
             }
         }
         case 'right': {
             let itemIndex = action.itemIndex ?? womState.currentIndex;
             return {
                 ...womState,
-                items: movedAction(womState.items, itemIndex, 1)
+                items: movedAction(womState.items, itemIndex, 1),
+                version: action.reRender ? !womState.version : womState.version,
             }
         }
         case 'up': {
