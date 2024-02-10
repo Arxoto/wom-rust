@@ -113,7 +113,21 @@ fn on_system_tray_event(app: &AppHandle, event: SystemTrayEvent) -> tauri::Resul
 /// 配置页面  快捷键 窗口大小 样式
 ///
 /// 根据编译原理使用rust手写计算器  文法消除左递归及提取左公因子 递归下降分析器 ...
-/// 中文转拼音
+/// todo 该复习下编译原理了
+/// 
+/// 汉语转拼音（遥遥无期 懒）
+///     模式 normal普通 surname姓名（不知道咋实现）
+///     风格 normal无声调 tone声调再韵母第一个字母上
+/// 可基于以下两个库实现
+///     汉字  https://github.com/mozillazg/pinyin-data
+///     词语  https://github.com/mozillazg/phrase-pinyin-data/
+/// 方案一（完整分词）（参考pinyin-pro的算法）（tips: algorithm 一般是计算机领域 arithmetic 一般是数学领域）：
+///     database 构建字词对拼音的映射关系（多音字的话是集合）
+///     algorithm 假设最长的词的长度为n 先取前n个字视为一个词 进行查找 若找不到再取n-1个字
+/// 方案二（最短分词）：
+///     database 将词分割为字 依次映射最后是拼音（树） 若中途遇到分词一致且拼音一致的情况直接跳过（如果是实现完整分词的话就不跳）
+///     algorithm 从前向后依次遍历 若后一个字无法再子树中找到 则把前面的视为一个词
+///     特殊情况 假设abcd、ab有拼音 abc没有 需要查找的短句为abce  这时候遍历发现e不在c的子树里 而abc不是词 这时候需要回溯至ab
 ///
 /// 内置页面  调色盘 编码转换 富文本便签(contenteditable)
 /// 联动或者页面  OCR接口（ShareX_or_Umi-OCR）、翻译接口（寻找api）、密码箱（加密算法/明文提示）
