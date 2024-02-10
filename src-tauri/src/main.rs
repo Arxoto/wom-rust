@@ -20,7 +20,7 @@ fn build_main_window<R: Runtime, M: Manager<R>>(
     width: f64,
     height: f64,
 ) -> Result<(), tauri::Error> {
-    let w = tauri::WindowBuilder::new(
+    let _w = tauri::WindowBuilder::new(
         manager,
         MAIN_WINDOW_LABEL,
         tauri::WindowUrl::App("index.html".into()),
@@ -38,9 +38,9 @@ fn build_main_window<R: Runtime, M: Manager<R>>(
 
     #[cfg(debug_assertions)]
     {
-        w.show()?;
-        w.set_focus()?;
-        w.set_always_on_top(false)?;
+        _w.show()?;
+        _w.set_focus()?;
+        _w.set_always_on_top(false)?;
     }
     Ok(())
 }
