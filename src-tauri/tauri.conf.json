@@ -6,8 +6,8 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "wom-v2",
-    "version": "0.0.0"
+    "productName": "wom",
+    "version": "0.2.0"
   },
   "tauri": {
     "allowlist": {

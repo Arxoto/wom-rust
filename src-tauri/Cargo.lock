@@ -4430,8 +4430,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "wom-v2"
-version = "0.0.0"
+name = "wom"
+version = "0.2.0"
 dependencies = [
  "serde",
  "serde_json",
