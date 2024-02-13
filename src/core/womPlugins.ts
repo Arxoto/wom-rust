@@ -4,6 +4,7 @@ import { Input } from "./womInputer";
 import { ItemExtend, ItemType } from "./womItem";
 
 // ========= 内嵌页面 =========
+// 写死在这的原因：和router强相关
 
 const gotoPageNav: ItemExtend = {
     the_type: ItemType.Page,
@@ -16,6 +17,7 @@ const gotoPageNav: ItemExtend = {
 };
 
 // ========= 电源操作 =========
+// 写死在这的原因：需要自定义action和trigger
 
 const power_trigger = async (action: string, _arg: string) => {
     const shouldShutdown = await ensure(`will ${action}, sure?`);

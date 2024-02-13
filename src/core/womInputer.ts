@@ -1,4 +1,4 @@
-import { searchItem } from "./runtime";
+import { FindedItems, searchItem } from "./runtime";
 import { ItemExtend } from "./womItem";
 import { genCalc, gotoPageNav, power_hibernate, power_restart, power_shutdown } from "./womPlugins";
 
@@ -40,24 +40,44 @@ function parseInput(value: string): Input {
     return { key, arg, hasArg: !!arg, hasInput: true };
 }
 
-const matchFns = [
-    (input: Input, item: ItemExtend) => item.the_key === input.key,
-    (input: Input, item: ItemExtend) => item.the_key.startsWith(input.key),
-    (input: Input, item: ItemExtend) => item.the_key.includes(input.key),
-]
+const findMatch = (item: ItemExtend, input: Input) => {
+    const inkey = input.key;
+    const itkey = item.the_key;
+    if (inkey.length >= itkey.length) return false;
+    let n = 0, t = 0;
+    while (n < inkey.length && t < itkey.length) {
+        if (inkey[n] === itkey[t]) {
+            n++;
+        }
+        t++;
+    }
+    return n === inkey.length;
+}
 
 const getStaticPlugins = (input: Input) => {
     const source: ItemExtend[] = [gotoPageNav, power_hibernate, power_restart, power_shutdown];
-    const target: ItemExtend[] = [];
-    const already = new Set<number>();
-    for (const fn of matchFns) {
-        for (let i = 0; i < source.length; i++) {
-            if (already.has(i)) continue;
-            const pp = source[i];
-            if (fn(input, pp)) {
-                target.push(pp);
-                already.add(i);
-            }
+    const target: FindedItems<ItemExtend> = {
+        eq: [],
+        sw: [],
+        ct: [],
+        mc: []
+    };
+    for (const item of source) {
+        if (item.the_key === input.key) {
+            target.eq.push(item);
+            continue;
+        }
+        if (item.the_key.startsWith(input.key)) {
+            target.sw.push(item);
+            continue;
+        }
+        if (item.the_key.includes(input.key)) {
+            target.ct.push(item);
+            continue;
+        }
+        if (findMatch(item, input)) {
+            target.mc.push(item);
+            continue;
         }
     }
     return target;
@@ -86,11 +106,17 @@ const searchItemsEx = async (input: Input, inputValue: string) => {
         return [];
     }
 
-    let staticP = getStaticPlugins(input);
     let dynamicP = await genDynamicPlugins(input, inputValue);
+    let staticP = getStaticPlugins(input);
     let items = await searchItem(input.key, input.hasArg);
 
-    return [...staticP, ...dynamicP, ...items];
+    return [
+        ...dynamicP,
+        ...staticP.eq, ...items.eq,
+        ...staticP.sw, ...items.sw,
+        ...staticP.ct, ...items.ct,
+        ...staticP.mc, ...items.mc,
+    ];
 }
 
 export { parseInput, searchItemsEx };

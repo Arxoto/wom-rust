@@ -79,14 +79,28 @@ const configCurrent = (): Promise<ConfigCurrent> => invoke('config_current');
 
 // ========= item search =========
 
-const searchItem = async (keyword: string, hasArgs: boolean): Promise<ItemExtend[]> => {
-    let items: ItemCommon[] = await invoke('search_item', { keyword, hasArgs });
-    return items.map(item => ({
-        ...item.the_base,
-        ...item,
-        action_list: actions(item.the_base.the_type),
-        action_index: 0,
-    }))
+interface FindedItems<T> {
+    eq: T[],
+    sw: T[],
+    ct: T[],
+    mc: T[],
+}
+
+const convertItem = (items: ItemCommon[]): ItemExtend[] => items.map(item => ({
+    ...item.the_base,
+    ...item,
+    action_list: actions(item.the_base.the_type),
+    action_index: 0,
+}))
+
+const searchItem = async (keyword: string, hasArgs: boolean): Promise<FindedItems<ItemExtend>> => {
+    let items: FindedItems<ItemCommon> = await invoke('search_item', { keyword, hasArgs });
+    return {
+        eq: convertItem(items.eq),
+        sw: convertItem(items.sw),
+        ct: convertItem(items.ct),
+        mc: convertItem(items.mc),
+    }
 }
 
 // ========= event =========
@@ -211,4 +225,4 @@ export {
     currentMini, currentClose, currentOnTop,
     debounce, throttle
 };
-export type { ConfigCurrent };
+export type { FindedItems, ConfigCurrent };
