@@ -128,9 +128,6 @@ fn on_system_tray_event(app: &AppHandle, event: SystemTrayEvent) -> tauri::Resul
 ///
 /// ========= todo =========
 ///
-/// 可配置item和内置item的匹配优先级合并
-/// 重建item的能力
-///
 /// 设置页面  wom item
 /// 配置页面  快捷键 窗口大小 样式
 ///
