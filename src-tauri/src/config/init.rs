@@ -8,7 +8,12 @@ use super::{
 
 pub struct ConfigState {
     pub ruler: ConfigRuler,
-    pub currrent: Mutex<ConfigCurrent>, // 运行时能被修改
+    pub currrent: ConfigCurrent,
+}
+
+pub struct ConfigStateMutex {
+    pub ruler: ConfigRuler,
+    pub currrent: Mutex<ConfigCurrent>,
 }
 
 pub fn init(path: &PathBuf) -> ConfigState {
@@ -23,7 +28,7 @@ pub fn init(path: &PathBuf) -> ConfigState {
             // println!("load: {:#?}, {:#?}", path, config_current);
             ConfigState {
                 ruler: config_ruler,
-                currrent: Mutex::new(config_current),
+                currrent: config_current,
             }
         }
         Err(_) => {
@@ -33,7 +38,7 @@ pub fn init(path: &PathBuf) -> ConfigState {
             // println!("init: {:#?}, {:#?}", path, config_current);
             ConfigState {
                 ruler: config_ruler,
-                currrent: Mutex::new(config_current),
+                currrent: config_current,
             }
         }
     }

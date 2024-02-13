@@ -56,16 +56,13 @@ impl Default for FindedItems {
 impl FindedItems {
     pub fn add_if_finded(self: &mut Self, item: &ItemCommon, keyword: &str) {
         if find_equal(item, keyword) {
-            self.eq.push(item.clone())
-        }
-        if find_starts_with(item, keyword) {
-            self.sw.push(item.clone())
-        }
-        if find_contains(item, keyword) {
-            self.ct.push(item.clone())
-        }
-        if find_match(item, keyword) {
-            self.mc.push(item.clone())
+            self.eq.push(item.clone());
+        } else if find_starts_with(item, keyword) {
+            self.sw.push(item.clone());
+        } else if find_contains(item, keyword) {
+            self.ct.push(item.clone());
+        } else if find_match(item, keyword) {
+            self.mc.push(item.clone());
         }
     }
 }

@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{path::PathBuf, sync::Mutex};
 
 use crate::path_helper::{list_files_by_path_desc, path_format};
 
@@ -16,7 +16,17 @@ pub fn to_key_by_default(title: &str) -> String {
     title.to_ascii_lowercase()
 }
 
-pub fn init(path: &PathBuf, to_key_fn: fn(&str) -> String, app: &tauri::App) -> Vec<ItemCommon> {
+pub struct SettingStateMutex {
+    pub items: Mutex<Box<Vec<ItemCommon>>>,
+}
+
+pub fn init(
+    path: &PathBuf,
+    to_key_fn: fn(&str) -> String,
+    app: &tauri::AppHandle,
+) -> Box<Vec<ItemCommon>> {
+    let mut item_list: Box<Vec<ItemCommon>> = Box::new(Vec::new());
+
     let ibs = match load(path) {
         Ok(its) => its,
         Err(_) => {
@@ -51,6 +61,7 @@ pub fn init(path: &PathBuf, to_key_fn: fn(&str) -> String, app: &tauri::App) -> 
             }
         })
         .collect();
+    item_list.append(&mut ics);
 
     // e.g. title: "inner.exe|lnk"
     let mut ifs: Vec<ItemCommon> = ibs
@@ -87,7 +98,7 @@ pub fn init(path: &PathBuf, to_key_fn: fn(&str) -> String, app: &tauri::App) -> 
             }
         })
         .collect();
-    ics.append(&mut ifs);
+    item_list.append(&mut ifs);
 
-    ics
+    item_list
 }

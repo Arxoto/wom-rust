@@ -1,15 +1,15 @@
 use super::{
     core::{ConfigCurrent, ConfigRuler},
-    init::ConfigState,
+    init::ConfigStateMutex,
 };
 
 #[tauri::command]
-pub fn config_ruler(config_state: tauri::State<ConfigState>) -> ConfigRuler {
+pub fn config_ruler(config_state: tauri::State<ConfigStateMutex>) -> ConfigRuler {
     config_state.ruler.clone()
 }
 
 #[tauri::command]
-pub fn config_current(config_state: tauri::State<ConfigState>) -> Result<ConfigCurrent, String> {
+pub fn config_current(config_state: tauri::State<ConfigStateMutex>) -> Result<ConfigCurrent, String> {
     config_state
         .currrent
         .lock()

@@ -1,7 +1,19 @@
 import { router } from "./constants";
-import { calc, clipboardWriteTextNotify, ensure, shutdown_power } from "./runtime";
+import { calc, clipboardWriteTextNotify, ensure, openConfigPath, shutdown_power } from "./runtime";
 import { Input } from "./womInputer";
 import { ItemExtend, ItemType } from "./womItem";
+
+// ========= 配置路径 =========
+const configPath: ItemExtend = {
+    the_type: ItemType.Plugin,
+    title: "config",
+    detail: "goto the config path",
+    the_key: "config",
+    with_args: false,
+    action_list: [],
+    action_index: 0,
+    trigger: openConfigPath,
+}
 
 // ========= 内嵌页面 =========
 // 写死在这的原因：和router强相关
@@ -95,6 +107,7 @@ const genCalc = async (input: Input, inputValue: string): Promise<ItemExtend | n
 }
 
 export {
+    configPath,
     gotoPageNav,
     power_hibernate, power_restart, power_shutdown,
     genCalc,

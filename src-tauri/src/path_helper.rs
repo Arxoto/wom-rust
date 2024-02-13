@@ -4,6 +4,23 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use crate::config::core::{CONFIG_FILE, SETTING_FILE};
+
+#[inline]
+pub fn get_base_path(app: &tauri::AppHandle) -> Option<PathBuf> {
+    app.path_resolver().app_data_dir()
+}
+
+#[inline]
+pub fn get_config_path(base_path: &PathBuf) -> PathBuf {
+    base_path.join(CONFIG_FILE)
+}
+
+#[inline]
+pub fn get_setting_path(base_path: &PathBuf) -> PathBuf {
+    base_path.join(SETTING_FILE)
+}
+
 pub const PUBLIC: &str = "public";
 pub const HOME: &str = "home";
 pub const DESKTOP: &str = "desktop";
@@ -21,7 +38,7 @@ pub const CONFIG: &str = "config"; // same as data in windows
 pub const APP_CONFIG: &str = "app_config"; // same as app_data in windwos
 pub const APP_LOG: &str = "app_log";
 
-fn path_from(app: &tauri::App, var: &str) -> Option<PathBuf> {
+fn path_from(app: &tauri::AppHandle, var: &str) -> Option<PathBuf> {
     match var {
         PUBLIC => tauri::api::path::public_dir(),
         HOME => tauri::api::path::home_dir(),
@@ -43,7 +60,7 @@ fn path_from(app: &tauri::App, var: &str) -> Option<PathBuf> {
     }
 }
 
-pub fn path_format(app: &tauri::App, path_desc: &str) -> PathBuf {
+pub fn path_format(app: &tauri::AppHandle, path_desc: &str) -> PathBuf {
     let path_split: Vec<&str> = path_desc.split("::").collect();
     if path_split.len() != 2 {
         return Path::new(path_desc).to_path_buf();
@@ -99,7 +116,7 @@ pub fn list_files(path: &PathBuf, into: bool, suffixs: &Vec<String>) -> Vec<File
 }
 
 pub fn list_files_by_path_desc(
-    app: &tauri::App,
+    app: &tauri::AppHandle,
     path_desc: &str,
     into: bool,
     suffixs: &Vec<String>,
@@ -122,7 +139,8 @@ mod tests {
 
     #[test]
     fn test_list_files() {
-        let path = Path::new(r#"C:\Users\{user}\AppData\Local\Microsoft\WindowsApps"#).to_path_buf();
+        let path =
+            Path::new(r#"C:\Users\{user}\AppData\Local\Microsoft\WindowsApps"#).to_path_buf();
         let suffixs = vec![".exe".to_string()];
         let ll = list_files(&path, false, &suffixs);
         for l in ll {

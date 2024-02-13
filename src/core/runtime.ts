@@ -9,6 +9,7 @@ import { WebviewWindow, appWindow } from '@tauri-apps/api/window';
 import { isRegistered, register, unregister } from '@tauri-apps/api/globalShortcut';
 import { ItemCommon, ItemExtend } from './womItem';
 import { actions } from './womExecuter';
+import { appDataDir } from '@tauri-apps/api/path';
 
 // ========= API =========
 
@@ -38,6 +39,9 @@ const clipboardWriteTextNotify = (s: string) => {
         notify(`cpoy ${s} failed`);
     });
 }
+
+// 打开配置路径
+const openConfigPath = async () => open(await appDataDir());
 
 // 打开资源  两个打开的进程貌似都会挂在本进程下面
 const shellOpen = (s: string) => open(s);
@@ -217,7 +221,7 @@ export {
     ensure,
     notify,
     clipboardWriteText, clipboardWriteTextNotify,
-    shellOpen, shellSelect, shutdown_power, calc,
+    openConfigPath, shellOpen, shellSelect, shutdown_power, calc,
     configRuler, configCurrent, searchItem,
     listenEvents, registerSwitchDoAndUn,
     pageWebView, isMain,

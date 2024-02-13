@@ -7,13 +7,17 @@ mod path_helper;
 mod platform;
 mod setting;
 
-use config::core::{CONFIG_FILE, MAIN_WINDOW_LABEL, SETTING_FILE};
+use std::sync::Mutex;
+
 use tauri::{
     AppHandle, CustomMenuItem, Manager, Runtime, SystemTray, SystemTrayEvent, SystemTrayMenu,
     SystemTrayMenuItem,
 };
 
+use config::{core::MAIN_WINDOW_LABEL, init::ConfigStateMutex};
 use event::MAIN_EVENT;
+use path_helper::{get_base_path, get_config_path, get_setting_path};
+use setting::init::SettingStateMutex;
 
 fn build_main_window<R: Runtime, M: Manager<R>>(
     manager: &M,
@@ -53,6 +57,7 @@ fn new_system_tray() -> SystemTray {
             .add_item(CustomMenuItem::new("register", "register global shortcut"))
             .add_item(CustomMenuItem::new("unregister", "unregister"))
             .add_native_item(SystemTrayMenuItem::Separator)
+            .add_item(CustomMenuItem::new("reload", "Reload Setting"))
             .add_item(CustomMenuItem::new("quit", "Quit")),
     )
 }
@@ -78,6 +83,20 @@ fn on_system_tray_event(app: &AppHandle, event: SystemTrayEvent) -> tauri::Resul
                 } else {
                     Err(tauri::Error::WebviewNotFound)
                 }
+            }
+            "reload" => {
+                if let Some(base_path) = get_base_path(app) {
+                    let setting_path = get_setting_path(&base_path);
+                    let setting_items =
+                        setting::init::init(&setting_path, setting::init::to_key_by_default, app);
+
+                    if let Some(setting_state) = app.try_state::<SettingStateMutex>() {
+                        if let Ok(mut items) = setting_state.items.lock() {
+                            *items = setting_items;
+                        }
+                    }
+                }
+                Ok(())
             }
             // 这里因为app所有权的原因不宜用 app.global_shortcut_manager()
             "register" => app.emit_to(MAIN_WINDOW_LABEL, MAIN_EVENT.do_global_shortcut, ()),
@@ -108,7 +127,7 @@ fn on_system_tray_event(app: &AppHandle, event: SystemTrayEvent) -> tauri::Resul
 ///
 ///
 /// ========= todo =========
-/// 
+///
 /// 可配置item和内置item的匹配优先级合并
 /// 重建item的能力
 ///
@@ -117,7 +136,7 @@ fn on_system_tray_event(app: &AppHandle, event: SystemTrayEvent) -> tauri::Resul
 ///
 /// 根据编译原理使用rust手写计算器  文法消除左递归及提取左公因子 递归下降分析器 ...
 /// todo 该复习下编译原理了
-/// 
+///
 /// 汉语转拼音（遥遥无期 懒）
 ///     模式 normal普通 surname姓名（不知道咋实现）
 ///     风格 normal无声调 tone声调再韵母第一个字母上
@@ -169,36 +188,35 @@ fn main() {
         })
         .setup(|app| {
             // load persistent files
-            let base_path = app
-                .path_resolver()
-                .app_data_dir()
-                .ok_or("failed to get dir")?;
+            let base_path = get_base_path(&app.handle()).ok_or("failed to get dir".to_string())?;
             if !base_path.exists() {
                 std::fs::create_dir_all(&base_path)
                     .map_err(|_| "failed to create app config dir")?;
             }
 
             // load config
-            let config_path = base_path.join(CONFIG_FILE);
+            let config_path = get_config_path(&base_path);
             let config_state = config::init::init(&config_path);
-            let config_current = config_state
-                .currrent
-                .lock()
-                .expect("fetch config_current failed")
-                .clone();
-            app.manage(config_state);
+            let window_width = config_state.currrent.window_width;
+            let window_height = config_state.currrent.window_height;
+            // 运行时能被修改  详见 app.manage<T>(&self, state: T) -> bool
+            app.manage(ConfigStateMutex {
+                ruler: config_state.ruler,
+                currrent: Mutex::new(config_state.currrent),
+            });
 
             // load setting
-            let setting_path = base_path.join(SETTING_FILE);
-            let setting_state =
-                setting::init::init(&setting_path, setting::init::to_key_by_default, &app);
-            app.manage(setting_state);
+            let setting_path = get_setting_path(&base_path);
+            let setting_items = setting::init::init(
+                &setting_path,
+                setting::init::to_key_by_default,
+                &app.handle(),
+            );
+            app.manage(SettingStateMutex {
+                items: Mutex::new(setting_items),
+            });
 
-            build_main_window(
-                app,
-                config_current.window_width,
-                config_current.window_height,
-            )?;
+            build_main_window(app, window_width, window_height)?;
             Ok(())
         })
         .run(tauri::generate_context!())
