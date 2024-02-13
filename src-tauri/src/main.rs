@@ -128,6 +128,11 @@ fn on_system_tray_event(app: &AppHandle, event: SystemTrayEvent) -> tauri::Resul
 ///
 /// ========= todo =========
 ///
+/// item支持自动横向滚动
+/// 可通过 rref.scrollLeft + rref.clientWidth === rref.scrollWidth 实现
+/// setInterval 100 rref.scrollLeft++  setTimeout 400 turn left
+/// 但是不知为何后两个总是恒等于 应该与样式有关 待研究
+///
 /// 设置页面  wom item
 /// 配置页面  快捷键 窗口大小 样式
 ///
