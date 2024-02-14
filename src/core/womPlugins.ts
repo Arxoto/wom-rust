@@ -38,9 +38,9 @@ const power_trigger = async (action: string, _arg: string) => {
 
 const power_hibernate: ItemExtend = {
     the_type: ItemType.Plugin,
-    title: "power_休眠_hibernate",
+    title: "休眠 hibernate_power",
     detail: "",
-    the_key: "power_xm_hibernate",
+    the_key: "xm hibernate_power",
     with_args: false,
     action_list: ['hibernate'],
     action_index: 0,
@@ -48,9 +48,9 @@ const power_hibernate: ItemExtend = {
 }
 const power_restart: ItemExtend = {
     the_type: ItemType.Plugin,
-    title: "power_重启_restart",
+    title: "重启 restart_power",
     detail: "",
-    the_key: "power_cq_restart",
+    the_key: "cq restart_power",
     with_args: false,
     action_list: ['restart'],
     action_index: 0,
@@ -58,9 +58,9 @@ const power_restart: ItemExtend = {
 }
 const power_shutdown: ItemExtend = {
     the_type: ItemType.Plugin,
-    title: "power_关机_shutdown",
+    title: "关机 shutdown_power",
     detail: "",
-    the_key: "power_gj_shutdown",
+    the_key: "gj shutdown_power",
     with_args: false,
     action_list: ['shutdown'],
     action_index: 0,

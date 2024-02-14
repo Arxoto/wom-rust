@@ -6,6 +6,7 @@ import folder from "../../../assets/folder-2.svg";
 import files from "../../../assets/app-1.svg";
 import app from "../../../assets/app-2.svg";
 import more from "../../../assets/more.svg";
+import navigation from "../../../assets/navigation.svg";
 
 interface ItemIconArgs {
     itemType: string,
@@ -23,6 +24,8 @@ export default function ({ itemType }: ItemIconArgs) {
             return <img src={files} alt="" style={{ width: '75%' }} />;
         case ItemType.App:
             return <img src={app} alt="" style={{ width: '65%' }} />;
+        case ItemType.Page:
+            return <img src={navigation} alt="" style={{ width: '65%' }} />;
         default:
             return <img src={more} alt="" style={{ width: '50%' }} />
     }
