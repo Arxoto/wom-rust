@@ -1,6 +1,6 @@
 import { FindedItems, searchItem } from "./runtime";
 import { ItemExtend } from "./womItem";
-import { configPath, genCalc, gotoPageNav, power_hibernate, power_restart, power_shutdown } from "./womPlugins";
+import { configPath, gotoPageNav, power_hibernate, power_restart, power_shutdown } from "./womPlugins";
 
 /**
  * 解析后的输入对象
@@ -63,6 +63,9 @@ const getStaticPlugins = (input: Input) => {
         mc: []
     };
     for (const item of source) {
+        if (input.hasArg && !item.with_args) {
+            continue;
+        }
         if (item.the_key === input.key) {
             target.eq.push(item);
             continue;
@@ -85,7 +88,9 @@ const getStaticPlugins = (input: Input) => {
 
 const genDynamicPlugins = async (input: Input, inputValue: string) => {
     const result: ItemExtend[] = [];
-    const gens = [genCalc];
+    const gens: any[] = [ // 后期有插件了any类型需要修改
+        // genCalc,
+    ];
     for (const gen of gens) {
         let plugin = await gen(input, inputValue);
         if (plugin) {
