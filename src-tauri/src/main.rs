@@ -138,6 +138,7 @@ fn on_system_tray_event(app: &AppHandle, event: SystemTrayEvent) -> tauri::Resul
 ///
 /// 根据编译原理使用rust手写计算器  文法消除左递归及提取左公因子 递归下降分析器 ...
 /// todo 该复习下编译原理了
+/// 可以用ANTLR4生成lexer和parser 或者生成其他语言学习后转成rust
 ///
 /// 汉语转拼音（遥遥无期 懒）
 ///     模式 normal普通 surname姓名（不知道咋实现）
