@@ -51,7 +51,7 @@ const shellOpen = (s: string) => open(s);
 
 // 选中资源
 const shellSelect = (s: string) => {
-    invoke("open_folder_and_select_items", { path: s });
+    return invoke("open_folder_and_select_items", { path: s }) as Promise<void>;
 };
 
 const shutdown_power: (s: string) => void = (s: string) => invoke("shutdown_power", { action: s });
@@ -146,12 +146,76 @@ const registerSwitchDoAndUn = (global_shortcut_key: string) => {
 
 // ========= window =========
 
+// interface UrlQuery {
+//     goto?: string,
+// }
+
+// const withQuery = (url: string, query: UrlQuery) => {
+//     let hasQuery = false;
+//     let ll = [];
+//     let object = query as any;
+//     for (const key in object) {
+//         if (Object.prototype.hasOwnProperty.call(object, key)) {
+//             const element = object[key] as string;
+//             hasQuery = true;
+//             ll.push(`${key}=${encodeURIComponent(element)}`)
+//         }
+//     }
+//     if (hasQuery) {
+//         url += '?' + ll.join("&")
+//     }
+//     return url
+// }
+
+// const parseQuery = (url: string) => {
+//     let query: any = {};
+//     let i = url.indexOf('?');
+//     let search: string;
+//     if (i != -1) {
+//         search = url.substring(i + 1);
+//         let ll = search.split("&");
+//         for (const element of ll) {
+//             let [k, v] = element.split("=", 2)
+//             query[k] = decodeURIComponent(v);
+//         }
+//     }
+//     return query as UrlQuery;
+// }
+
+/**
+ * 目前有个难点
+ * 
+ * 1、选择 query=url + iframe 的方式 会导致子文档无法使用 __TAURI__ 方法
+ * 也许跟这个有关 https://github.com/tauri-apps/tauri/issues/6204
+ * 但是不完全一致，没深究，明明其他人说是能在 iframe 里用的，嘤嘤嘤
+ * 
+ * 2、选择 file://asset 需要自己实现窗口框架且打开 dangerousRemoteDomainIpcAccess 但是该选项只能以白名单的方式开启 不支持通配符
+ * see https://github.com/tauri-apps/tauri/issues/7461
+ * 新方案在 V2 合入了 https://github.com/tauri-apps/tauri/pull/8428
+ * 因此拒绝了 V1 的合并请求 https://github.com/tauri-apps/tauri/pull/7468
+ * 导致这里不是很优雅，哼！
+ */
+const exWebView = async (title: string, url: string) => {
+    // const label = crypto.randomUUID();
+    const lb = "plugins";
+    for (let i = 0; i < 10; i++) {
+        const label = `${lb}${i}`;
+        let webview = WebviewWindow.getByLabel(label);
+        if (webview) {
+            continue;
+        }
+        invoke('build_a_window', { label, url, title }).catch(console.error)
+        return;
+    }
+    console.error('failed to build a new window');
+}
+
 // 创建页面
-const pageWebView = (pathId: string) => {
-    const label = 'tmp';
+const pageWebView = async (pathId: string) => {
+    const label = 'tmp';  // todo 根据 pathId 选择不同 label
     let webview = WebviewWindow.getByLabel(label);
     if (webview) {
-        webview.close();
+        await webview.close();
     }
 
     new WebviewWindow(label, {
@@ -224,7 +288,7 @@ export {
     openConfigPath, shellOpen, shellSelect, shutdown_power, calc,
     configRuler, configCurrent, searchItem,
     listenEvents, registerSwitchDoAndUn,
-    pageWebView, isMain,
+    exWebView, pageWebView, isMain,
     currentHide, currentShow,
     currentMini, currentClose, currentOnTop,
     debounce, throttle

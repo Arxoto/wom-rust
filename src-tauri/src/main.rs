@@ -19,6 +19,55 @@ use event::MAIN_EVENT;
 use path_helper::{get_base_path, get_config_path, get_setting_path};
 use setting::init::SettingStateMutex;
 
+#[tauri::command]
+async fn build_a_window(
+    app_handle: tauri::AppHandle,
+    label: String,
+    url: String,
+    title: String,
+) -> Result<(), tauri::Error> {
+    // to use `window.__TAURI__` in js
+    // Be sure to set `build.withGlobalTauri` in `tauri.conf.json` to true
+
+    // to load file://asset
+    // set `tauri.allowlist.protocol` to `{"asset": true, "assetScope": ["**"]}`
+    // see https://tauri.app/zh-cn/v1/api/js/tauri/#convertfilesrc
+
+    // allow external or file://asset to use `window.__TAURI__`
+    // set `tauri.security.dangerousRemoteDomainIpcAccess`
+    // see https://tauri.app/zh-cn/v1/api/config/#securityconfig.dangerousremotedomainipcaccess
+    // set `tauri.security.dangerousRemoteDomainIpcAccess.[].domain` to `asset.localhost` in Windows
+    // P.S., Windows url is `https://asset.localhost`, MacOS url maybe `asset://localhost`
+
+    // let _w = tauri::WindowBuilder::new(
+    //     &app_handle,
+    //     "external", /* the unique window label */
+    //     tauri::WindowUrl::External("https://tauri.app/".parse().unwrap()),
+    // )
+    // .build()?;
+
+    if let Some(w) = app_handle.get_window(&label) {
+        // w.close()?;
+        // 关闭后不能马上新建  a window with label `xxx` already exists
+        // 在js中这么用没事
+
+        w.show()?;
+        w.set_focus()?;
+        return Ok(());
+    }
+    // cannot use window.__TAURI__ in iframe, see https://github.com/tauri-apps/tauri/issues/6204
+    let _w = tauri::WindowBuilder::new(&app_handle, &label, tauri::WindowUrl::App(url.into()))
+        .title(title)
+        // .decorations(false)
+        // .transparent(true)
+        // .visible(false)
+        .center()
+        // load file to str  注意 preload 中直接获取 window.__TAURI__ 是 undefined 需要 setTimeout 0 延后下
+        .initialization_script(include_str!("./preload.js"))
+        .build()?;
+    Ok(())
+}
+
 fn build_main_window<R: Runtime, M: Manager<R>>(
     manager: &M,
     width: f64,
@@ -39,6 +88,8 @@ fn build_main_window<R: Runtime, M: Manager<R>>(
     .always_on_top(true) // 置顶
     .visible(false) // 可见
     .build()?;
+
+    // _w.open_devtools(); // add features "devtools" in Cargo.toml if debug in release
 
     #[cfg(debug_assertions)]
     {
@@ -128,6 +179,8 @@ fn on_system_tray_event(app: &AppHandle, event: SystemTrayEvent) -> tauri::Resul
 ///
 /// ========= todo =========
 ///
+/// js中console.*规范
+/// js中增加try保护
 /// item支持自动横向滚动
 /// 可通过 rref.scrollLeft + rref.clientWidth === rref.scrollWidth 实现
 /// setInterval 100 rref.scrollLeft++  setTimeout 400 turn left
@@ -154,8 +207,34 @@ fn on_system_tray_event(app: &AppHandle, event: SystemTrayEvent) -> tauri::Resul
 ///     algorithm 从前向后依次遍历 若后一个字无法再子树中找到 则把前面的视为一个词
 ///     特殊情况 假设abcd、ab有拼音 abc没有 需要查找的短句为abce  这时候遍历发现e不在c的子树里 而abc不是词 这时候需要回溯至ab
 ///
+/// 截图贴图
+/// 使用 cpp 参考 ScreenCapture 基于 Skia 实现截图绘制工具 打开即表示开始截图
+/// 图片管理、贴图、OCR、翻译、上传 等能力基于插件实现
+///
+/// 插件框架
+/// 规范的基础信息i18n（id、hash、名称、版本、作者、描述、原址、图标、依赖）
+/// 入口文件
+///     关键字搜索、个性化搜索&优先级、允许返回多个结果
+///     多种触发方式：打开应用、剪贴板、独立窗口、网络请求。。
+///     插件间 pipeline
+///     通用配置页面
+///     定时任务
+///     注册全局快捷键
+///     持久化存储 明文/加密
+///     应用生命周期 hook
+/// 插件市场&服务器
+/// 插件实现方案（系统命令、脚本注入、显示自定义资源）
+///     initialization_script+withGlobalTauri 实测不行脚本中无法找到 window.__TAURI__ 且如何打开外部html也是个难题
+///     iframe 也许可以通过 iframe.contentWindow 挂载系统命令 但是在 react 框架下无法做到
+///     也许可以参考 https://github.com/tauri-apps/tauri/issues/5682
+///
 /// 内置页面  调色盘 编码转换 富文本便签(contenteditable)
 /// 联动或者页面  OCR接口（ShareX_or_Umi-OCR）、翻译接口（寻找api）、密码箱（加密算法/明文提示）
+///
+///
+/// ========= undo =========
+///
+/// 显示文件图标  参考 extract-file-icon 将图片数据写入到缓存文件中 然后显示
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
@@ -165,6 +244,7 @@ fn main() {
             platform::shutdown_power,
             platform::open_folder_and_select_items,
             platform::shell_execute,
+            build_a_window,
         ])
         .system_tray(new_system_tray())
         .on_system_tray_event(|app, event| match on_system_tray_event(app, event) {

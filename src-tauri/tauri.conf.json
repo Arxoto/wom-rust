@@ -3,6 +3,7 @@
     "beforeDevCommand": "pnpm dev",
     "beforeBuildCommand": "pnpm build",
     "devPath": "http://localhost:1420",
+    "withGlobalTauri": true,
     "distDir": "../dist"
   },
   "package": {
@@ -31,6 +32,16 @@
         "exists": true,
         "readDir": true
       },
+      "protocol": {
+        "all": false,
+        "asset": true,
+        "assetScope": ["**"]
+      },
+      "http": {
+        "all": false,
+        "request": true,
+        "scope": ["https://**"]
+      },
       "clipboard": {
         "all": true
       },
@@ -55,6 +66,13 @@
       ]
     },
     "security": {
+      "dangerousRemoteDomainIpcAccess": [
+        {
+          "domain": "asset.localhost",
+          "windows": ["plugins0", "plugins1", "plugins2", "plugins3", "plugins4", "plugins5", "plugins6", "plugins7", "plugins8", "plugins9"],
+          "enableTauriAPI": true
+        }
+      ],
       "csp": null
     },
     "systemTray": {
