@@ -150,6 +150,28 @@ fn on_system_tray_event(app: &AppHandle, event: SystemTrayEvent) -> tauri::Resul
                 Ok(())
             }
             // 这里因为app所有权的原因不宜用 app.global_shortcut_manager()
+            // fix 所有权的问题可以用 `let _app_handle = app.app_handle();` 解决
+            // 但是由于全局热键被设定为运行时可变 所以不是很方便在这里写
+            // 一定要用的话有两个方案
+            //   - 全局变量包裹 `Arc<Mutex<T>>` 同时要思考 注册-修改-注销 流程下怎么才能不出的bug
+            //   - 设定该配置项为启动生效
+            // P.S. 由于 `GlobalShortcutManager::register()` 是私有的 需要先 `use tauri::GlobalShortcutManager;`
+            // "register" => {
+            //     let app_handle = app.app_handle();
+            //     use tauri::GlobalShortcutManager;
+            //     app.global_shortcut_manager().register("Alt+Space", move || {
+            //         if let Some(w) = app_handle.get_window(MAIN_WINDOW_LABEL) {
+            //             if let Ok(is_visible) = w.is_visible() {
+            //                 if is_visible {
+            //                     let _ = w.hide();
+            //                 } else {
+            //                     let _ = w.show().and_then(|_| w.set_focus());
+            //                 }
+            //             }
+            //         }
+            //     })?;
+            //     Ok(())
+            // },
             "register" => app.emit_to(MAIN_WINDOW_LABEL, MAIN_EVENT.do_global_shortcut, ()),
             "unregister" => app.emit_to(MAIN_WINDOW_LABEL, MAIN_EVENT.un_global_shortcut, ()),
             _ => Ok(()),
